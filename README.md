@@ -1,3 +1,3 @@
 # org.shaneking.leon
 
-ShaneKing Java AspectJ Library
+ShaneKing Spring Web Library

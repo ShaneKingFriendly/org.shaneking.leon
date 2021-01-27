@@ -1,0 +1,43 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.shaneking.leon</groupId>
+    <artifactId>org.shaneking.leon</artifactId>
+    <version>0.241.1</version>
+  </parent>
+
+  <artifactId>org.shaneking.leon.test</artifactId>
+  <version>0.241.1</version>
+  <packaging>jar</packaging>
+
+  <name>org.shaneking.leon.test</name>
+  <description>Spring Web Test for ShaneKing</description>
+  <url>https://github.com/ShaneKingOrg/org.shaneking.leon</url>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+
+  <dependencies>
+    <!-- @ConfigurationProperties, @EnableConfigurationProperties -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.shaneking.roc</groupId>
+      <artifactId>org.shaneking.roc.test</artifactId>
+      <version>${org.shaneking.roc_version}</version>
+    </dependency>
+  </dependencies>
+
+</project>

@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.shaneking.leon.test.LeonTestAutoConfiguration

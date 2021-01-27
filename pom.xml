@@ -15,7 +15,7 @@
   <packaging>pom</packaging>
 
   <name>org.shaneking.leon</name>
-  <description>ShaneKing Java AspectJ Library</description>
+  <description>ShaneKing Spring Web Library</description>
   <url>https://github.com/ShaneKingOrg/org.shaneking.leon</url>
   <inceptionYear>2011-2021</inceptionYear>
 
@@ -92,12 +92,16 @@
   </ciManagement>
 
   <properties>
-
+    <org.shaneking.ling_version>0.241.1</org.shaneking.ling_version>
+    <org.shaneking.roc_version>0.241.1</org.shaneking.roc_version>
   </properties>
 
   <!-- mvn -N versions:set -DgenerateBackupPoms=false -DnewVersion=0.241.1 -->
   <!-- Unused : mvn -N versions:update-child-modules -->
   <modules>
+    <module>org.shaneking.leon.rr</module>
+    <module>org.shaneking.leon.swagger</module>
+    <module>org.shaneking.leon.test</module>
   </modules>
 
 </project>
