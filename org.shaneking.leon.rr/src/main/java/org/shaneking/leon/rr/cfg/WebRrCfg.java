@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebRrCfg implements WebMvcConfigurer {
-  @Value("${sk.leon.rr.req.ips.enabled:true}")
+  @Value("${sk.leon.rr.req.ips.enabled:false}")
   private boolean reqIpsEnabled;
 
-  @Value("${sk.leon.rr.req.url.enabled:true}")
+  @Value("${sk.leon.rr.req.url.enabled:false}")
   private boolean reqUrlEnabled;
 
   @Autowired(required = false)

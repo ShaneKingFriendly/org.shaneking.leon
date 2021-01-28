@@ -13,6 +13,7 @@ import org.shaneking.roc.persistence.entity.AuditLogEntity;
 import org.shaneking.roc.rr.Req;
 import org.shaneking.roc.rr.annotation.RrAudit;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,11 @@ import java.text.MessageFormat;
 
 @Aspect
 @Component
+@ConditionalOnProperty(prefix = "sk.leon.rr.audit", value = "enabled")
 @Slf4j
 @Order(450)///must greater than org.shaneking.roc.rr.aspectj.WebRrAuditAspect
 public class WebRrAuditAspect {
-  @Value("${sk.roc.rr.audit.enabled:true}")
+  @Value("${sk.leon.rr.audit.enabled:false}")
   private boolean enabled;
 
   @Pointcut("execution(@org.shaneking.roc.rr.annotation.RrAudit * *..*.*(..))")

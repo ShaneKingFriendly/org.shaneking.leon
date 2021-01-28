@@ -42,10 +42,11 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.shaneking.roc</groupId>
-      <artifactId>org.shaneking.roc.rr</artifactId>
-      <version>${org.shaneking.roc_version}</version>
+      <groupId>org.shaneking.ling</groupId>
+      <artifactId>org.shaneking.ling.zero</artifactId>
+      <version>${org.shaneking.ling_version}</version>
     </dependency>
+    <!-- test(spring default logback, so not need dependency logback) -->
     <dependency>
       <groupId>org.shaneking.leon</groupId>
       <artifactId>org.shaneking.leon.test</artifactId>

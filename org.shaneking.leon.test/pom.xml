@@ -33,6 +33,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+    <!-- test(spring default logback, so not need dependency logback) -->
     <dependency>
       <groupId>org.shaneking.roc</groupId>
       <artifactId>org.shaneking.roc.test</artifactId>
