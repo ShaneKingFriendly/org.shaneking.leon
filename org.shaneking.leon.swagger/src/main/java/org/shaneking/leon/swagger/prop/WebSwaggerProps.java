@@ -6,12 +6,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = SwaggerProps.PREFIX, ignoreInvalidFields = true)
-public class SwaggerProps {
+@ConfigurationProperties(prefix = WebSwaggerProps.PREFIX, ignoreInvalidFields = true)
+public class WebSwaggerProps {
   public static final String PREFIX = "sk.leon.swagger.ui";
   @Getter
   @Setter
-  private boolean enabled = true;
+  private boolean enabled = false;
   @Getter
   @Setter
   private String basePkg = "org.shaneking";

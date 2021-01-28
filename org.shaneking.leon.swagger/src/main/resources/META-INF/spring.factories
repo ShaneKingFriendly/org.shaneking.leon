@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.shaneking.leon.swagger.LeonSwaggerAutoConfiguration
+org.shaneking.leon.swagger.WebSwaggerAutoConfiguration

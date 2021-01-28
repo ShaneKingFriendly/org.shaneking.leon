@@ -1,7 +1,7 @@
 package org.shaneking.leon.rr.cfg;
 
-import org.shaneking.leon.rr.interceptor.ReqIpsInterceptor;
-import org.shaneking.leon.rr.interceptor.ReqUrlInterceptor;
+import org.shaneking.leon.rr.interceptor.WebRrReqIpsInterceptor;
+import org.shaneking.leon.rr.interceptor.WebRrReqUrlInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class RrCfg implements WebMvcConfigurer {
+public class WebRrCfg implements WebMvcConfigurer {
   @Value("${sk.leon.rr.req.ips.enabled:true}")
   private boolean reqIpsEnabled;
 
@@ -17,10 +17,10 @@ public class RrCfg implements WebMvcConfigurer {
   private boolean reqUrlEnabled;
 
   @Autowired(required = false)
-  private ReqIpsInterceptor reqIpsInterceptor;
+  private WebRrReqIpsInterceptor reqIpsInterceptor;
 
   @Autowired(required = false)
-  private ReqUrlInterceptor reqUrlInterceptor;
+  private WebRrReqUrlInterceptor reqUrlInterceptor;
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {

@@ -2,7 +2,7 @@ package org.shaneking.leon.swagger.cfg;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import org.shaneking.leon.swagger.prop.SwaggerProps;
+import org.shaneking.leon.swagger.prop.WebSwaggerProps;
 import org.shaneking.ling.zero.lang.String0;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,13 +20,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerCfg implements WebMvcConfigurer {
+public class WebSwaggerCfg implements WebMvcConfigurer {
   @Autowired
-  private SwaggerProps swaggerProps;
+  private WebSwaggerProps props;
 
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    if (swaggerProps.isEnabled()) {
+    if (props.isEnabled()) {
       registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
       registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
@@ -36,16 +36,17 @@ public class SwaggerCfg implements WebMvcConfigurer {
   public Docket docket() {
     return new Docket(DocumentationType.SWAGGER_2)
       .apiInfo(apiInfo())
-      .enable(swaggerProps.isEnabled())
+      .enable(props.isEnabled())
       .useDefaultResponseMessages(false)
       .select()
-      .apis(predicate(swaggerProps.getBasePkg()))
-      .paths(PathSelectors.regex(swaggerProps.getPathReg()))
+      .apis(predicate(props.getBasePkg()))
+//      .apis(RequestHandlerSelectors.any())
+      .paths(PathSelectors.regex(props.getPathReg()))
       .build();
   }
 
   private ApiInfo apiInfo() {
-    return new ApiInfoBuilder().title(swaggerProps.getTitle()).version(swaggerProps.getVersion()).build();
+    return new ApiInfoBuilder().title(props.getTitle()).version(props.getVersion()).build();
   }
 
   private Predicate<RequestHandler> predicate(final String pkgs) {
