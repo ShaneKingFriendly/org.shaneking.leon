@@ -23,7 +23,7 @@ import java.text.MessageFormat;
 @Component
 @ConditionalOnProperty(prefix = "sk.leon.rr.audit", value = "enabled")
 @Slf4j
-@Order(450)///must greater than org.shaneking.roc.rr.aspectj.WebRrAuditAspect
+@Order(450)///400(org.shaneking.roc.rr.aspectj.RrAuditAspect) < 450 < 500(org.shaneking.roc.rr.aspectj.RrAccessAspect)
 public class WebRrAuditAspect {
   @Value("${sk.leon.rr.audit.enabled:false}")
   private boolean enabled;
