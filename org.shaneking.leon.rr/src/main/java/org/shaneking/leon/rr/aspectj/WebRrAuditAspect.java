@@ -38,13 +38,13 @@ public class WebRrAuditAspect {
       if (jp.getArgs().length > rrAudit.reqParamIdx() && jp.getArgs()[rrAudit.reqParamIdx()] instanceof Req) {
         Req<?, ?> req = (Req<?, ?>) jp.getArgs()[rrAudit.reqParamIdx()];
 
-        AuditLogEntity auditLogEntity = req.getCtx().getAuditLog();
+        AuditLogEntity auditLogEntity = req.gnnCtx().getAuditLog();
         if (auditLogEntity != null) {
           auditLogEntity.setReqIps(WebRrReqIpsInterceptor.REQ_IPS.get());
           auditLogEntity.setReqUrl(WebRrReqUrlInterceptor.REQ_URL.get());
         }
       } else {
-        log.error(MessageFormat.format("{0} - {1} : {2}", ZeroAnnotation.ERR_CODE__ANNOTATION_SETTING_ERROR, jp.getSignature().getName(), OM3.writeValueAsString(rrAudit)));
+        log.error(MessageFormat.format("{0} - {1} : {2}", ZeroAnnotation.ERR_CODE__ANNOTATION_SETTING_ERROR, jp.getSignature().toLongString(), OM3.writeValueAsString(rrAudit)));
       }
     }
   }
