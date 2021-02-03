@@ -1,0 +1,13 @@
+{
+  "pri": {
+    "ext": {
+      "userNo": "tstuserno"
+    },
+    "obj": "{}"
+  },
+  "pub": {
+    "channelName": "tstchannel",
+    "tenantName": "tsttenant",
+    "tracingId": "$UUID0_cUl33_1$"
+  }
+}

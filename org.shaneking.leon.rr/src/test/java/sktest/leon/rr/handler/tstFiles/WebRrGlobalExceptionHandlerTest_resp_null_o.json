@@ -1,0 +1,17 @@
+{
+  "code": "-1",
+  "data": {
+    "pri": {
+      "ext": {
+        "userNo": "tstuserno"
+      },
+      "obj": "{}"
+    },
+    "pub": {
+      "channelName": "tstchannel",
+      "tenantName": "tsttenant",
+      "tracingId": "$UUID0_cUl33_1$"
+    }
+  },
+  "mesg": "RespException(resp=Resp(code=, data=Req(ctx=null, enc=null, pri=Pri(ext=Ext(jon=null, tbl=null, userNo=tstuserno), obj={}, rtn=null), pub=Pub(channelName=tstchannel, encoded=null, jon=null, tenantName=tsttenant, tracingId=$UUID0_cUl33_1$)), mesg=))"
+}
