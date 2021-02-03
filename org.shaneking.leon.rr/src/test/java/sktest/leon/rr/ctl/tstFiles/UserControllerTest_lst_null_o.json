@@ -1,0 +1,38 @@
+{
+  "code": "0",
+  "data": {
+    "pri": {
+      "ext": {
+        "userNo": "tstuserno"
+      },
+      "obj": {
+        "whereConditions": {
+          "tenantId": {
+            "op": "=",
+            "cs": "1612262610215_LoHqeZBGrVYm3MlYmpH"
+          }
+        }
+      },
+      "rtn": [
+        {
+          "id": "1612262610216_koFVLCNZrhezbgULWqW",
+          "invalid": "N",
+          "lastModifyDateTime": "",
+          "lastModifyUserId": "",
+          "version": 0,
+          "tenantId": "1612262610215_LoHqeZBGrVYm3MlYmpH",
+          "no": "tstuserno",
+          "name": "tstusername",
+          "haha": "[C3]494c6f7665596f75",
+          "mobile": "18888888888",
+          "email": "email@email.com"
+        }
+      ]
+    },
+    "pub": {
+      "channelName": "tstchannel",
+      "tenantName": "tsttenant",
+      "tracingId": "$UUID0_cUl33_1$"
+    }
+  }
+}

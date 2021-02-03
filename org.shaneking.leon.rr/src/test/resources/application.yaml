@@ -1,7 +1,34 @@
+## sk
 sk:
+  leon:
+    rr:
+      audit:
+        enabled: true
+      geh:
+        enabled: true
+  #      req:
+  #        ips:
+  #          enabled: true
+  #        url:
+  #          enabled: true
   roc:
     cache:
       string:
+        enabled: true
+    persistence:
+      entity:
+        cache:
+          enabled: true
+    rr:
+      limiting:
+        enabled: true
+      audit:
+        enabled: true
+      access:
+        enabled: true
+      cache:
+        enabled: true
+      crypto:
         enabled: true
 
 ## spring
@@ -10,10 +37,14 @@ spring:
     driver-class-name: org.sqlite.JDBC
     password:
     ## absolute
-    #url: jdbc:sqlite:D:/eclipse/xy.db
+    #url: jdbc:sqlite:D:/test/sktest.sqllite
     ## compiled for test(../org.shaneking.roc.persistence/target/test-classes/sktest.sqllite)
     #url: jdbc:sqlite::resource:sktest.sqllite
     ## relative
     url: jdbc:sqlite:src/test/resources/sktest.sqllite
     username:
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      fail_on_unknown_properties: false
 

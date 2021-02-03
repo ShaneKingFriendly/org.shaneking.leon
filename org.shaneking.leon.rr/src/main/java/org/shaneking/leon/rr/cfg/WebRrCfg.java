@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebRrCfg implements WebMvcConfigurer {
-  @Value("${sk.leon.rr.req.ips.enabled:false}")
+  @Value("${sk.leon.rr.req.ips.enabled:true}")
   private boolean reqIpsEnabled;
 
-  @Value("${sk.leon.rr.req.url.enabled:false}")
+  @Value("${sk.leon.rr.req.url.enabled:true}")
   private boolean reqUrlEnabled;
 
   @Autowired(required = false)
@@ -24,10 +24,10 @@ public class WebRrCfg implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    if (reqIpsEnabled) {
+    if (reqIpsEnabled && reqIpsInterceptor != null) {
       registry.addInterceptor(reqIpsInterceptor).addPathPatterns("/**");
     }
-    if (reqUrlEnabled) {
+    if (reqUrlEnabled && reqUrlInterceptor != null) {
       registry.addInterceptor(reqUrlInterceptor).addPathPatterns("/**");
     }
   }
