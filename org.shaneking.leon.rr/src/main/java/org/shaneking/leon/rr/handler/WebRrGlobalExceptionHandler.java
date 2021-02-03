@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ConditionalOnProperty(prefix = "sk.leon.rr.geh", value = "enabled")
 @ControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler {
+public class WebRrGlobalExceptionHandler {
 
   @ExceptionHandler(value = Throwable.class)
   @ResponseBody
