@@ -1,0 +1,77 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.shaneking.leon</groupId>
+    <artifactId>org.shaneking.leon</artifactId>
+    <version>0.241.1</version>
+  </parent>
+
+  <artifactId>org.shaneking.leon.biz</artifactId>
+  <version>0.241.1</version>
+  <packaging>jar</packaging>
+
+  <name>org.shaneking.leon.biz</name>
+  <description>Business with Spring Web for ShaneKing</description>
+  <url>https://github.com/ShaneKingOrg/org.shaneking.leon</url>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+
+  <dependencies>
+    <!-- @ConditionalOnProperty -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+    <!-- @ConfigurationProperties, @EnableConfigurationProperties -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.shaneking.roc</groupId>
+      <artifactId>org.shaneking.roc.rr</artifactId>
+      <version>${org.shaneking.roc_version}</version>
+    </dependency>
+    <!-- test(spring default logback, so not need dependency logback) -->
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.shaneking.leon</groupId>
+      <artifactId>org.shaneking.leon.test</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.shaneking.roc</groupId>
+      <artifactId>org.shaneking.roc.cache</artifactId>
+      <version>${org.shaneking.roc_version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.shaneking.roc</groupId>
+      <artifactId>org.shaneking.roc.persistence.hello</artifactId>
+      <version>${project.parent.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>

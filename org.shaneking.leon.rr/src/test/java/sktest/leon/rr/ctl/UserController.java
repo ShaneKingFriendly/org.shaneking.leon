@@ -1,7 +1,7 @@
 package sktest.leon.rr.ctl;
 
 import org.shaneking.ling.rr.Resp;
-import org.shaneking.roc.persistence.dao.TenantedCacheableDao;
+import org.shaneking.roc.persistence.dao.TenantedProtectDao;
 import org.shaneking.roc.persistence.hello.entity.HelloUserEntity;
 import org.shaneking.roc.rr.Req;
 import org.shaneking.roc.rr.annotation.*;
@@ -18,7 +18,7 @@ import java.util.List;
 public class UserController {
 
   @Autowired
-  private TenantedCacheableDao cacheableDao;
+  private TenantedProtectDao cacheableDao;
 
   @RequestMapping("/add")
   @ResponseBody

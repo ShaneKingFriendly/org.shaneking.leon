@@ -99,6 +99,7 @@
   <!-- mvn -N versions:set -DgenerateBackupPoms=false -DnewVersion=0.241.1 -->
   <!-- Unused : mvn -N versions:update-child-modules -->
   <modules>
+    <module>org.shaneking.leon.biz</module>
     <module>org.shaneking.leon.rr</module>
     <module>org.shaneking.leon.swagger</module>
     <module>org.shaneking.leon.test</module>
