@@ -1,9 +1,9 @@
-package org.shaneking.leon.biz;
+package org.shaneking.leon.persistence;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @ComponentScan
 @Configuration
-public class WebBizAutoConfiguration {
+public class WebPersistenceAutoConfiguration {
 }

@@ -1,11 +1,10 @@
-package org.shaneking.leon.biz.impl;
+package org.shaneking.leon.persistence.biz.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.shaneking.leon.biz.FileBiz;
+import org.shaneking.leon.persistence.biz.FileBiz;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.util.Date0;
-import org.shaneking.roc.persistence.entity.TenantEntity;
 import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,8 +34,7 @@ public class FileBizImpl implements FileBiz {
 
   private Resp<Req<String, String>> transform(Req<String, String> req, MultipartFile multipartFile, String folder) {
     Resp<Req<String, String>> resp = Resp.success(req);
-    TenantEntity tenantEntity = req.gnnCtx().getTenant();
-    Path path = Paths.get(folder, String.valueOf(tenantEntity == null ? null : tenantEntity.getId()), Date0.on().ySmSd(), req.getPub().gnnTracingId(), new File(String.valueOf(multipartFile.getOriginalFilename())).getName());
+    Path path = Paths.get(folder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), req.getPub().gnnTracingId(), new File(String.valueOf(multipartFile.getOriginalFilename())).getName());
     path.toFile().getParentFile().mkdirs();
     try {
       multipartFile.transferTo(path);

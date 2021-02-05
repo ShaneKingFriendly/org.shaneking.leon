@@ -1,4 +1,4 @@
-package org.shaneking.leon.biz;
+package org.shaneking.leon.persistence.biz;
 
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.roc.rr.Req;

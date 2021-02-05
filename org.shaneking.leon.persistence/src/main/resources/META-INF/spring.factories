@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.shaneking.leon.biz.WebBizAutoConfiguration
+org.shaneking.leon.persistence.WebPersistenceAutoConfiguration
