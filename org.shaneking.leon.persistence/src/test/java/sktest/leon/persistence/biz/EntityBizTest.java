@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.shaneking.ling.test.SKUnit;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.String0;
+import org.shaneking.roc.persistence.hello.entity.HelloUserEntity;
 
 import java.io.IOException;
 
@@ -43,24 +44,16 @@ class EntityBizTest extends SKUnit {
   }
 
   @Test
-  void csvAdd() {
+  void csv() {
   }
 
   @Test
-  void csvMod() {
-  }
-
-  @Test
-  void xlsxTmp() throws IOException {
-    FileExportUtil.export(DefaultExcelBuilder.of(HelloExcelUserEntity.class).build(Lists.newArrayList(new HelloExcelUserEntity())), tstOFiles(File0.TYPE_XLSX));
+  void template() throws IOException {
+    FileExportUtil.export(DefaultExcelBuilder.of(HelloUserEntity.class).sheetName(new HelloUserEntity().getDbTableName()).build(Lists.newArrayList(new HelloUserEntity())), tstOFiles(File0.TYPE_XLSX));
     assertEquals(String0.ARY_DEC, String0.DIGITAL);
   }
 
   @Test
-  void xlsxImp() {
-  }
-
-  @Test
-  void xlsxExp() {
+  void xlsx() {
   }
 }

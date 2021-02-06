@@ -21,13 +21,9 @@ public interface EntityBiz {
 
   <T extends CacheableEntity> Resp<Req<T, T>> one(Req<T, T> req, Class<T> entityClass);
 
-  <T extends CacheableEntity> Resp<Req<String, String>> csvAdd(Req<String, String> req, Class<T> entityClass);
+  <T extends CacheableEntity> Resp<Req<String, String>> csv(Req<String, String> req, Class<T> entityClass);
 
-  <T extends CacheableEntity> Resp<Req<String, String>> csvMod(Req<String, String> req, Class<T> entityClass);
+  <T extends CacheableEntity> Resp<Req<String, String>> template(Req<String, String> req, Class<T> entityClass);
 
-  <T extends CacheableEntity> Resp<Req<String, String>> xlsxTmp(Req<String, String> req, Class<T> entityClass);
-
-  <T extends CacheableEntity> Resp<Req<String, Integer>> xlsxImp(Req<String, Integer> req, Class<T> entityClass);
-
-  <T extends CacheableEntity> Resp<Req<String, String>> xlsxExp(Req<String, String> req, Class<T> entityClass);
+  <T extends CacheableEntity> Resp<Req<String, Integer>> xlsx(Req<String, Integer> req, Class<T> entityClass);
 }

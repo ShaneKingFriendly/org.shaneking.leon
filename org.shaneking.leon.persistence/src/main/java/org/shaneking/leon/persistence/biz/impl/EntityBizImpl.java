@@ -1,40 +1,63 @@
 package org.shaneking.leon.persistence.biz.impl;
 
+import com.github.liaochong.myexcel.core.CsvBuilder;
+import com.github.liaochong.myexcel.core.DefaultExcelBuilder;
+import com.github.liaochong.myexcel.core.SaxExcelReader;
+import com.github.liaochong.myexcel.utils.FileExportUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.shaneking.leon.persistence.biz.EntityBiz;
-import org.shaneking.ling.cache.StringCaches;
 import org.shaneking.ling.jackson.databind.OM3;
-import org.shaneking.ling.persistence.GlobalNumbered;
-import org.shaneking.ling.persistence.Numbered;
 import org.shaneking.ling.persistence.Tenanted;
 import org.shaneking.ling.rr.Resp;
+import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.String0;
+import org.shaneking.ling.zero.lang.ZeroException;
 import org.shaneking.ling.zero.util.Date0;
 import org.shaneking.ling.zero.util.List0;
 import org.shaneking.ling.zero.util.UUID0;
 import org.shaneking.roc.persistence.dao.CacheableDao;
+import org.shaneking.roc.persistence.dao.GlobalNumberedCacheDao;
+import org.shaneking.roc.persistence.dao.NumberedCacheDao;
 import org.shaneking.roc.persistence.entity.CacheableEntity;
+import org.shaneking.roc.persistence.entity.GlobalNumberedEntity;
+import org.shaneking.roc.persistence.entity.NumberedEntity;
 import org.shaneking.roc.persistence.entity.UserEntity;
 import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
 public class EntityBizImpl implements EntityBiz {
-  @Value("${sk.leon.biz.file.upload.folder:/tmp}")
-  private String uploadFolder;
-  @Value("${sk.leon.biz.file.export.folder:/tmp}")
-  private String exportFolder;
-  @Autowired
-  private StringCaches stringCaches;
+  @Value("${sk.leon.biz.file.temporary.folder:/tmp}")
+  private String temporaryFolder;
+  @Value("${sk.leon.biz.file.csv.buffer:1023}")
+  private int csvBuffer;
   @Autowired
   private CacheableDao cacheableDao;
   @Autowired
+  private GlobalNumberedCacheDao globalNumberedCacheDao;
+  @Autowired
+  private NumberedCacheDao numberedCacheDao;
+  @Autowired
   private UserEntity userEntity;
+
+  private <T extends CacheableEntity> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
+    T rtn = null;
+    if (t instanceof GlobalNumberedEntity && !String0.isNullOrEmpty(((GlobalNumberedEntity) t).getNo())) {
+      rtn = (T) globalNumberedCacheDao.oneByNo(((GlobalNumberedEntity) t).getClass(), ((GlobalNumberedEntity) t).getNo(), true);
+    } else if (t instanceof NumberedEntity && !String0.isNullOrEmpty(((NumberedEntity) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
+      rtn = (T) numberedCacheDao.oneByNo(((NumberedEntity) t).getClass(), ((NumberedEntity) t).getNo(), tenantId, true);
+    }
+    return rtn;
+  }
 
   @Override
   public <T extends CacheableEntity> Resp<Req<T, Integer>> mge(Req<T, Integer> req, Class<T> entityClass) {
@@ -42,17 +65,7 @@ public class EntityBizImpl implements EntityBiz {
     try {
       T t = req.getPri().getObj();
       if (String0.isNullOrEmpty(t.getId())) {
-        T existT = null;
-        if (t instanceof GlobalNumbered && !String0.isNullOrEmpty(((GlobalNumbered) t).getNo())) {
-          T tmpT = entityClass.newInstance();
-          ((GlobalNumbered) tmpT).setNo(((GlobalNumbered) t).getNo());
-          existT = cacheableDao.one(entityClass, tmpT, true);
-        } else if (t instanceof Numbered && t instanceof Tenanted && !String0.isNullOrEmpty(((Numbered) t).getNo()) && !String0.isNullOrEmpty(req.gnnCtx().gnaTenantId())) {
-          T tmpT = entityClass.newInstance();
-          ((Numbered) tmpT).setNo(((Numbered) t).getNo());
-          ((Tenanted) tmpT).setTenantId(req.gnnCtx().gnaTenantId());
-          existT = cacheableDao.one(entityClass, tmpT, true);
-        }
+        T existT = exists(entityClass, t, req.gnnCtx().gnaTenantId());
         if (existT == null) {
           resp = add(req, entityClass);
         } else {
@@ -155,11 +168,12 @@ public class EntityBizImpl implements EntityBiz {
     Resp<Req<T, List<T>>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
-      t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
       t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntity.entityClass(), t.getLastModifyUserId()));
+      t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
       req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId())));
       t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId())));
       req.getPri().gnnExt().gnnTbl().setPagination(t.getPagination());
+      ///setLastModifyUser in other biz when need
     } catch (Exception e) {
       log.error(OM3.lp(resp, req), e);
       resp.parseExp(e);
@@ -174,7 +188,7 @@ public class EntityBizImpl implements EntityBiz {
       T t = req.getPri().getObj();
       t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntity.entityClass(), t.getLastModifyUserId()));
       T rst = cacheableDao.one(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
-      rst.setLastModifyUser((rst.getLastModifyUser() == null && String0.isNullOrEmpty(rst.getLastModifyUserId())) ? cacheableDao.oneById(userEntity.entityClass(), rst.getLastModifyUserId()) : rst.getLastModifyUser());
+      rst.setLastModifyUser((Objects.equals(rst.getLastModifyUserId(), t.getLastModifyUserId())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntity.entityClass(), rst.getLastModifyUserId()));
       req.getPri().setRtn(rst);
     } catch (Exception e) {
       log.error(OM3.lp(resp, req), e);
@@ -184,27 +198,100 @@ public class EntityBizImpl implements EntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<String, String>> csvAdd(Req<String, String> req, Class<T> entityClass) {
-    return null;
+  public <T extends CacheableEntity> Resp<Req<String, String>> csv(Req<String, String> req, Class<T> entityClass) {
+    Resp<Req<String, String>> resp = Resp.success(req);
+    try {
+      List<T> list = List0.newArrayList();
+      File csvFile = new File(req.getPri().getObj());
+      Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), String0.nullOrEmptyTo(req.getPub().getTracingId(), UUID0.cUl33()), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
+      SaxExcelReader.of(entityClass).rowFilter(row -> row.getRowNum() > 0).readThen(csvFile, (row, ctx) -> {
+        try {
+          if (ctx.getRowNum() > 0 && ctx.getRowNum() % csvBuffer == 0) {
+            if (ctx.getRowNum() / csvBuffer == 1) {
+              CsvBuilder.of(entityClass).build(list).write(tmpPath);
+            } else {
+              CsvBuilder.of(entityClass).noTitles().build(list).write(tmpPath, true);
+            }
+            list.clear();
+          } else {
+            if (row instanceof Tenanted) {
+              ((Tenanted) row).setTenantId(req.gnnCtx().gnaTenantId());
+            }
+            row.initWithUserId(req.gnnCtx().gnaUserId());
+            if (String0.isNullOrEmpty(row.getId())) {
+              T existT = exists(entityClass, row, req.gnnCtx().gnaTenantId());
+              if (existT == null) {
+                row.initId(UUID0.cUl33());
+              } else {
+                row.setVersion(existT.getVersion()).setId(existT.getId());
+              }
+            }
+            list.add(row);
+          }
+        } catch (Exception e) {
+          throw new ZeroException(e);
+        }
+      });
+      CsvBuilder.of(entityClass).noTitles().build(list).write(tmpPath, true);
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req), e);
+      resp.parseExp(e);
+    }
+    return resp;
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<String, String>> csvMod(Req<String, String> req, Class<T> entityClass) {
-    return null;
+  public <T extends CacheableEntity> Resp<Req<String, String>> template(Req<String, String> req, Class<T> entityClass) {
+    Resp<Req<String, String>> resp = Resp.success(req);
+    try {
+      T t = entityClass.newInstance();
+      Path path = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_XLSX));
+      if (!path.toFile().exists()) {
+        path.toFile().getParentFile().mkdirs();
+        FileExportUtil.export(DefaultExcelBuilder.of(entityClass).build(List0.newArrayList(t)), path.toFile());
+      }
+      req.getPri().setRtn(path.toFile().getAbsolutePath());
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req), e);
+      resp.parseExp(e);
+    }
+    return resp;
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<String, String>> xlsxTmp(Req<String, String> req, Class<T> entityClass) {
-    return null;
-  }
-
-  @Override
-  public <T extends CacheableEntity> Resp<Req<String, Integer>> xlsxImp(Req<String, Integer> req, Class<T> entityClass) {
-    return null;
-  }
-
-  @Override
-  public <T extends CacheableEntity> Resp<Req<String, String>> xlsxExp(Req<String, String> req, Class<T> entityClass) {
-    return null;
+  public <T extends CacheableEntity> Resp<Req<String, Integer>> xlsx(Req<String, Integer> req, Class<T> entityClass) {
+    Resp<Req<String, Integer>> resp = Resp.success(req);
+    try {
+      req.getPri().setRtn(0);
+      T entity = entityClass.newInstance();
+      File xlsxFile = new File(req.getPri().getObj());
+      SaxExcelReader.of(entityClass).sheet(String0.maxLenStr(entity.getDbTableName(), 31)).rowFilter(row -> row.getRowNum() > 0).readThen(xlsxFile, row -> {
+        try {
+          row.initWithUserId(req.gnnCtx().gnaUserId());
+          if (String0.isNullOrEmpty(row.getId())) {
+            T existT = exists(entityClass, row, req.gnnCtx().gnaTenantId());
+            if (existT == null) {
+              row.initId(UUID0.cUl33());
+              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.add(entityClass, CacheableDao.pti(row, req.gnnCtx().gnaTenantId())));
+            } else {
+              row.setVersion(existT.getVersion()).setId(existT.getId());
+              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(row, req.gnnCtx().gnaTenantId())));
+            }
+          } else {
+            if (cacheableDao.oneById(entityClass, row.getId(), true) == null) {
+              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.add(entityClass, CacheableDao.pti(row, req.gnnCtx().gnaTenantId())));
+            } else {
+              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(row, req.gnnCtx().gnaTenantId())));
+            }
+          }
+        } catch (Exception e) {
+          throw new ZeroException(e);
+        }
+      });
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req), e);
+      resp.parseExp(e);
+    }
+    return resp;
   }
 }
