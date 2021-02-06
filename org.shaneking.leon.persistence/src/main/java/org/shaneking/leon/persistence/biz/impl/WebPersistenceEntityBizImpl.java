@@ -5,7 +5,7 @@ import com.github.liaochong.myexcel.core.DefaultExcelBuilder;
 import com.github.liaochong.myexcel.core.SaxExcelReader;
 import com.github.liaochong.myexcel.utils.FileExportUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.shaneking.leon.persistence.biz.EntityBiz;
+import org.shaneking.leon.persistence.biz.WebPersistenceEntityBiz;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.persistence.Tenanted;
 import org.shaneking.ling.rr.Resp;
@@ -35,10 +35,10 @@ import java.util.Objects;
 
 @Service
 @Slf4j
-public class EntityBizImpl implements EntityBiz {
-  @Value("${sk.leon.biz.file.temporary.folder:/tmp}")
+public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
+  @Value("${sk.leon.persistence.file.temporary.folder:/tmp}")
   private String temporaryFolder;
-  @Value("${sk.leon.biz.file.csv.buffer:1023}")
+  @Value("${sk.leon.persistence.file.csv.buffer:1023}")
   private int csvBuffer;
   @Autowired
   private CacheableDao cacheableDao;

@@ -1,7 +1,7 @@
-package org.shaneking.leon.persistence.biz.impl;
+package org.shaneking.leon.rr.biz.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.shaneking.leon.persistence.biz.FileBiz;
+import org.shaneking.leon.rr.biz.WebRrFileBiz;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.util.Date0;
@@ -16,10 +16,10 @@ import java.nio.file.Paths;
 
 @Service
 @Slf4j
-public class FileBizImpl implements FileBiz {
-  @Value("${sk.leon.biz.file.attach.folder:/tmp}")
+public class WebRrFileBizImpl implements WebRrFileBiz {
+  @Value("${sk.leon.rr.file.attach.folder:/tmp}")
   private String attachFolder;
-  @Value("${sk.leon.biz.file.upload.folder:/tmp}")
+  @Value("${sk.leon.rr.file.upload.folder:/tmp}")
   private String uploadFolder;
 
   @Override

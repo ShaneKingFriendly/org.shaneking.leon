@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class EntityBizTest extends SKUnit {
+class WebPersistenceEntityBizTest extends SKUnit {
 
   @Test
   void mge() {

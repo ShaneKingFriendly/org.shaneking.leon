@@ -1,7 +1,7 @@
 package org.shaneking.leon.persistence.ctl;
 
 import lombok.Getter;
-import org.shaneking.leon.persistence.biz.EntityBiz;
+import org.shaneking.leon.persistence.biz.WebPersistenceEntityBiz;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.roc.persistence.entity.CacheableEntity;
 import org.shaneking.roc.rr.Req;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-public abstract class AbstractEntityController<T extends CacheableEntity> {
+public abstract class WebPersistenceEntityController<T extends CacheableEntity> {
   @Getter
   private Class<T> entityClass;
 
   @Autowired
-  private EntityBiz entityBiz;
+  private WebPersistenceEntityBiz entityBiz;
 
   @PostMapping(path = {"/mge"})
   @RrAudit
@@ -90,7 +90,7 @@ public abstract class AbstractEntityController<T extends CacheableEntity> {
     return this.getEntityBiz().xlsx(req, this.getEntityClass());
   }
 
-  public EntityBiz getEntityBiz() {
+  public WebPersistenceEntityBiz getEntityBiz() {
     return entityBiz;
   }
 }

@@ -6,7 +6,7 @@ import org.shaneking.roc.rr.Req;
 
 import java.util.List;
 
-public interface EntityBiz {
+public interface WebPersistenceEntityBiz {
   <T extends CacheableEntity> Resp<Req<T, Integer>> mge(Req<T, Integer> req, Class<T> entityClass);
 
   <T extends CacheableEntity> Resp<Req<T, Integer>> add(Req<T, Integer> req, Class<T> entityClass);
