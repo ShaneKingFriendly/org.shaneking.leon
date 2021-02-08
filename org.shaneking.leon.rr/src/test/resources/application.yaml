@@ -32,11 +32,11 @@ spring:
     driver-class-name: org.sqlite.JDBC
     password:
     ## absolute
-    #url: jdbc:sqlite:D:/test/sktest.sqllite
-    ## compiled for test(../org.shaneking.roc.persistence/target/test-classes/sktest.sqllite)
-    #url: jdbc:sqlite::resource:sktest.sqllite
+    #url: jdbc:sqlite:D:/test/sktest.leon.rr.sqllite
+    ## compiled for test(../org.shaneking.roc.persistence/target/test-classes/sktest.leon.rr.sqllite)
+    #url: jdbc:sqlite::resource:sktest.leon.rr.sqllite
     ## relative
-    url: jdbc:sqlite:src/test/resources/sktest.sqllite
+    url: jdbc:sqlite:src/test/resources/sktest.leon.rr.sqllite
     username:
   jackson:
     default-property-inclusion: non_null
