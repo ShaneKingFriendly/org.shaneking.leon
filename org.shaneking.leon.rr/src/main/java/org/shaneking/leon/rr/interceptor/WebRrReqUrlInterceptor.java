@@ -21,6 +21,6 @@ public class WebRrReqUrlInterceptor implements HandlerInterceptor {
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-    REQ_URL.set(null);
+    REQ_URL.remove();
   }
 }

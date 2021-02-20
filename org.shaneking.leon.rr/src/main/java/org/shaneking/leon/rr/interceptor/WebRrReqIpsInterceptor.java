@@ -25,6 +25,6 @@ public class WebRrReqIpsInterceptor implements HandlerInterceptor {
 
   @Override
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-    REQ_IPS.set(null);
+    REQ_IPS.remove();
   }
 }

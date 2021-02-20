@@ -14,7 +14,7 @@
 
   <name>org.shaneking.leon.rr</name>
   <description>Request and Response with Spring Web for ShaneKing</description>
-  <url>https://github.com/ShaneKingOrg/org.shaneking.leon</url>
+  <url>https://github.com/ShaneKingOpen/org.shaneking.leon</url>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
