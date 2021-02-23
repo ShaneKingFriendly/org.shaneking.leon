@@ -3,7 +3,7 @@ package org.shaneking.leon.persistence.ctl;
 import lombok.Getter;
 import org.shaneking.leon.persistence.biz.WebPersistenceEntityBiz;
 import org.shaneking.ling.rr.Resp;
-import org.shaneking.roc.persistence.entity.CacheableEntity;
+import org.shaneking.roc.persistence.CacheableEntities;
 import org.shaneking.roc.rr.Req;
 import org.shaneking.roc.rr.annotation.RrAudit;
 import org.shaneking.roc.rr.annotation.RrCrypto;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-public abstract class WebPersistenceEntityController<T extends CacheableEntity> {
+public abstract class WebPersistenceEntityController<T extends CacheableEntities> {
   @Getter
   private Class<T> entityClass;
 

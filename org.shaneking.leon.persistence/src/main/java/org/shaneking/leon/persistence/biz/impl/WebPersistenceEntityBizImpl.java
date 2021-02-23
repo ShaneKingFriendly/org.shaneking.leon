@@ -7,7 +7,7 @@ import com.github.liaochong.myexcel.utils.FileExportUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.shaneking.leon.persistence.biz.WebPersistenceEntityBiz;
 import org.shaneking.ling.jackson.databind.OM3;
-import org.shaneking.ling.persistence.Tenanted;
+import org.shaneking.ling.persistence.entity.sql.Tenanted;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.String0;
@@ -15,12 +15,12 @@ import org.shaneking.ling.zero.lang.ZeroException;
 import org.shaneking.ling.zero.util.Date0;
 import org.shaneking.ling.zero.util.List0;
 import org.shaneking.ling.zero.util.UUID0;
+import org.shaneking.roc.persistence.CacheableEntities;
 import org.shaneking.roc.persistence.dao.CacheableDao;
-import org.shaneking.roc.persistence.dao.GlobalNumberedCacheDao;
-import org.shaneking.roc.persistence.dao.NumberedCacheDao;
-import org.shaneking.roc.persistence.entity.CacheableEntity;
-import org.shaneking.roc.persistence.entity.GlobalNumberedEntity;
+import org.shaneking.roc.persistence.dao.NumberedCacheableDao;
+import org.shaneking.roc.persistence.dao.TenantNumberedCacheableDao;
 import org.shaneking.roc.persistence.entity.NumberedEntity;
+import org.shaneking.roc.persistence.entity.TenantNumberedEntity;
 import org.shaneking.roc.persistence.entity.UserEntity;
 import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,24 +43,24 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   @Autowired
   private CacheableDao cacheableDao;
   @Autowired
-  private GlobalNumberedCacheDao globalNumberedCacheDao;
+  private NumberedCacheableDao numberedCacheableDao;
   @Autowired
-  private NumberedCacheDao numberedCacheDao;
+  private TenantNumberedCacheableDao tenantNumberedCacheableDao;
   @Autowired
   private UserEntity userEntity;
 
-  private <T extends CacheableEntity> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
+  private <T extends CacheableEntities> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
     T rtn = null;
-    if (t instanceof GlobalNumberedEntity && !String0.isNullOrEmpty(((GlobalNumberedEntity) t).getNo())) {
-      rtn = (T) globalNumberedCacheDao.oneByNo(((GlobalNumberedEntity) t).getClass(), ((GlobalNumberedEntity) t).getNo(), true);
-    } else if (t instanceof NumberedEntity && !String0.isNullOrEmpty(((NumberedEntity) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
-      rtn = (T) numberedCacheDao.oneByNo(((NumberedEntity) t).getClass(), ((NumberedEntity) t).getNo(), tenantId, true);
+    if (t instanceof NumberedEntity && !String0.isNullOrEmpty(((NumberedEntity) t).getNo())) {
+      rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntity) t).getClass(), ((NumberedEntity) t).getNo(), true);
+    } else if (t instanceof TenantNumberedEntity && !String0.isNullOrEmpty(((TenantNumberedEntity) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
+      rtn = (T) tenantNumberedCacheableDao.oneByNo(((TenantNumberedEntity) t).getClass(), ((TenantNumberedEntity) t).getNo(), tenantId, true);
     }
     return rtn;
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<T, Integer>> mge(Req<T, Integer> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> mge(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
@@ -87,7 +87,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<T, Integer>> add(Req<T, Integer> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> add(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
@@ -101,7 +101,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<T, Integer>> rmv(Req<T, Integer> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> rmv(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
@@ -114,7 +114,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
@@ -138,7 +138,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<T, Integer>> mod(Req<T, Integer> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> mod(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
@@ -146,7 +146,8 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       t.setLastModifyUserId(req.gnnCtx().gnaUserId());
       if (String0.isNullOrEmpty(t.getId())) {
         T tmpT = entityClass.newInstance();
-        tmpT.setVersion(t.getVersion()).setWhereConditions(t.getWhereConditions());
+        tmpT.srvWhereConditions(t.getWhereConditions());
+        tmpT.setVersion(t.getVersion());
         String ids = cacheableDao.ids(entityClass, CacheableDao.pts(tmpT, req.gnnCtx().gnaTenantId()));
         if (String0.isNullOrEmpty(ids)) {
           req.getPri().setRtn(0);
@@ -164,7 +165,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<T, List<T>>> lst(Req<T, List<T>> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<T, List<T>>> lst(Req<T, List<T>> req, Class<T> entityClass) {
     Resp<Req<T, List<T>>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
@@ -182,7 +183,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<T, T>> one(Req<T, T> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<T, T>> one(Req<T, T> req, Class<T> entityClass) {
     Resp<Req<T, T>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
@@ -198,7 +199,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<String, String>> csv(Req<String, String> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<String, String>> csv(Req<String, String> req, Class<T> entityClass) {
     Resp<Req<String, String>> resp = Resp.success(req);
     try {
       List<T> list = List0.newArrayList();
@@ -221,9 +222,10 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
             if (String0.isNullOrEmpty(row.getId())) {
               T existT = exists(entityClass, row, req.gnnCtx().gnaTenantId());
               if (existT == null) {
-                row.initId(UUID0.cUl33());
+                row.sinId(UUID0.cUl33());
               } else {
-                row.setVersion(existT.getVersion()).setId(existT.getId());
+                row.setVersion(existT.getVersion());
+                row.setId(existT.getId());
               }
             }
             list.add(row);
@@ -241,7 +243,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<String, String>> template(Req<String, String> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<String, String>> template(Req<String, String> req, Class<T> entityClass) {
     Resp<Req<String, String>> resp = Resp.success(req);
     try {
       T t = entityClass.newInstance();
@@ -259,7 +261,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntity> Resp<Req<String, Integer>> xlsx(Req<String, Integer> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Req<String, Integer>> xlsx(Req<String, Integer> req, Class<T> entityClass) {
     Resp<Req<String, Integer>> resp = Resp.success(req);
     try {
       req.getPri().setRtn(0);
@@ -271,10 +273,11 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
           if (String0.isNullOrEmpty(row.getId())) {
             T existT = exists(entityClass, row, req.gnnCtx().gnaTenantId());
             if (existT == null) {
-              row.initId(UUID0.cUl33());
+              row.sinId(UUID0.cUl33());
               req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.add(entityClass, CacheableDao.pti(row, req.gnnCtx().gnaTenantId())));
             } else {
-              row.setVersion(existT.getVersion()).setId(existT.getId());
+              row.setVersion(existT.getVersion());
+              row.setId(existT.getId());
               req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(row, req.gnnCtx().gnaTenantId())));
             }
           } else {
