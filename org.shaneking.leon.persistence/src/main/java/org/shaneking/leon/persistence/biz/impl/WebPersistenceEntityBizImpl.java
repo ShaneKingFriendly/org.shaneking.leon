@@ -19,9 +19,9 @@ import org.shaneking.roc.persistence.CacheableEntities;
 import org.shaneking.roc.persistence.dao.CacheableDao;
 import org.shaneking.roc.persistence.dao.NumberedCacheableDao;
 import org.shaneking.roc.persistence.dao.TenantNumberedCacheableDao;
-import org.shaneking.roc.persistence.entity.NumberedEntity;
-import org.shaneking.roc.persistence.entity.TenantNumberedEntity;
-import org.shaneking.roc.persistence.entity.UserEntity;
+import org.shaneking.roc.persistence.entity.NumberedEntities;
+import org.shaneking.roc.persistence.entity.TenantNumberedEntities;
+import org.shaneking.roc.persistence.entity.sql.UserEntities;
 import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,14 +47,14 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   @Autowired
   private TenantNumberedCacheableDao tenantNumberedCacheableDao;
   @Autowired
-  private UserEntity userEntity;
+  private UserEntities userEntityClass;
 
   private <T extends CacheableEntities> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
     T rtn = null;
-    if (t instanceof NumberedEntity && !String0.isNullOrEmpty(((NumberedEntity) t).getNo())) {
-      rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntity) t).getClass(), ((NumberedEntity) t).getNo(), true);
-    } else if (t instanceof TenantNumberedEntity && !String0.isNullOrEmpty(((TenantNumberedEntity) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
-      rtn = (T) tenantNumberedCacheableDao.oneByNo(((TenantNumberedEntity) t).getClass(), ((TenantNumberedEntity) t).getNo(), tenantId, true);
+    if (t instanceof NumberedEntities && !String0.isNullOrEmpty(((NumberedEntities) t).getNo())) {
+      rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntities) t).getClass(), ((NumberedEntities) t).getNo(), true);
+    } else if (t instanceof TenantNumberedEntities && !String0.isNullOrEmpty(((TenantNumberedEntities) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
+      rtn = (T) tenantNumberedCacheableDao.oneByNo(((TenantNumberedEntities) t).getClass(), ((TenantNumberedEntities) t).getNo(), tenantId, true);
     }
     return rtn;
   }
@@ -169,7 +169,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     Resp<Req<T, List<T>>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
-      t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntity.entityClass(), t.getLastModifyUserId()));
+      t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLastModifyUserId()));
       t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
       req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId())));
       t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId())));
@@ -187,9 +187,9 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     Resp<Req<T, T>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
-      t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntity.entityClass(), t.getLastModifyUserId()));
+      t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLastModifyUserId()));
       T rst = cacheableDao.one(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
-      rst.setLastModifyUser((Objects.equals(rst.getLastModifyUserId(), t.getLastModifyUserId())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntity.entityClass(), rst.getLastModifyUserId()));
+      rst.setLastModifyUser((Objects.equals(rst.getLastModifyUserId(), t.getLastModifyUserId())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLastModifyUserId()));
       req.getPri().setRtn(rst);
     } catch (Exception e) {
       log.error(OM3.lp(resp, req), e);

@@ -9,7 +9,7 @@ import org.shaneking.leon.rr.interceptor.WebRrReqIpsInterceptor;
 import org.shaneking.leon.rr.interceptor.WebRrReqUrlInterceptor;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.zero.annotation.ZeroAnnotation;
-import org.shaneking.roc.persistence.entity.AuditLogEntity;
+import org.shaneking.roc.persistence.entity.sql.AuditLogEntities;
 import org.shaneking.roc.rr.Req;
 import org.shaneking.roc.rr.annotation.RrAudit;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +38,7 @@ public class WebRrAuditAspect {
       if (jp.getArgs().length > rrAudit.reqParamIdx() && jp.getArgs()[rrAudit.reqParamIdx()] instanceof Req) {
         Req<?, ?> req = (Req<?, ?>) jp.getArgs()[rrAudit.reqParamIdx()];
 
-        AuditLogEntity auditLogEntity = req.gnnCtx().getAuditLog();
+        AuditLogEntities auditLogEntity = req.gnnCtx().getAuditLog();
         if (auditLogEntity != null) {
           auditLogEntity.setReqIps(WebRrReqIpsInterceptor.REQ_IPS.get());
           auditLogEntity.setReqUrl(WebRrReqUrlInterceptor.REQ_URL.get());
