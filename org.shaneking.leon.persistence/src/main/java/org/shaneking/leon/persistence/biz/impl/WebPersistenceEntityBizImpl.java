@@ -51,10 +51,10 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
 
   private <T extends CacheableEntities> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
     T rtn = null;
-    if (t instanceof NumberedEntities && !String0.isNullOrEmpty(((NumberedEntities) t).getNo())) {
-      rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntities) t).getClass(), ((NumberedEntities) t).getNo(), true);
-    } else if (t instanceof TenantNumberedEntities && !String0.isNullOrEmpty(((TenantNumberedEntities) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
+    if (t instanceof TenantNumberedEntities && !String0.isNullOrEmpty(((TenantNumberedEntities) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
       rtn = (T) tenantNumberedCacheableDao.oneByNo(((TenantNumberedEntities) t).getClass(), ((TenantNumberedEntities) t).getNo(), tenantId, true);
+    } else if (t instanceof NumberedEntities && !String0.isNullOrEmpty(((NumberedEntities) t).getNo())) {
+      rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntities) t).getClass(), ((NumberedEntities) t).getNo(), true);
     }
     return rtn;
   }
