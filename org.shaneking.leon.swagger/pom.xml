@@ -48,6 +48,11 @@
     </dependency>
     <!-- test(spring default logback, so not need dependency logback) -->
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.shaneking.leon</groupId>
       <artifactId>org.shaneking.leon.test</artifactId>
       <version>${project.parent.version}</version>

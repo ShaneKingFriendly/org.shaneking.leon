@@ -1,0 +1,6 @@
+## sk
+sk:
+  leon:
+    swagger:
+      ui:
+        enabled: true
