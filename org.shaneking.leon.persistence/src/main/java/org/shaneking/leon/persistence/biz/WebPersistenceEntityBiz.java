@@ -15,6 +15,8 @@ public interface WebPersistenceEntityBiz {
 
   <T extends CacheableEntities> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass);
 
+  <T extends CacheableEntities> Resp<Req<String, Integer>> delById(Req<String, Integer> req, Class<T> entityClass);
+
   <T extends CacheableEntities> Resp<Req<T, Integer>> mod(Req<T, Integer> req, Class<T> entityClass);
 
   <T extends CacheableEntities> Resp<Req<T, List<T>>> lst(Req<T, List<T>> req, Class<T> entityClass);

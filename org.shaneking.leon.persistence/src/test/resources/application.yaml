@@ -1,0 +1,42 @@
+## sk
+sk:
+  roc:
+    cache:
+      string:
+        enabled: true
+    persistence:
+      entity:
+        cache:
+          enabled: true
+      dao:
+        cache:
+          enabled: true
+    rr:
+      limiting:
+        enabled: true
+      audit:
+        enabled: true
+      access:
+        enabled: true
+      cache:
+        enabled: true
+      crypto:
+        enabled: true
+
+## spring
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    password:
+    ## absolute
+    #url: jdbc:sqlite:D:/test/sktest.leon.persistence.sqllite
+    ## compiled for test(../org.shaneking.leon.persistence/target/test-classes/sktest.leon.persistence.sqllite)
+    #url: jdbc:sqlite::resource:sktest.leon.persistence.sqllite
+    ## relative
+    url: jdbc:sqlite:src/test/resources/sktest.leon.persistence.sqllite
+    username:
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      fail_on_unknown_properties: false
+

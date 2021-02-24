@@ -1,0 +1,16 @@
+{
+  "pri": {
+    "ext": {
+      "userNo": "tstuserno"
+    },
+    "obj": {
+      "invalid": "N",
+      "no": "1614173052422_dJwxshF8cKjT8mnOAhJ"
+    }
+  },
+  "pub": {
+    "channelName": "tstchannel",
+    "tenantName": "tsttenant",
+    "tracingId": "$UUID0_cUl33_1$"
+  }
+}

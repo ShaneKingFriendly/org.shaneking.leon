@@ -138,6 +138,25 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
+  public <T extends CacheableEntities> Resp<Req<String, Integer>> delById(Req<String, Integer> req, Class<T> entityClass) {
+    Resp<Req<String, Integer>> resp = Resp.success(req);
+    try {
+      String id = req.getPri().getObj();
+      if (String0.isNullOrEmpty(id)) {
+        req.getPri().setRtn(0);
+      } else {
+        T t = entityClass.newInstance();
+        t.sinId(id);
+        req.getPri().setRtn(cacheableDao.delById(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+      }
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  @Override
   public <T extends CacheableEntities> Resp<Req<T, Integer>> mod(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
