@@ -1,7 +1,7 @@
 "code":"0"
 "rtn":1
 "id":"1612353237501_DcNd45KtJXPmSpz2xRB",
-"userNo":"tstuserno"
-"channelName":"tstchannel",
-"tenantName":"tsttenant",
+"userNo":"tstUserNo"
+"channelNo":"tstChannelNo",
+"tenantNo":"tstTenantNo",
 "tracingId":"$UUID0_cUl33_1$"

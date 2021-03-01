@@ -1,7 +1,7 @@
 {
   "pri": {
     "ext": {
-      "userNo": "tstuserno"
+      "userNo": "tstUserNo"
     },
     "obj": {
       "id": "1612353237501_DcNd45KtJXPmSpz2xRB",
@@ -12,8 +12,8 @@
     }
   },
   "pub": {
-    "channelName": "tstchannel",
-    "tenantName": "tsttenant",
+    "channelNo": "tstChannelNo",
+    "tenantNo": "tstTenantNo",
     "tracingId": "$UUID0_cUl33_1$"
   }
 }

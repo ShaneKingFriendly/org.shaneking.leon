@@ -1,9 +1,9 @@
 {
-  "enc": "UpYigwpx9zJXGQraTGg7LnIIxLaGlQ9JM04xKhfYjAZcfoFMyiXjBil7DH5l61v0Lo/SwEEK5xTVyuMTFudTedRzvULSDX6PPkHTFv5biaA=",
+  "enc": "UpYigwpx9zJXGQraTGg7LinYngjNd4HQlutN8zK/i8dcfoFMyiXjBil7DH5l61v0Lo/SwEEK5xTVyuMTFudTeQdUUmAVUiuVk4vrOn8NgMZKPuUFmf6zENVMCmznwiKo",
   "pub": {
-    "channelName": "tstchannel",
+    "channelNo": "tstChannelNo",
     "encoded": "Y",
-    "tenantName": "tsttenant",
+    "tenantNo": "tstTenantNo",
     "tracingId": "$UUID0_cUl33_1$"
   }
 }

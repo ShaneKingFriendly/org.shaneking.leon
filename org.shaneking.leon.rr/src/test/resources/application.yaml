@@ -19,6 +19,9 @@ sk:
       entity:
         cache:
           enabled: true
+      dao:
+        cache:
+          enabled: true
     rr:
       limiting:
         enabled: true

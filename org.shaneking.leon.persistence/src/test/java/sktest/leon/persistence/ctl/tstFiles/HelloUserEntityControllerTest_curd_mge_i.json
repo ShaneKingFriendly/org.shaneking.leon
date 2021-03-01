@@ -1,7 +1,7 @@
 {
   "pri": {
     "ext": {
-      "userNo": "tstuserno"
+      "userNo": "tstUserNo"
     },
     "obj": {
       "invalid": "N",
@@ -9,8 +9,8 @@
     }
   },
   "pub": {
-    "channelName": "tstchannel",
-    "tenantName": "tsttenant",
+    "channelNo": "tstChannelNo",
+    "tenantNo": "tstTenantNo",
     "tracingId": "$UUID0_cUl33_1$"
   }
 }

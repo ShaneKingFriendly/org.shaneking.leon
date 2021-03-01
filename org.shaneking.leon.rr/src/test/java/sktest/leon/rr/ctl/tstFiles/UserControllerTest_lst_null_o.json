@@ -3,7 +3,7 @@
   "data": {
     "pri": {
       "ext": {
-        "userNo": "tstuserno"
+        "userNo": "tstUserNo"
       },
       "obj": {
         "whereConditions": {
@@ -21,7 +21,7 @@
           "lastModifyUserId": "",
           "version": 0,
           "tenantId": "1612262610215_LoHqeZBGrVYm3MlYmpH",
-          "no": "tstuserno",
+          "no": "tstUserNo",
           "name": "tstusername",
           "haha": "[C3]494c6f7665596f75",
           "mobile": "18888888888",
@@ -30,8 +30,8 @@
       ]
     },
     "pub": {
-      "channelName": "tstchannel",
-      "tenantName": "tsttenant",
+      "channelNo": "tstChannelNo",
+      "tenantNo": "tstTenantNo",
       "tracingId": "$UUID0_cUl33_1$"
     }
   }
