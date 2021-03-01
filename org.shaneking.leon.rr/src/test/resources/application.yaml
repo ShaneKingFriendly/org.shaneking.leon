@@ -6,6 +6,11 @@ sk:
         enabled: true
       geh:
         enabled: true
+      req:
+        ips:
+          enabled: true
+        url:
+          enabled: true
   roc:
     cache:
       string:
