@@ -6,7 +6,7 @@ import org.shaneking.leon.rr.bean.WebRrHt2pBean;
 import org.shaneking.leon.rr.biz.WebRrFileBiz;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.rr.Resp;
-import org.shaneking.ling.zero.crypto.Crypto0;
+import org.shaneking.ling.zero.crypto.SKC1;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.Runtime0;
 import org.shaneking.ling.zero.lang.String0;
@@ -64,7 +64,7 @@ public class WebRrController {
 
   @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = {"/crypto0/slat"})
   public String crypto0slat() {
-    return Crypto0.salt();
+    return SKC1.salt();
   }
 
   @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = {"/env/{key}"})

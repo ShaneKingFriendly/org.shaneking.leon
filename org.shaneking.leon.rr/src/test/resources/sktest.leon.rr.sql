@@ -116,7 +116,7 @@ create table if not exists `t_hello_user_entity` (
 insert into t_hello_tenant_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, no, name, description)
 select 0,'1612262610215_LoHqeZBGrVYm3MlYmpH','N','','1612262610216_koFVLCNZrhezbgULWqW','tstTenantNo','tstTenantName','tstTenantDesc';
 insert into t_hello_user_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, tenant_id, no, name, haha, mobile, email)
-select 0,'1612262610216_koFVLCNZrhezbgULWqW','N','','1612262610216_koFVLCNZrhezbgULWqW','1612262610215_LoHqeZBGrVYm3MlYmpH','tstUserNo','tstUserName','[C3]494c6f7665596f75','18888888888','email@email.com';
+select 0,'1612262610216_koFVLCNZrhezbgULWqW','N','','1612262610216_koFVLCNZrhezbgULWqW','1612262610215_LoHqeZBGrVYm3MlYmpH','tstUserNo','tstUserName','[SKC1]494c6f7665596f75','18888888888','email@email.com';
 insert into t_hello_channel_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, no, name, description, token_value, token_force, token_algorithm_type, token_value_type)
 select 0,'1612263653223_oGFvE5Hyndf0njoFhyK','N','','1612262610216_koFVLCNZrhezbgULWqW','tstChannelNo','tstChannelName','tstChannelDesc','494c6f7665596f75','N','C3','SELF';
 insert into t_hello_api_access_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, tenant_id, channel_id, allow_url_regex, allow_signature_regex, deny_url_regex, deny_signature_regex)
