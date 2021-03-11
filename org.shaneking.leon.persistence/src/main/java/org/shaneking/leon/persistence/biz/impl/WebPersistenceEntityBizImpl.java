@@ -223,7 +223,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     try {
       List<T> list = List0.newArrayList();
       File csvFile = new File(req.getPri().getObj());
-      Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), String0.nullOrEmptyTo(req.getPub().getTracingId(), UUID0.cUl33()), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
+      Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), String0.nullOrEmptyTo(req.getPub().getTracingNo(), UUID0.cUl33()), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
       SaxExcelReader.of(entityClass).rowFilter(row -> row.getRowNum() > 0).readThen(csvFile, (row, ctx) -> {
         try {
           if (ctx.getRowNum() > 0 && ctx.getRowNum() % csvBuffer == 0) {

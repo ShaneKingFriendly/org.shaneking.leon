@@ -4,4 +4,4 @@
 "userNo":"tstUserNo"
 "channelNo":"tstChannelNo",
 "tenantNo":"tstTenantNo",
-"tracingId":"$UUID0_cUl33_1$"
+"tracingNo":"$UUID0_cUl33_1$"

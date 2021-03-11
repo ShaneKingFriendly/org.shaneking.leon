@@ -16,7 +16,7 @@
     "pub": {
       "channelNo": "tstChannelNo",
       "tenantNo": "tstTenantNo",
-      "tracingId": "$UUID0_cUl33_1$"
+      "tracingNo": "$UUID0_cUl33_1$"
     }
   },
   "mesg": "{\"id\":\"1612263668482_jaHu6tmguyKo2xWgHPj\",\"invalid\":\"N\",\"lastModifyDateTime\":\"\",\"lastModifyUserId\":\"1612262610216_koFVLCNZrhezbgULWqW\",\"version\":0,\"tenantId\":\"1612262610215_LoHqeZBGrVYm3MlYmpH\",\"channelId\":\"1612263653223_oGFvE5Hyndf0njoFhyK\",\"allowUrlRegex\":\"^[\\\\s\\\\S]*(user/delById|user/mge)[\\\\s\\\\S]*$\",\"allowSignatureRegex\":\"^[\\\\s\\\\S]*(add|lst)\\\\([\\\\s\\\\S]*$\",\"denyUrlRegex\":\"\",\"denySignatureRegex\":\"\"}"
