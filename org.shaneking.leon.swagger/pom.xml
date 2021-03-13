@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.shaneking.leon</groupId>
     <artifactId>org.shaneking.leon</artifactId>
-    <version>0.241.1.2-SNAPSHOT</version>
+    <version>0.241.2.Friendly-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.shaneking.leon.swagger</artifactId>
-  <version>0.241.1.2-SNAPSHOT</version>
+  <version>0.241.2.Friendly-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>org.shaneking.leon.swagger</name>
@@ -44,7 +44,7 @@
     <dependency>
       <groupId>org.shaneking.ling</groupId>
       <artifactId>org.shaneking.ling.zero</artifactId>
-      <version>${org.shaneking.ling_version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <!-- test(spring default logback, so not need dependency logback) -->
     <dependency>
