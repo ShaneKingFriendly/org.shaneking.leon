@@ -1,6 +1,6 @@
 <configuration>
   <property name="sklog.path" value="./logs"/>
-  <property name="sklog.prefix" value="org.shaneking.leon.persistence.hello"/>
+  <property name="sklog.prefix" value="org.shaneking.leon.persistence"/>
   <property name="sklog.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %thread %logger:%line - %msg%n"/>
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>

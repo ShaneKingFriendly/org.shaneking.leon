@@ -13,7 +13,7 @@
   <packaging>jar</packaging>
 
   <name>org.shaneking.leon.test</name>
-  <description>Spring Web Test for ShaneKing</description>
+  <description>Test with Spring Web for ShaneKing</description>
   <url>https://github.com/ShaneKingFriendly/org.shaneking.leon</url>
   <licenses>
     <license>
