@@ -40,7 +40,7 @@ public class WebRrFileBizImpl implements WebRrFileBiz {
       multipartFile.transferTo(path);
       req.getPri().setRtn(path.toFile().getAbsolutePath());
     } catch (Exception e) {
-      log.error(OM3.p(req, folder), e);
+      log.error(OM3.lp(resp, req, folder), e);
       resp.parseExp(e);
     }
     return resp;

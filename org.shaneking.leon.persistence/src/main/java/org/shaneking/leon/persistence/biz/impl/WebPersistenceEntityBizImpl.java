@@ -80,7 +80,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
         }
       }
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -94,7 +94,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       t.initWithUserIdAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
       req.getPri().setRtn(cacheableDao.add(entityClass, CacheableDao.pti(t, req.gnnCtx().gnaTenantId())));
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -107,7 +107,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       T t = req.getPri().getObj();
       req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -131,7 +131,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
         req.getPri().setRtn(cacheableDao.delById(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
       }
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -150,7 +150,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
         req.getPri().setRtn(cacheableDao.delById(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
       }
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -177,7 +177,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
         req.getPri().setRtn(cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
       }
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -195,7 +195,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       req.getPri().gnnExt().gnnTbl().setPagination(t.getPagination());
       ///setLastModifyUser in other biz when need
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -211,7 +211,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       rst.setLastModifyUser((Objects.equals(rst.getLastModifyUserId(), t.getLastModifyUserId())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLastModifyUserId()));
       req.getPri().setRtn(rst);
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -250,12 +250,13 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
             list.add(row);
           }
         } catch (Exception e) {
-          throw new ZeroException(e);
+          log.error(OM3.p(row, ctx), e);
+          throw new ZeroException(OM3.p(row, ctx), e);
         }
       });
       CsvBuilder.of(entityClass).noTitles().build(list).write(tmpPath, true);
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -273,7 +274,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       }
       req.getPri().setRtn(path.toFile().getAbsolutePath());
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
@@ -307,11 +308,12 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
             }
           }
         } catch (Exception e) {
-          throw new ZeroException(e);
+          log.error(OM3.writeValueAsString(row), e);
+          throw new ZeroException(OM3.writeValueAsString(row), e);
         }
       });
     } catch (Exception e) {
-      log.error(OM3.lp(resp, req), e);
+      log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
     }
     return resp;
