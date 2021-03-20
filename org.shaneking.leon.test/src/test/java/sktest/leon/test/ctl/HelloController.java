@@ -20,7 +20,7 @@ public class HelloController {
   }
 
   @Accessors(chain = true)
-  @ToString(callSuper = true)
+  @ToString
   public static class UserBean {
     @Getter
     @Setter
