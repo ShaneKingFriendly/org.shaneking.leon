@@ -13,5 +13,5 @@
       "tracingNo": "$UUID0_cUl33_1$"
     }
   },
-  "mesg": "RespException(resp=Resp(code=, data=Req(ctx=null, enc=null, pri=Pri(ext=Ext(jon=null, tbl=null, userNo=tstUserNo), obj={}, rtn=null), pub=Pub(channelNo=tstChannelNo, encoded=null, jon=null, tenantNo=tstTenantNo, tracingNo=$UUID0_cUl33_1$)), mesg=))"
+  "mesg": "RespException(super=org.shaneking.ling.rr.RespException: , resp=Resp(code=, data=Req(ctx=null, enc=null, pri=Pri(ext=Ext(jon=null, tbl=null, userNo=tstUserNo), obj={}, rtn=null), pub=Pub(channelNo=tstChannelNo, encoded=null, jon=null, tenantNo=tstTenantNo, tracingNo=$UUID0_cUl33_1$)), mesg=))"
 }

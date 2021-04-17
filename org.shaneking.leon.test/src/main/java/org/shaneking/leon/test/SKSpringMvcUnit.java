@@ -79,7 +79,7 @@ public class SKSpringMvcUnit extends SKSpringUnit {
     resultActions.andExpect(status().isOk()).andDo(print());
     if (respJsonFile != null) {
       String respStr = String.join(String0.EMPTY, Files.readAllLines(respJsonFile.toPath(), charset).stream().map(String::trim).collect(Collectors.toList()));
-      respStr = respStr.replace(": ", ":");
+      respStr = respStr.replace("\": ", "\":");
       for (String key : replaceMap.keySet()) {
         respStr = respStr.replace(key, replaceMap.get(key));
       }
