@@ -122,14 +122,14 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       if (String0.isNullOrEmpty(t.getId())) {
         long cnt = cacheableDao.cnt(entityClass, t);
         if (cnt < Pagination.MAX_SIZE) {
-          Pagination definedPagination = t.fsvPagination(new Pagination().setPage(Pagination.MAX_SIZE));
+          Pagination definedPagination = t.sroPagination(new Pagination().setPage(Pagination.MAX_SIZE));
           List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
-          t.fsvPagination(definedPagination);
+          t.setPagination(definedPagination);
           ///show variables like 'max_allow%';
           ///max_allowed_packet
           req.getPri().setRtn(ids.size() > 0 ? cacheableDao.delByIds(entityClass, ids) : 0);
         } else {
-          req.getPri().setRtn(cacheableDao.rmv(entityClass, t));
+          req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
         }
       } else {
         req.getPri().setRtn(cacheableDao.delById(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
@@ -176,6 +176,8 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
           tmpT.setPagination(new Pagination().setPage(Pagination.MAX_SIZE));
           List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(tmpT, req.gnnCtx().gnaTenantId()));
           req.getPri().setRtn(ids.size() > 0 ? cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId()), ids) : 0);
+        } else {
+          req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
         }
       } else {
         req.getPri().setRtn(cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
