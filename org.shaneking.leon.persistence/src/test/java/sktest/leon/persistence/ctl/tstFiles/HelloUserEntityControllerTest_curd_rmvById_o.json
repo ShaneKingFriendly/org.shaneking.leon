@@ -1,0 +1,12 @@
+{
+  "code": "0",
+  "data": {
+    "enc": "UpYigwpx9zJXGQraTGg7LinYngjNd4HQlutN8zK/i8ekWhVfldssP4loE+0WhISX/hCnovJeStZRr7LhJxoHu+L4wdNQykpa/D3O/LQiGcVJvIHeAhMGNMBXvOO5LHIZTdIvZABx5C1FjwAgvhHreTKBMqbMuiI3u20F/VM5t/M9XFLbPfahzu3vnRKQt12bd5uGEzJO+bvCckGBcBq9Ztiz+efV4rI8hY437LEBtxg0fY5T0mkOWzfnUXTd0PuYE//w33/xDiz2+Uyc0HQKdr3Z7tJMS2CHu520m7K3Ksk=",
+    "pub": {
+      "channelNo": "tstChannelNo",
+      "encoded": "Y",
+      "tenantNo": "tstTenantNo",
+      "tracingNo": "$UUID0_cUl33_1$"
+    }
+  }
+}

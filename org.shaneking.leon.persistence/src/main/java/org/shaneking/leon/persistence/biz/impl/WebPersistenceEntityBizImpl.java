@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.shaneking.leon.persistence.biz.WebPersistenceEntityBiz;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.persistence.Pagination;
+import org.shaneking.ling.persistence.entity.Identified;
 import org.shaneking.ling.persistence.entity.sql.Tenanted;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.io.File0;
@@ -106,33 +107,10 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
-      req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  @Override
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
-    try {
-      T t = req.getPri().getObj();
-      if (String0.isNullOrEmpty(t.getId())) {
-        long cnt = cacheableDao.cnt(entityClass, t);
-        if (cnt < Pagination.MAX_SIZE) {
-          Pagination definedPagination = t.sroPagination(new Pagination().setPage(Pagination.MAX_SIZE));
-          List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
-          t.setPagination(definedPagination);
-          ///show variables like 'max_allow%';
-          ///max_allowed_packet
-          req.getPri().setRtn(ids.size() > 0 ? cacheableDao.delByIds(entityClass, ids) : 0);
-        } else {
-          req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
-        }
+      if (String0.isNullOrEmpty(t.getId()) && t.findWhereConditions(Identified.FIELD__ID).size() == 0) {
+        req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));///TODO can optimizing
       } else {
-        req.getPri().setRtn(cacheableDao.delById(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+        resp = rmvById(req, entityClass);
       }
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
@@ -142,16 +120,28 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   }
 
   @Override
-  public <T extends CacheableEntities> Resp<Req<String, Integer>> delById(Req<String, Integer> req, Class<T> entityClass) {
-    Resp<Req<String, Integer>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> rmvById(Req<T, Integer> req, Class<T> entityClass) {
+    Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
-      String id = req.getPri().getObj();
-      if (String0.isNullOrEmpty(id)) {
-        req.getPri().setRtn(0);
+      T t = req.getPri().getObj();
+      if (String0.isNullOrEmpty(t.getId()) && t.findWhereConditions(Identified.FIELD__ID).size() == 0) {
+        resp.setCode(Identified.ERR_CODE__REQUIRED);
       } else {
-        T t = entityClass.newInstance();
-        t.sinId(id);
-        req.getPri().setRtn(cacheableDao.delById(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+        if (String0.isNullOrEmpty(t.getId())) {
+          long cnt = cacheableDao.cnt(entityClass, t);
+          if (cnt < Pagination.MAX_SIZE) {
+            Pagination definedPagination = t.sroPagination(new Pagination().setPage(Pagination.MAX_SIZE));
+            List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
+            t.setPagination(definedPagination);
+            ///show variables like 'max_allow%';
+            ///max_allowed_packet
+            req.getPri().setRtn(ids.size() > 0 ? cacheableDao.rmvByIds(entityClass, ids) : 0);
+          } else {
+            req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+          }
+        } else {
+          req.getPri().setRtn(cacheableDao.rmvById(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+        }
       }
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
@@ -167,20 +157,43 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       T t = req.getPri().getObj();
       t.setLastModifyDateTime(Date0.on().dateTime());
       t.setLastModifyUserId(req.gnnCtx().gnaUserId());
-      if (String0.isNullOrEmpty(t.getId())) {
-        long cnt = cacheableDao.cnt(entityClass, t);
-        if (cnt < Pagination.MAX_SIZE) {
-          T tmpT = entityClass.newInstance();
-          tmpT.srvWhereConditions(t.getWhereConditions());
-          tmpT.setVersion(t.getVersion());
-          tmpT.setPagination(new Pagination().setPage(Pagination.MAX_SIZE));
-          List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(tmpT, req.gnnCtx().gnaTenantId()));
-          req.getPri().setRtn(ids.size() > 0 ? cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId()), ids) : 0);
-        } else {
-          req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
-        }
+      if (String0.isNullOrEmpty(t.getId()) && t.findWhereConditions(Identified.FIELD__ID).size() == 0) {
+        req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));///TODO can optimizing
       } else {
-        req.getPri().setRtn(cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+        resp = modById(req, entityClass);
+      }
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  @Override
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> modById(Req<T, Integer> req, Class<T> entityClass) {
+    Resp<Req<T, Integer>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      if (String0.isNullOrEmpty(t.getId()) && t.findWhereConditions(Identified.FIELD__ID).size() == 0) {
+        resp.setCode(Identified.ERR_CODE__REQUIRED);
+      } else {
+        t.setLastModifyDateTime(Date0.on().dateTime());
+        t.setLastModifyUserId(req.gnnCtx().gnaUserId());
+        if (String0.isNullOrEmpty(t.getId())) {
+          long cnt = cacheableDao.cnt(entityClass, t);
+          if (cnt < Pagination.MAX_SIZE) {
+            T tmpT = entityClass.newInstance();
+            tmpT.srvWhereConditions(t.getWhereConditions());
+            tmpT.setVersion(t.getVersion());
+            tmpT.setPagination(new Pagination().setPage(Pagination.MAX_SIZE));
+            List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(tmpT, req.gnnCtx().gnaTenantId()));
+            req.getPri().setRtn(ids.size() > 0 ? cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId()), ids) : 0);
+          } else {
+            req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+          }
+        } else {
+          req.getPri().setRtn(cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+        }
       }
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);

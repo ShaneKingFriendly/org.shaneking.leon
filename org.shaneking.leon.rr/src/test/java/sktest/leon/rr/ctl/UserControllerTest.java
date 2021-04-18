@@ -124,8 +124,8 @@ public class UserControllerTest extends SKSpringMvcUnit {
       assertNotNull(performJJ("/user/add"));
       setTstSeq("modByIdVer");
       assertNotNull(performJJ("/user/modByIdVer"));
-      setTstSeq("delById");
-      assertNotNull(performJJ("/user/delById"));
+      setTstSeq("rmvById");
+      assertNotNull(performJJ("/user/rmvById"));
     }
   }
 }

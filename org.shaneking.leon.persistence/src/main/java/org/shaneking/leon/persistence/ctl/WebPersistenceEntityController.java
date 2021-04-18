@@ -45,20 +45,12 @@ public abstract class WebPersistenceEntityController<T extends CacheableEntities
     return this.getEntityBiz().rmv(req, this.getEntityClass());
   }
 
-  @PostMapping(path = {"/del"})
+  @PostMapping(path = {"/rmvById"})
   @RrAudit
   @RrAccess
   @RrCrypto
-  public Resp<Req<T, Integer>> del(@RequestBody Req<T, Integer> req) {
-    return this.getEntityBiz().del(req, this.getEntityClass());
-  }
-
-  @PostMapping(path = {"/delById"})
-  @RrAudit
-  @RrAccess
-  @RrCrypto
-  public Resp<Req<String, Integer>> delById(@RequestBody Req<String, Integer> req) {
-    return this.getEntityBiz().delById(req, this.getEntityClass());
+  public Resp<Req<T, Integer>> rmvById(@RequestBody Req<T, Integer> req) {
+    return this.getEntityBiz().rmvById(req, this.getEntityClass());
   }
 
   @PostMapping(path = {"/mod"})
@@ -67,6 +59,14 @@ public abstract class WebPersistenceEntityController<T extends CacheableEntities
   @RrCrypto
   public Resp<Req<T, Integer>> mod(@RequestBody Req<T, Integer> req) {
     return this.getEntityBiz().mod(req, this.getEntityClass());
+  }
+
+  @PostMapping(path = {"/modById"})
+  @RrAudit
+  @RrAccess
+  @RrCrypto
+  public Resp<Req<T, Integer>> modById(@RequestBody Req<T, Integer> req) {
+    return this.getEntityBiz().modById(req, this.getEntityClass());
   }
 
   @PostMapping(path = {"/lst"})
