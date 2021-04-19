@@ -94,7 +94,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
       t.initWithUserIdAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
-      req.getPri().setRtn(cacheableDao.add(entityClass, CacheableDao.pti(t, req.gnnCtx().gnaTenantId())));
+      req.getPri().setRtn(cacheableDao.add(entityClass, CacheableDao.pti(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
@@ -108,7 +108,13 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
       if (String0.isNullOrEmpty(t.getId()) && t.findWhereConditions(Identified.FIELD__ID).size() == 0) {
-        req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));///TODO can optimizing
+        long cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
+        if (cnt < Pagination.MAX_SIZE) {
+          t.forceWhereCondition(Identified.FIELD__ID).resetVal(cacheableDao.lstIds(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+          resp = rmvById(req, entityClass);
+        } else {
+          req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+        }
       } else {
         resp = rmvById(req, entityClass);
       }
@@ -128,19 +134,19 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
         resp.setCode(Identified.ERR_CODE__REQUIRED);
       } else {
         if (String0.isNullOrEmpty(t.getId())) {
-          long cnt = cacheableDao.cnt(entityClass, t);
+          long cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
           if (cnt < Pagination.MAX_SIZE) {
             Pagination definedPagination = t.sroPagination(new Pagination().setPage(Pagination.MAX_SIZE));
-            List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
+            List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
             t.setPagination(definedPagination);
             ///show variables like 'max_allow%';
             ///max_allowed_packet
             req.getPri().setRtn(ids.size() > 0 ? cacheableDao.rmvByIds(entityClass, ids) : 0);
           } else {
-            req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+            req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
           }
         } else {
-          req.getPri().setRtn(cacheableDao.rmvById(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+          req.getPri().setRtn(cacheableDao.rmvById(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
         }
       }
     } catch (Exception e) {
@@ -158,7 +164,20 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       t.setLastModifyDateTime(Date0.on().dateTime());
       t.setLastModifyUserId(req.gnnCtx().gnaUserId());
       if (String0.isNullOrEmpty(t.getId()) && t.findWhereConditions(Identified.FIELD__ID).size() == 0) {
-        req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));///TODO can optimizing
+        long cnt = Pagination.MAX_SIZE;
+        T tmpT = entityClass.newInstance();
+        tmpT.setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+        if (t.getWhereConditions().size() > 0) {
+          tmpT.srvWhereConditions(t.getWhereConditions());
+          tmpT.setVersion(t.getVersion());
+          cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(tmpT, List0.newArrayList(req.gnnCtx().gnaTenantId())));
+        }
+        if (cnt < Pagination.MAX_SIZE) {
+          t.forceWhereCondition(Identified.FIELD__ID).resetVal(cacheableDao.lstIds(entityClass, CacheableDao.pts(tmpT, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+          resp = rmvById(req, entityClass);
+        } else {
+          req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+        }
       } else {
         resp = modById(req, entityClass);
       }
@@ -180,19 +199,19 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
         t.setLastModifyDateTime(Date0.on().dateTime());
         t.setLastModifyUserId(req.gnnCtx().gnaUserId());
         if (String0.isNullOrEmpty(t.getId())) {
-          long cnt = cacheableDao.cnt(entityClass, t);
+          long cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
           if (cnt < Pagination.MAX_SIZE) {
             T tmpT = entityClass.newInstance();
             tmpT.srvWhereConditions(t.getWhereConditions());
             tmpT.setVersion(t.getVersion());
             tmpT.setPagination(new Pagination().setPage(Pagination.MAX_SIZE));
-            List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(tmpT, req.gnnCtx().gnaTenantId()));
-            req.getPri().setRtn(ids.size() > 0 ? cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId()), ids) : 0);
+            List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(tmpT, List0.newArrayList(req.gnnCtx().gnaTenantId())));
+            req.getPri().setRtn(ids.size() > 0 ? cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId())), ids) : 0);
           } else {
-            req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+            req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
           }
         } else {
-          req.getPri().setRtn(cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+          req.getPri().setRtn(cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
         }
       }
     } catch (Exception e) {
@@ -209,8 +228,8 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       T t = req.getPri().getObj();
       t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLastModifyUserId()));
       t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
-      req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId())));
-      t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId())));
+      req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+      t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
       req.getPri().gnnExt().gnnTbl().setPagination(t.getPagination());
       ///setLastModifyUser in other biz when need
     } catch (Exception e) {
@@ -226,7 +245,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
       t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLastModifyUserId()));
-      T rst = cacheableDao.one(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
+      T rst = cacheableDao.one(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
       rst.setLastModifyUser((Objects.equals(rst.getLastModifyUserId(), t.getLastModifyUserId())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLastModifyUserId()));
       req.getPri().setRtn(rst);
     } catch (Exception e) {
@@ -313,17 +332,17 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
             T existT = exists(entityClass, row, req.gnnCtx().gnaTenantId());
             if (existT == null) {
               row.sinId(UUID0.cUl33());
-              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.add(entityClass, CacheableDao.pti(row, req.gnnCtx().gnaTenantId())));
+              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.add(entityClass, CacheableDao.pti(row, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
             } else {
               row.setVersion(existT.getVersion());
               row.setId(existT.getId());
-              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(row, req.gnnCtx().gnaTenantId())));
+              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(row, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
             }
           } else {
             if (cacheableDao.oneById(entityClass, row.getId(), true) == null) {
-              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.add(entityClass, CacheableDao.pti(row, req.gnnCtx().gnaTenantId())));
+              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.add(entityClass, CacheableDao.pti(row, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
             } else {
-              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(row, req.gnnCtx().gnaTenantId())));
+              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(row, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
             }
           }
         } catch (Exception e) {
