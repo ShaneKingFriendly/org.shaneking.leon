@@ -1,5 +1,7 @@
 drop table if exists t_hello_api_access_2_entity;
 drop table if exists t_hello_api_access_3_entity;
+drop table if exists t_hello_api_access_4_entity;
+drop table if exists t_hello_api_access_5_entity;
 drop table if exists t_hello_api_access_entity;
 drop table if exists t_hello_audit_log_entity;
 drop table if exists t_hello_channel_entity;
@@ -38,6 +40,38 @@ create table if not exists `t_hello_api_access_3_entity` (
 );
 
 create unique index if not exists u_idx_channel_id_tenant_id_allow_signature_deny_signature on t_hello_api_access_3_entity(`channel_id`,`tenant_id`,`allow_signature`,`deny_signature`);
+
+-- HelloApiAccess4EntityTest_createTableIfNotExistSql_null_o.txt
+create table if not exists `t_hello_api_access_4_entity` (
+  `version` int not null default 0,
+  `id` char(40) not null,
+  `invalid` varchar(1) default 'N',
+  `last_modify_date_time` varchar(20) default '',
+  `last_modify_user_id` varchar(40) default '',
+  `channel_id` varchar(40) default '',
+  `tenant_id` varchar(40) default '',
+  `op` varchar(1) default '',
+  `url` varchar(255) default '',
+  primary key (`id`)
+);
+
+create unique index if not exists u_idx_channel_id_tenant_id_url on t_hello_api_access_4_entity(`channel_id`,`tenant_id`,`url`);
+
+-- HelloApiAccess5EntityTest_createTableIfNotExistSql_null_o.txt
+create table if not exists `t_hello_api_access_5_entity` (
+  `version` int not null default 0,
+  `id` char(40) not null,
+  `invalid` varchar(1) default 'N',
+  `last_modify_date_time` varchar(20) default '',
+  `last_modify_user_id` varchar(40) default '',
+  `channel_id` varchar(40) default '',
+  `tenant_id` varchar(40) default '',
+  `op` varchar(1) default '',
+  `signature` varchar(255) default '',
+  primary key (`id`)
+);
+
+create unique index if not exists u_idx_channel_id_tenant_id_signature on t_hello_api_access_5_entity(`channel_id`,`tenant_id`,`signature`);
 
 -- HelloApiAccessEntityTest_createTableIfNotExistSql_null_o.txt
 create table if not exists `t_hello_api_access_entity` (
@@ -149,6 +183,8 @@ select 0,'1612263668482_jaHu6tmguyKo2xWgHPj','N','','1612262610216_koFVLCNZrhezb
 
 select * from t_hello_api_access_2_entity;
 select * from t_hello_api_access_3_entity;
+select * from t_hello_api_access_4_entity;
+select * from t_hello_api_access_5_entity;
 select * from t_hello_api_access_entity;
 select * from t_hello_audit_log_entity;
 select * from t_hello_channel_entity;
