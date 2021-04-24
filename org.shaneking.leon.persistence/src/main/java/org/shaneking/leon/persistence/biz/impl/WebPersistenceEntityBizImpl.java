@@ -20,9 +20,9 @@ import org.shaneking.ling.zero.util.UUID0;
 import org.shaneking.roc.persistence.CacheableEntities;
 import org.shaneking.roc.persistence.dao.CacheableDao;
 import org.shaneking.roc.persistence.dao.NumberedCacheableDao;
-import org.shaneking.roc.persistence.dao.TenantNumberedCacheableDao;
+import org.shaneking.roc.persistence.dao.TenantedNumberedCacheableDao;
 import org.shaneking.roc.persistence.entity.NumberedEntities;
-import org.shaneking.roc.persistence.entity.TenantNumberedEntities;
+import org.shaneking.roc.persistence.entity.TenantedNumberedEntities;
 import org.shaneking.roc.persistence.entity.sql.UserEntities;
 import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +47,14 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
   @Autowired
   private NumberedCacheableDao numberedCacheableDao;
   @Autowired
-  private TenantNumberedCacheableDao tenantNumberedCacheableDao;
+  private TenantedNumberedCacheableDao tenantedNumberedCacheableDao;
   @Autowired
   private UserEntities userEntityClass;
 
   private <T extends CacheableEntities> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
     T rtn = null;
-    if (t instanceof TenantNumberedEntities && !String0.isNullOrEmpty(((TenantNumberedEntities) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
-      rtn = (T) tenantNumberedCacheableDao.oneByNo(((TenantNumberedEntities) t).getClass(), ((TenantNumberedEntities) t).getNo(), tenantId, true);
+    if (t instanceof TenantedNumberedEntities && !String0.isNullOrEmpty(((TenantedNumberedEntities) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
+      rtn = (T) tenantedNumberedCacheableDao.oneByNo(((TenantedNumberedEntities) t).getClass(), ((TenantedNumberedEntities) t).getNo(), tenantId, true);
     } else if (t instanceof NumberedEntities && !String0.isNullOrEmpty(((NumberedEntities) t).getNo())) {
       rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntities) t).getClass(), ((NumberedEntities) t).getNo(), true);
     }
