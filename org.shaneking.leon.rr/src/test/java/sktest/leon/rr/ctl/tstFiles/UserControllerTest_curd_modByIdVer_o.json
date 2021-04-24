@@ -19,5 +19,5 @@
       "tracingNo": "$UUID0_cUl33_1$"
     }
   },
-  "mesg": "{\"p\":[{\"id\":\"1612263668482_jaHu6tmguyKo2xWgHPj\",\"invalid\":\"N\",\"lastModifyDateTime\":\"\",\"lastModifyUserId\":\"1612262610216_koFVLCNZrhezbgULWqW\",\"version\":0,\"channelId\":\"1612263653223_oGFvE5Hyndf0njoFhyK\",\"tenantId\":\"1612262610215_LoHqeZBGrVYm3MlYmpH\",\"allowUrlRegex\":\"^[\\\\s\\\\S]*(user/rmvById|user/mge)[\\\\s\\\\S]*$\",\"allowSignatureRegex\":\"^[\\\\s\\\\S]*(add|lst)\\\\([\\\\s\\\\S]*$\",\"denyUrlRegex\":\"\",\"denySignatureRegex\":\"\"},0,0,0,0]}"
+  "mesg": "{\"p\":[{\"id\":\"1612263668482_jaHu6tmguyKo2xWgHPj\",\"invalid\":\"N\",\"lastModifyDateTime\":\"\",\"lastModifyUserId\":\"1612262610216_koFVLCNZrhezbgULWqW\",\"version\":0,\"channelId\":\"1612263653223_oGFvE5Hyndf0njoFhyK\",\"tenantId\":\"1612262610215_LoHqeZBGrVYm3MlYmpH\",\"allowUrlRegex\":\"^[\\\\s\\\\S]*(user/rmvById|user/mge)[\\\\s\\\\S]*$\",\"allowSignatureRegex\":\"^[\\\\s\\\\S]*(add|lst)\\\\([\\\\s\\\\S]*$\",\"denyUrlRegex\":\"\",\"denySignatureRegex\":\"\"},0,0,0,0,null,null]}"
 }
