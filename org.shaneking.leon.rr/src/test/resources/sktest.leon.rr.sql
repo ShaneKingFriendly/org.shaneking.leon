@@ -1,82 +1,17 @@
-drop table if exists t_hello_api_access_2_entity;
-drop table if exists t_hello_api_access_3_entity;
-drop table if exists t_hello_api_access_4_entity;
-drop table if exists t_hello_api_access_5_entity;
-drop table if exists t_hello_api_access_entity;
+drop table if exists t_hello_api_access_regex_entity;
+drop table if exists t_hello_api_access_signature_entity;
+drop table if exists t_hello_api_access_url_entity;
 drop table if exists t_hello_audit_log_entity;
 drop table if exists t_hello_channel_entity;
 drop table if exists t_hello_tenant_entity;
 drop table if exists t_hello_user_entity;
 
 
--- HelloApiAccess2EntityTest_createTableIfNotExistSql_null_o.txt
-create table if not exists `t_hello_api_access_2_entity` (
+-- HelloApiAccessRegexEntityTest_createTableIfNotExistSql_null_o.txt
+create table if not exists `t_hello_api_access_regex_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
-  `invalid` varchar(1) default 'N',
-  `last_modify_date_time` varchar(20) default '',
-  `last_modify_user_id` varchar(40) default '',
-  `channel_id` varchar(40) default '',
-  `tenant_id` varchar(40) default '',
-  `allow_url` varchar(255) default '',
-  `deny_url` varchar(255) default '',
-  primary key (`id`)
-);
-
-create unique index if not exists u_idx_channel_id_tenant_id_allow_url_deny_url on t_hello_api_access_2_entity(`channel_id`,`tenant_id`,`allow_url`,`deny_url`);
-
--- HelloApiAccess3EntityTest_createTableIfNotExistSql_null_o.txt
-create table if not exists `t_hello_api_access_3_entity` (
-  `version` int not null default 0,
-  `id` char(40) not null,
-  `invalid` varchar(1) default 'N',
-  `last_modify_date_time` varchar(20) default '',
-  `last_modify_user_id` varchar(40) default '',
-  `channel_id` varchar(40) default '',
-  `tenant_id` varchar(40) default '',
-  `allow_signature` varchar(255) default '',
-  `deny_signature` varchar(255) default '',
-  primary key (`id`)
-);
-
-create unique index if not exists u_idx_channel_id_tenant_id_allow_signature_deny_signature on t_hello_api_access_3_entity(`channel_id`,`tenant_id`,`allow_signature`,`deny_signature`);
-
--- HelloApiAccess4EntityTest_createTableIfNotExistSql_null_o.txt
-create table if not exists `t_hello_api_access_4_entity` (
-  `version` int not null default 0,
-  `id` char(40) not null,
-  `invalid` varchar(1) default 'N',
-  `last_modify_date_time` varchar(20) default '',
-  `last_modify_user_id` varchar(40) default '',
-  `channel_id` varchar(40) default '',
-  `tenant_id` varchar(40) default '',
-  `op` varchar(1) default '',
-  `url` varchar(255) default '',
-  primary key (`id`)
-);
-
-create unique index if not exists u_idx_channel_id_tenant_id_url on t_hello_api_access_4_entity(`channel_id`,`tenant_id`,`url`);
-
--- HelloApiAccess5EntityTest_createTableIfNotExistSql_null_o.txt
-create table if not exists `t_hello_api_access_5_entity` (
-  `version` int not null default 0,
-  `id` char(40) not null,
-  `invalid` varchar(1) default 'N',
-  `last_modify_date_time` varchar(20) default '',
-  `last_modify_user_id` varchar(40) default '',
-  `channel_id` varchar(40) default '',
-  `tenant_id` varchar(40) default '',
-  `op` varchar(1) default '',
-  `signature` varchar(255) default '',
-  primary key (`id`)
-);
-
-create unique index if not exists u_idx_channel_id_tenant_id_signature on t_hello_api_access_5_entity(`channel_id`,`tenant_id`,`signature`);
-
--- HelloApiAccessEntityTest_createTableIfNotExistSql_null_o.txt
-create table if not exists `t_hello_api_access_entity` (
-  `version` int not null default 0,
-  `id` char(40) not null,
+  `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
   `last_modify_user_id` varchar(40) default '',
@@ -89,12 +24,47 @@ create table if not exists `t_hello_api_access_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_channel_id_tenant_id on t_hello_api_access_entity(`channel_id`,`tenant_id`);
+create unique index if not exists u_idx_channel_id_tenant_id on t_hello_api_access_regex_entity(`channel_id`,`tenant_id`);
+
+-- HelloApiAccessSignatureEntityTest_createTableIfNotExistSql_null_o.txt
+create table if not exists `t_hello_api_access_signature_entity` (
+  `version` int not null default 0,
+  `id` char(40) not null,
+  `no` varchar(40) default '',
+  `invalid` varchar(1) default 'N',
+  `last_modify_date_time` varchar(20) default '',
+  `last_modify_user_id` varchar(40) default '',
+  `channel_id` varchar(40) default '',
+  `tenant_id` varchar(40) default '',
+  `op` varchar(1) default '',
+  `signature` varchar(255) default '',
+  primary key (`id`)
+);
+
+create unique index if not exists u_idx_channel_id_tenant_id_signature on t_hello_api_access_signature_entity(`channel_id`,`tenant_id`,`signature`);
+
+-- HelloApiAccessUrlEntityTest_createTableIfNotExistSql_null_o.txt
+create table if not exists `t_hello_api_access_url_entity` (
+  `version` int not null default 0,
+  `id` char(40) not null,
+  `no` varchar(40) default '',
+  `invalid` varchar(1) default 'N',
+  `last_modify_date_time` varchar(20) default '',
+  `last_modify_user_id` varchar(40) default '',
+  `channel_id` varchar(40) default '',
+  `tenant_id` varchar(40) default '',
+  `op` varchar(1) default '',
+  `url` varchar(255) default '',
+  primary key (`id`)
+);
+
+create unique index if not exists u_idx_channel_id_tenant_id_url on t_hello_api_access_url_entity(`channel_id`,`tenant_id`,`url`);
 
 -- HelloAuditLogEntityTest_createTableIfNotExistSql_null_o.txt
 create table if not exists `t_hello_audit_log_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
   `last_modify_user_id` varchar(40) default '',
@@ -122,10 +92,10 @@ create table if not exists `t_hello_audit_log_entity` (
 create table if not exists `t_hello_channel_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
   `last_modify_user_id` varchar(40) default '',
-  `no` varchar(40) default '',
   `name` varchar(255) default '',
   `description` varchar(255) default '',
   `token_value` varchar(255) default '',
@@ -141,10 +111,10 @@ create unique index if not exists u_idx_no on t_hello_channel_entity(`no`);
 create table if not exists `t_hello_tenant_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
   `last_modify_user_id` varchar(40) default '',
-  `no` varchar(40) default '',
   `name` varchar(255) default '',
   `description` varchar(255) default '',
   primary key (`id`)
@@ -156,10 +126,10 @@ create unique index if not exists u_idx_no on t_hello_tenant_entity(`no`);
 create table if not exists `t_hello_user_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
   `last_modify_user_id` varchar(40) default '',
-  `no` varchar(40) default '',
   `tenant_id` varchar(40) default '',
   `name` varchar(30) default '',
   `haha` varchar(255) default '',
@@ -171,21 +141,19 @@ create table if not exists `t_hello_user_entity` (
 create unique index if not exists u_idx_no_tenant_id on t_hello_user_entity(`no`,`tenant_id`);
 
 
-insert into t_hello_tenant_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, no, name, description)
-select 0,'1612262610215_LoHqeZBGrVYm3MlYmpH','N','','1612262610216_koFVLCNZrhezbgULWqW','tstTenantNo','tstTenantName','tstTenantDesc';
-insert into t_hello_user_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, no, tenant_id, name, haha, mobile, email)
-select 0,'1612262610216_koFVLCNZrhezbgULWqW','N','','1612262610216_koFVLCNZrhezbgULWqW','tstUserNo','1612262610215_LoHqeZBGrVYm3MlYmpH','tstUserName','[SKC1]494c6f7665596f75','18888888888','email@email.com';
-insert into t_hello_channel_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, no, name, description, token_value, token_force, token_algorithm_type, token_value_type)
-select 0,'1612263653223_oGFvE5Hyndf0njoFhyK','N','','1612262610216_koFVLCNZrhezbgULWqW','tstChannelNo','tstChannelName','tstChannelDesc','494c6f7665596f75','N','SKC1','SELF';
-insert into t_hello_api_access_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, channel_id, tenant_id, allow_url_regex, allow_signature_regex, deny_url_regex, deny_signature_regex)
+insert into t_hello_tenant_entity (version, id, no, invalid, last_modify_date_time, last_modify_user_id, name, description)
+select 0,'1612262610215_LoHqeZBGrVYm3MlYmpH','tstTenantNo','N','','1612262610216_koFVLCNZrhezbgULWqW','tstTenantName','tstTenantDesc';
+insert into t_hello_user_entity (version, id, no, invalid, last_modify_date_time, last_modify_user_id, tenant_id, name, haha, mobile, email)
+select 0,'1612262610216_koFVLCNZrhezbgULWqW','tstUserNo','N','','1612262610216_koFVLCNZrhezbgULWqW','1612262610215_LoHqeZBGrVYm3MlYmpH','tstUserName','[SKC1]494c6f7665596f75','18888888888','email@email.com';
+insert into t_hello_channel_entity (version, id, no, invalid, last_modify_date_time, last_modify_user_id, name, description, token_value, token_force, token_algorithm_type, token_value_type)
+select 0,'1612263653223_oGFvE5Hyndf0njoFhyK','tstChannelNo','N','','1612262610216_koFVLCNZrhezbgULWqW','tstChannelName','tstChannelDesc','494c6f7665596f75','N','SKC1','SELF';
+insert into t_hello_api_access_regex_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, channel_id, tenant_id, allow_url_regex, allow_signature_regex, deny_url_regex, deny_signature_regex)
 select 0,'1612263668482_jaHu6tmguyKo2xWgHPj','N','','1612262610216_koFVLCNZrhezbgULWqW','1612263653223_oGFvE5Hyndf0njoFhyK','1612262610215_LoHqeZBGrVYm3MlYmpH','^[\s\S]*(user/rmvById|user/mge)[\s\S]*$','^[\s\S]*(add|lst)\([\s\S]*$','','';
 
 
-select * from t_hello_api_access_2_entity;
-select * from t_hello_api_access_3_entity;
-select * from t_hello_api_access_4_entity;
-select * from t_hello_api_access_5_entity;
-select * from t_hello_api_access_entity;
+select * from t_hello_api_access_regex_entity;
+select * from t_hello_api_access_signature_entity;
+select * from t_hello_api_access_url_entity;
 select * from t_hello_audit_log_entity;
 select * from t_hello_channel_entity;
 select * from t_hello_tenant_entity;
