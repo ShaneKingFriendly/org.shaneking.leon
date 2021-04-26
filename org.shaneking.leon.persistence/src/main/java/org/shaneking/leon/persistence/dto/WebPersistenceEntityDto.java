@@ -1,11 +1,8 @@
-package org.shaneking.leon.persistence.biz.impl;
+package org.shaneking.leon.persistence.dto;
 
 import com.github.liaochong.myexcel.core.CsvBuilder;
-import com.github.liaochong.myexcel.core.DefaultExcelBuilder;
 import com.github.liaochong.myexcel.core.SaxExcelReader;
-import com.github.liaochong.myexcel.utils.FileExportUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.shaneking.leon.persistence.biz.WebPersistenceEntityBiz;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.persistence.Pagination;
 import org.shaneking.ling.persistence.entity.Identified;
@@ -27,17 +24,18 @@ import org.shaneking.roc.persistence.entity.sql.UserEntities;
 import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
-@Service
+@Component
 @Slf4j
-public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
+public class WebPersistenceEntityDto {
   @Value("${sk.leon.persistence.file.temporary.folder:/tmp}")
   private String temporaryFolder;
   @Value("${sk.leon.persistence.file.csv.buffer:1023}")
@@ -53,15 +51,14 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
 
   private <T extends CacheableEntities> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
     T rtn = null;
-    if (t instanceof TenantedNumberedEntities && !String0.isNullOrEmpty(((TenantedNumberedEntities) t).getNo()) && !String0.isNullOrEmpty(tenantId)) {
-      rtn = (T) tenantedNumberedCacheableDao.oneByNo(((TenantedNumberedEntities) t).getClass(), ((TenantedNumberedEntities) t).getNo(), tenantId, true);
-    } else if (t instanceof NumberedEntities && !String0.isNullOrEmpty(((NumberedEntities) t).getNo())) {
-      rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntities) t).getClass(), ((NumberedEntities) t).getNo(), true);
+    if (t instanceof TenantedNumberedEntities && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
+      rtn = (T) tenantedNumberedCacheableDao.oneByNo(((TenantedNumberedEntities) t).getClass(), t.getNo(), tenantId, true);
+    } else if (t instanceof NumberedEntities && !String0.isNullOrEmpty(t.getNo())) {
+      rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntities) t).getClass(), t.getNo(), true);
     }
     return rtn;
   }
 
-  @Override
   public <T extends CacheableEntities> Resp<Req<T, Integer>> mge(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
@@ -88,7 +85,6 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     return resp;
   }
 
-  @Override
   public <T extends CacheableEntities> Resp<Req<T, Integer>> add(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
@@ -102,7 +98,6 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     return resp;
   }
 
-  @Override
   public <T extends CacheableEntities> Resp<Req<T, Integer>> rmv(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
@@ -110,7 +105,9 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
       if (String0.isNullOrEmpty(t.getId()) && t.findWhereConditions(Identified.FIELD__ID).size() == 0) {
         long cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
         if (cnt < Pagination.MAX_SIZE) {
+          Pagination definedPagination = t.sroPagination(new Pagination().setPage(Pagination.MAX_SIZE));
           t.forceWhereCondition(Identified.FIELD__ID).resetVal(cacheableDao.lstIds(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+          t.setPagination(definedPagination);
           resp = rmvById(req, entityClass);
         } else {
           req.getPri().setRtn(cacheableDao.rmv(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
@@ -125,7 +122,6 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     return resp;
   }
 
-  @Override
   public <T extends CacheableEntities> Resp<Req<T, Integer>> rmvById(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
@@ -156,7 +152,69 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     return resp;
   }
 
-  @Override
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> ivd(Req<T, Integer> req, Class<T> entityClass) {
+    Resp<Req<T, Integer>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      if (String0.isNullOrEmpty(t.getId()) && t.findWhereConditions(Identified.FIELD__ID).size() == 0) {
+        long cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
+        if (cnt < Pagination.MAX_SIZE) {
+          Pagination definedPagination = t.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+          t.forceWhereCondition(Identified.FIELD__ID).resetVal(cacheableDao.lstIds(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+          t.setPagination(definedPagination);
+          resp = ivdById(req, entityClass);
+        } else {
+          T tmpT = entityClass.newInstance();
+          tmpT.srvWhereConditions(t.getWhereConditions());
+          for (Map.Entry<String, Object> e : t.fieldNameValues().entrySet()) {
+            tmpT.forceWhereCondition(e.getKey() + String0.UNDERLINE + String0.UNDERLINE + System.currentTimeMillis()).resetVal(String.valueOf(e.getValue()));
+          }
+          tmpT.setInvalid(String0.Y);
+          req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(tmpT, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+        }
+      } else {
+        resp = ivdById(req, entityClass);
+      }
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> ivdById(Req<T, Integer> req, Class<T> entityClass) {
+    Resp<Req<T, Integer>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      if (String0.isNullOrEmpty(t.getId()) && t.findWhereConditions(Identified.FIELD__ID).size() == 0) {
+        resp.setCode(Identified.ERR_CODE__REQUIRED);
+      } else {
+        if (String0.isNullOrEmpty(t.getId())) {
+          long cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
+          if (cnt < Pagination.MAX_SIZE) {
+            Pagination definedPagination = t.sroPagination(new Pagination().setPage(Pagination.MAX_SIZE));
+            List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
+            t.setPagination(definedPagination);
+            ///show variables like 'max_allow%';
+            ///max_allowed_packet
+            t.setInvalid(String0.Y);
+            req.getPri().setRtn(ids.size() > 0 ? cacheableDao.modByIdsVer(entityClass, t, ids) : 0);
+          } else {
+            t.setInvalid(String0.Y);
+            req.getPri().setRtn(cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+          }
+        } else {
+          t.setInvalid(String0.Y);
+          req.getPri().setRtn(cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+        }
+      }
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
   public <T extends CacheableEntities> Resp<Req<T, Integer>> mod(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
@@ -173,7 +231,9 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
           cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(tmpT, List0.newArrayList(req.gnnCtx().gnaTenantId())));
         }
         if (cnt < Pagination.MAX_SIZE) {
+          Pagination definedPagination = t.sroPagination(new Pagination().setPage(Pagination.MAX_SIZE));
           t.forceWhereCondition(Identified.FIELD__ID).resetVal(cacheableDao.lstIds(entityClass, CacheableDao.pts(tmpT, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+          t.setPagination(definedPagination);
           resp = rmvById(req, entityClass);
         } else {
           req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
@@ -188,7 +248,6 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     return resp;
   }
 
-  @Override
   public <T extends CacheableEntities> Resp<Req<T, Integer>> modById(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
@@ -204,8 +263,9 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
             T tmpT = entityClass.newInstance();
             tmpT.srvWhereConditions(t.getWhereConditions());
             tmpT.setVersion(t.getVersion());
-            tmpT.setPagination(new Pagination().setPage(Pagination.MAX_SIZE));
+            Pagination definedPagination = tmpT.sroPagination(new Pagination().setPage(Pagination.MAX_SIZE));
             List<String> ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(tmpT, List0.newArrayList(req.gnnCtx().gnaTenantId())));
+            tmpT.setPagination(definedPagination);
             req.getPri().setRtn(ids.size() > 0 ? cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId())), ids) : 0);
           } else {
             req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
@@ -221,7 +281,6 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     return resp;
   }
 
-  @Override
   public <T extends CacheableEntities> Resp<Req<T, List<T>>> lst(Req<T, List<T>> req, Class<T> entityClass) {
     Resp<Req<T, List<T>>> resp = Resp.success(req);
     try {
@@ -239,7 +298,6 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     return resp;
   }
 
-  @Override
   public <T extends CacheableEntities> Resp<Req<T, T>> one(Req<T, T> req, Class<T> entityClass) {
     Resp<Req<T, T>> resp = Resp.success(req);
     try {
@@ -255,7 +313,6 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     return resp;
   }
 
-  @Override
   public <T extends CacheableEntities> Resp<Req<String, String>> csv(Req<String, String> req, Class<T> entityClass) {
     Resp<Req<String, String>> resp = Resp.success(req);
     try {
@@ -293,6 +350,7 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
         }
       });
       CsvBuilder.of(entityClass).noTitles().build(list).write(tmpPath, true);
+      //TODO load data
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
@@ -300,25 +358,6 @@ public class WebPersistenceEntityBizImpl implements WebPersistenceEntityBiz {
     return resp;
   }
 
-  @Override
-  public <T extends CacheableEntities> Resp<Req<String, String>> template(Req<String, String> req, Class<T> entityClass) {
-    Resp<Req<String, String>> resp = Resp.success(req);
-    try {
-      T t = entityClass.newInstance();
-      Path path = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_XLSX));
-      if (!path.toFile().exists()) {
-        path.toFile().getParentFile().mkdirs();
-        FileExportUtil.export(DefaultExcelBuilder.of(entityClass).build(List0.newArrayList(t)), path.toFile());
-      }
-      req.getPri().setRtn(path.toFile().getAbsolutePath());
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  @Override
   public <T extends CacheableEntities> Resp<Req<String, Integer>> xlsx(Req<String, Integer> req, Class<T> entityClass) {
     Resp<Req<String, Integer>> resp = Resp.success(req);
     try {
