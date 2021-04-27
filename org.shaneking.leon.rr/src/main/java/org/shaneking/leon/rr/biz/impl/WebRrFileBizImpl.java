@@ -6,6 +6,8 @@ import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.util.Date0;
 import org.shaneking.roc.rr.Req;
+import org.shaneking.roc.rr.annotation.RrAudit;
+import org.shaneking.roc.rr.annotation.RrCrypto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,11 +24,15 @@ public class WebRrFileBizImpl implements WebRrFileBiz {
   @Value("${sk.leon.rr.file.upload.folder:/tmp}")
   private String uploadFolder;
 
+  @RrAudit
+  @RrCrypto
   @Override
   public Resp<Req<String, String>> attach(Req<String, String> req, MultipartFile multipartFile) {
     return transform(req, multipartFile, attachFolder);
   }
 
+  @RrAudit
+  @RrCrypto
   @Override
   public Resp<Req<String, String>> upload(Req<String, String> req, MultipartFile multipartFile) {
     return transform(req, multipartFile, uploadFolder);

@@ -11,6 +11,7 @@ drop table if exists t_hello_user_entity;
 create table if not exists `t_hello_api_access_regex_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `dd` varchar(40) default 'N',
   `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
@@ -30,6 +31,7 @@ create unique index if not exists u_idx_channel_id_tenant_id on t_hello_api_acce
 create table if not exists `t_hello_api_access_signature_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `dd` varchar(40) default 'N',
   `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
@@ -47,6 +49,7 @@ create unique index if not exists u_idx_channel_id_tenant_id_signature on t_hell
 create table if not exists `t_hello_api_access_url_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `dd` varchar(40) default 'N',
   `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
@@ -64,6 +67,7 @@ create unique index if not exists u_idx_channel_id_tenant_id_url on t_hello_api_
 create table if not exists `t_hello_audit_log_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `dd` varchar(40) default 'N',
   `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
@@ -92,6 +96,7 @@ create table if not exists `t_hello_audit_log_entity` (
 create table if not exists `t_hello_channel_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `dd` varchar(40) default 'N',
   `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
@@ -111,6 +116,7 @@ create unique index if not exists u_idx_no on t_hello_channel_entity(`no`);
 create table if not exists `t_hello_tenant_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `dd` varchar(40) default 'N',
   `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',
@@ -126,6 +132,7 @@ create unique index if not exists u_idx_no on t_hello_tenant_entity(`no`);
 create table if not exists `t_hello_user_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
+  `dd` varchar(40) default 'N',
   `no` varchar(40) default '',
   `invalid` varchar(1) default 'N',
   `last_modify_date_time` varchar(20) default '',

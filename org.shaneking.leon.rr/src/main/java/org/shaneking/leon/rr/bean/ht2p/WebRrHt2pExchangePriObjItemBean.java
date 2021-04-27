@@ -1,4 +1,4 @@
-package org.shaneking.leon.rr.bean;
+package org.shaneking.leon.rr.bean.ht2p;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Accessors(chain = true)
 @ToString
-public class WebRrHt2pBean {
+public class WebRrHt2pExchangePriObjItemBean {
   @Getter
   @Setter
   private String url;
