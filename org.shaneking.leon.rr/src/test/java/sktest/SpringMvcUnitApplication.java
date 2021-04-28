@@ -1,4 +1,4 @@
-package sktest.leon.rr;
+package sktest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
