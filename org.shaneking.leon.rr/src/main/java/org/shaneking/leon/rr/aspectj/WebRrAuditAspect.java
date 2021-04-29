@@ -19,12 +19,18 @@ import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
 
+/**
+ * @see org.shaneking.roc.rr.aspectj.RrAuditAspect#ORDER
+ * @see org.shaneking.roc.rr.aspectj.RrAccessAspect#ORDER
+ */
 @Aspect
 @Component
 @ConditionalOnProperty(prefix = "sk.leon.rr.audit", value = "enabled")
 @Slf4j
-@Order(450)///400(org.shaneking.roc.rr.aspectj.RrAuditAspect) < 450 < 500(org.shaneking.roc.rr.aspectj.RrAccessAspect)
+@Order(WebRrAuditAspect.ORDER)
 public class WebRrAuditAspect {
+  public static final int ORDER = 45000;
+
   @Value("${sk.leon.rr.audit.enabled:false}")
   private boolean enabled;
 
