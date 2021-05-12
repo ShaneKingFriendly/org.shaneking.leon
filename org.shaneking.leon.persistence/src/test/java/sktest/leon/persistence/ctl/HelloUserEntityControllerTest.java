@@ -17,7 +17,7 @@ class HelloUserEntityControllerTest extends SKSpringMvcUnit {
     assertNotNull(performJT("/user/mod"));
     setTstSeq("mge");
     assertNotNull(performJT("/user/mge"));
-    setTstSeq("rmvById");
-    assertNotNull(performJJ("/user/rmvById"));
+    setTstSeq("rmv");
+    assertNotNull(performJT("/user/rmv"));//dd is random
   }
 }

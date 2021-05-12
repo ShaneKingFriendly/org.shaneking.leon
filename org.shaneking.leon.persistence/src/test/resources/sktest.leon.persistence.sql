@@ -5,6 +5,7 @@ drop table if exists t_hello_audit_log_entity;
 drop table if exists t_hello_channel_entity;
 drop table if exists t_hello_tenant_entity;
 drop table if exists t_hello_user_entity;
+drop table if exists t_hello_user_entity_d;
 
 
 -- HelloApiAccessRegexEntityTest_createTableIfNotExistSql_null_o.txt
@@ -155,9 +156,9 @@ select 0,'1612262610216_koFVLCNZrhezbgULWqW','tstUserNo','N','','1612262610216_k
 insert into t_hello_channel_entity (version, id, no, invalid, last_modify_date_time, last_modify_user_id, name, description, token_value, token_force, token_algorithm_type, token_value_type)
 select 0,'1612263653223_oGFvE5Hyndf0njoFhyK','tstChannelNo','N','','1612262610216_koFVLCNZrhezbgULWqW','tstChannelName','tstChannelDesc','494c6f7665596f75','N','SKC1','SELF';
 insert into t_hello_api_access_regex_entity (version, id, invalid, last_modify_date_time, last_modify_user_id, channel_id, tenant_id, allow_url_regex, allow_signature_regex, deny_url_regex, deny_signature_regex)
-select 0,'1612263668482_jaHu6tmguyKo2xWgHPj','N','','1612262610216_koFVLCNZrhezbgULWqW','1612263653223_oGFvE5Hyndf0njoFhyK','1612262610215_LoHqeZBGrVYm3MlYmpH','','^[\s\S]*(add|rmvById|mod|mge|lst)\([\s\S]*$','','';
+select 0,'1612263668482_jaHu6tmguyKo2xWgHPj','N','','1612262610216_koFVLCNZrhezbgULWqW','1612263653223_oGFvE5Hyndf0njoFhyK','1612262610215_LoHqeZBGrVYm3MlYmpH','','^[\s\S]*(add|rmv|mod|mge|lst)\([\s\S]*$','','';
 
-
+create table if not exists t_hello_user_entity_d as select * from t_hello_user_entity where 1=0;
 select * from t_hello_api_access_regex_entity;
 select * from t_hello_api_access_signature_entity;
 select * from t_hello_api_access_url_entity;
@@ -165,6 +166,7 @@ select * from t_hello_audit_log_entity;
 select * from t_hello_channel_entity;
 select * from t_hello_tenant_entity;
 select * from t_hello_user_entity;
+select * from t_hello_user_entity_d;
 
 
 vacuum;

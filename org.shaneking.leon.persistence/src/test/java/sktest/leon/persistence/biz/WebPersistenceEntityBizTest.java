@@ -2,6 +2,7 @@ package sktest.leon.persistence.biz;
 
 import com.github.liaochong.myexcel.core.DefaultExcelBuilder;
 import com.github.liaochong.myexcel.utils.FileExportUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.shaneking.ling.test.SKUnit;
@@ -13,6 +14,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 class WebPersistenceEntityBizTest extends SKUnit {
 
   @Test
@@ -24,11 +26,21 @@ class WebPersistenceEntityBizTest extends SKUnit {
   }
 
   @Test
-  void rmv() {
+  void del() {
   }
 
   @Test
-  void del() {
+  void rmv() {
+    assert 1 == new Integer(1);
+
+    boolean exception = false;
+    try {
+      assert 1 == new Integer(2);
+    } catch (Error e) {
+      log.error(e.getMessage(), e);
+      exception = true;
+    }
+    assert exception;
   }
 
   @Test
