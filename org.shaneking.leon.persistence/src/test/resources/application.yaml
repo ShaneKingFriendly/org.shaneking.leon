@@ -2,7 +2,7 @@
 sk:
   roc:
     cache:
-      string:
+      transactional:
         enabled: true
     persistence:
       entity:
