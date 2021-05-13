@@ -1,0 +1,39 @@
+language: java
+sudo: false # faster builds
+
+cache:
+  directories:
+    - $HOME/.m2
+
+#https://docs.travis-ci.com/user/languages/java/
+jdk:
+  - openjdk8
+  - openjdk11
+
+#https://docs.travis-ci.com/user/multi-os/
+os:
+  - linux
+  - osx
+  #- windows #The language 'java' is currently unsupported on the Windows Build Environment.
+
+#https://docs.travis-ci.com/user/multi-cpu-architectures/
+arch:
+  - amd64
+  #- ppc64le
+  #- s390x
+  #- arm64 #/home/travis/.travis/functions: line 351: mvn: command not found
+
+jobs:
+  allow_failures:
+    - os: osx
+      jdk: openjdk8 #The command "~/bin/install-jdk.sh --target "/Users/travis/openjdk8" --workspace "/Users/travis/.cache/install-jdk" --feature "8" --license "GPL"" failed and exited with 3 during .
+    - os: linux
+      jdk: openjdk11 #[ERROR]   InetAddress0Test.putCustomHost:45 Multiple Failures (5 failures) java.lang.NoSuchFieldException: addressCache
+    - os: osx
+      jdk: openjdk11 #[ERROR]   InetAddress0Test.putCustomHost:45 Multiple Failures (5 failures) java.lang.NoSuchFieldException: addressCache
+
+before_install:
+  - pip install --user codecov
+
+after_success:
+  - codecov
