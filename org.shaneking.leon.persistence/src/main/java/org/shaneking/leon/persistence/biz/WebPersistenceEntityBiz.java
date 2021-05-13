@@ -12,9 +12,11 @@ import org.shaneking.ling.persistence.entity.Identified;
 import org.shaneking.ling.persistence.entity.sql.Tenanted;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.io.File0;
+import org.shaneking.ling.zero.lang.Char0;
 import org.shaneking.ling.zero.lang.String0;
 import org.shaneking.ling.zero.lang.ZeroException;
 import org.shaneking.ling.zero.persistence.Tuple;
+import org.shaneking.ling.zero.text.MF0;
 import org.shaneking.ling.zero.util.Date0;
 import org.shaneking.ling.zero.util.List0;
 import org.shaneking.ling.zero.util.Map0;
@@ -32,13 +34,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -396,41 +401,61 @@ public class WebPersistenceEntityBiz {
   public <T extends CacheableEntities> Resp<Req<String, String>> csv(Req<String, String> req, Class<T> entityClass) {
     Resp<Req<String, String>> resp = Resp.success(req);
     try {
+      AtomicInteger writeTimes = new AtomicInteger(0);
       List<T> list = List0.newArrayList();
       File csvFile = new File(req.getPri().getObj());
       Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), String0.nullOrEmptyTo(req.getPub().getTracingNo(), UUID0.cUl33()), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
+      tmpPath.toFile().getParentFile().mkdirs();
       SaxExcelReader.of(entityClass).rowFilter(row -> row.getRowNum() > 0).readThen(csvFile, (row, ctx) -> {
         try {
-          if (ctx.getRowNum() > 0 && ctx.getRowNum() % csvBuffer == 0) {
-            if (ctx.getRowNum() / csvBuffer == 1) {
+          if (row instanceof Tenanted) {
+            ((Tenanted) row).setTenantId(req.gnnCtx().gnaTenantId());
+          }
+          row.initWithUserIdAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
+          list.add(row);
+          if (ctx.getRowNum() % csvBuffer == 0) {
+            if (writeTimes.getAndIncrement() == 0) {
               CsvBuilder.of(entityClass).build(list).write(tmpPath);
             } else {
               CsvBuilder.of(entityClass).noTitles().build(list).write(tmpPath, true);
             }
             list.clear();
-          } else {
-            if (row instanceof Tenanted) {
-              ((Tenanted) row).setTenantId(req.gnnCtx().gnaTenantId());
-            }
-            row.initWithUserId(req.gnnCtx().gnaUserId());
-            if (String0.isNullOrEmpty(row.getId())) {
-              T existT = exists(entityClass, row, req.gnnCtx().gnaTenantId());
-              if (existT == null) {
-                row.sinId(UUID0.cUl33());
-              } else {
-                row.setVersion(existT.getVersion());
-                row.setId(existT.getId());
-              }
-            }
-            list.add(row);
           }
         } catch (Exception e) {
           log.error(OM3.p(row, ctx), e);
           throw new ZeroException(OM3.p(row, ctx), e);
         }
       });
-      CsvBuilder.of(entityClass).noTitles().build(list).write(tmpPath, true);
-      //TODO load data
+      if (list.size() > 0) {
+        if (writeTimes.getAndIncrement() == 0) {
+          CsvBuilder.of(entityClass).build(list).write(tmpPath);
+        } else {
+          CsvBuilder.of(entityClass).noTitles().build(list).write(tmpPath, true);
+        }
+      }
+      if (writeTimes.intValue() > 0) {
+        String titles = null;
+        try (Stream<String> stream = Files.lines(tmpPath)) {
+          titles = stream.findFirst().get();
+        } catch (Exception e) {
+          throw e;
+        }
+        if (String0.isNullOrEmpty(titles)) {
+          resp.setCode(Resp.CODE_UNKNOWN_EXCEPTION);
+        } else {
+          //\ufeff
+          while (titles.length() > 0 && !Char0.isAlphabetOrDigital(titles.charAt(0))) {
+            titles = titles.substring(1);
+          }
+          String sql = MF0.fmt("load data local infile '{0}' replace into table {1} fields terminated by ',' optionally enclosed by '\"' lines terminated by '\\n' ignore 1 lines ({2})"
+            , tmpPath.toFile().getAbsolutePath().replaceAll("\\\\", "/")
+            , entityClass.newInstance().fullTableName()
+            , List0.newArrayList(titles.split(String0.COMMA)).stream().map(s -> String0.wrap(String0.field2DbColumn(s.trim()), "`")).collect(Collectors.joining(String0.COMMA)));
+          log.info(sql);
+          cacheableDao.getJdbcTemplate().execute(sql);
+          req.getPri().setRtn(String0.Y);
+        }
+      }
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
