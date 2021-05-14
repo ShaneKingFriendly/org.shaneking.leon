@@ -1,32 +1,23 @@
 package sktest.leon.persistence.biz;
 
 import com.github.liaochong.myexcel.core.DefaultExcelBuilder;
+import com.github.liaochong.myexcel.core.SaxExcelReader;
 import com.github.liaochong.myexcel.utils.FileExportUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
-import org.shaneking.leon.persistence.biz.WebPersistenceEntityBiz;
+import org.shaneking.ling.jackson.databind.OM3;
+import org.shaneking.ling.test.SKUnit;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.String0;
-import org.shaneking.ling.zero.util.UUID0;
-import org.shaneking.roc.persistence.hello.entity.HelloTenantEntity;
 import org.shaneking.roc.persistence.hello.entity.HelloUserEntity;
-import org.shaneking.roc.rr.Ctx;
-import org.shaneking.roc.rr.Pri;
-import org.shaneking.roc.rr.Pub;
-import org.shaneking.roc.rr.Req;
-import org.shaneking.roc.test.SKSpringUnit;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-class WebPersistenceEntityBizTest extends SKSpringUnit {
-
-  @Autowired
-  private WebPersistenceEntityBiz webPersistenceEntityBiz;
+class WebPersistenceEntityBizTest extends SKUnit {
 
   @Test
   void mge() {
@@ -67,12 +58,9 @@ class WebPersistenceEntityBizTest extends SKSpringUnit {
   }
 
   void csv(String fileType) {
-    Req<String, String> req = Req.<String, String>build().setCtx(new Ctx().setTenant(new HelloTenantEntity()).setUser(new HelloUserEntity()))
-      .setPub(new Pub().setTracingNo(UUID0.cUl33()))
-      .setPri(Pri.build("", tstIFiles(fileType).getAbsolutePath()));
-    req.gnnCtx().getTenant().setId("skTestTenantId");
-    req.gnnCtx().getUser().setId("skTestUserId");
-    webPersistenceEntityBiz.csv(req, HelloUserEntity.class);
+    SaxExcelReader.of(HelloUserEntity.class).rowFilter(row -> row.getRowNum() > 0).readThen(tstIFiles(fileType), (row, ctx) -> {
+      log.info(OM3.p(row, ctx));
+    });
   }
 
   @Test

@@ -61,28 +61,12 @@ public abstract class WebPersistenceEntityController<T extends CacheableEntities
     return this.getEntityBiz().ivd(req, this.getEntityClass());
   }
 
-  @PostMapping(path = {"/ivdById"})
-  @RrAudit
-  @RrAccess
-  @RrCrypto
-  public Resp<Req<T, Integer>> ivdById(@RequestBody Req<T, Integer> req) {
-    return this.getEntityBiz().ivdById(req, this.getEntityClass());
-  }
-
   @PostMapping(path = {"/mod"})
   @RrAudit
   @RrAccess
   @RrCrypto
   public Resp<Req<T, Integer>> mod(@RequestBody Req<T, Integer> req) {
     return this.getEntityBiz().mod(req, this.getEntityClass());
-  }
-
-  @PostMapping(path = {"/modById"})
-  @RrAudit
-  @RrAccess
-  @RrCrypto
-  public Resp<Req<T, Integer>> modById(@RequestBody Req<T, Integer> req) {
-    return this.getEntityBiz().modById(req, this.getEntityClass());
   }
 
   @PostMapping(path = {"/lst"})
