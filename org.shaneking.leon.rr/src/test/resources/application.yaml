@@ -33,8 +33,9 @@ sk:
     rr:
       audit:
         enabled: true
-      geh:
-        enabled: true
+      controller:
+        advice:
+          enabled: true
       req:
         ips:
           enabled: true
