@@ -31,6 +31,7 @@ import org.shaneking.roc.persistence.entity.sql.UserEntities;
 import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -45,6 +46,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
+@ConditionalOnBean(UserEntities.class)
 @Service
 @Slf4j
 public class WebPersistenceEntityBiz {
@@ -54,9 +57,9 @@ public class WebPersistenceEntityBiz {
   private int csvBuffer;
   @Autowired
   private CacheableDao cacheableDao;
-  @Autowired(required = false)
+  @Autowired
   private NumberedCacheableDao numberedCacheableDao;
-  @Autowired(required = false)
+  @Autowired
   private TenantedNumberedCacheableDao tenantedNumberedCacheableDao;
   @Autowired
   private UserEntities userEntityClass;

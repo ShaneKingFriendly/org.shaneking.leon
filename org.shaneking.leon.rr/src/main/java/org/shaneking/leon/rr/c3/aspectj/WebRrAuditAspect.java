@@ -25,13 +25,13 @@ import java.text.MessageFormat;
  */
 @Aspect
 @Component
-@ConditionalOnProperty(prefix = "sk.leon.rr.audit", value = "enabled")
+@ConditionalOnProperty(prefix = "sk.leon.rr.audit", value = "enabled", matchIfMissing = true)
 @Slf4j
 @Order(WebRrAuditAspect.ORDER)
 public class WebRrAuditAspect {
   public static final int ORDER = 45000;
 
-  @Value("${sk.leon.rr.audit.enabled:false}")
+  @Value("${sk.leon.rr.audit.enabled:true}")
   private boolean enabled;
 
   @Pointcut("execution(@org.shaneking.roc.rr.annotation.RrAudit * *..*.*(..))")

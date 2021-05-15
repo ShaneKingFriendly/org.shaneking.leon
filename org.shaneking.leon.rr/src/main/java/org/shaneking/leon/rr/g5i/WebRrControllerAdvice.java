@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 //https://www.jianshu.com/p/53ec69f1236e
-@ConditionalOnProperty(prefix = "sk.leon.rr.controller.advice", value = "enabled")
+@ConditionalOnProperty(prefix = "sk.leon.rr.controller.advice", value = "enabled", matchIfMissing = true)
 @ControllerAdvice
 @Slf4j
 public class WebRrControllerAdvice {

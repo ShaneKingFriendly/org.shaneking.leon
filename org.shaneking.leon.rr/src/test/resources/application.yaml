@@ -9,26 +9,12 @@ sk:
         cache:
           enabled: true
     persistence:
-      dao:
-        cache:
-          enabled: true
       entity:
         cache:
           enabled: true
       hello:
         entity:
           enabled: true
-    rr:
-      limiting:
-        enabled: true
-      audit:
-        enabled: true
-      access:
-        enabled: true
-      cache:
-        enabled: true
-      crypto:
-        enabled: true
   leon:
     rr:
       audit:
