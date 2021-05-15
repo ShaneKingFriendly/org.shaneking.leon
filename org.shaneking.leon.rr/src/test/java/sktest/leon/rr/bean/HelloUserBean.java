@@ -1,7 +1,7 @@
 package sktest.leon.rr.bean;
 
 import lombok.NonNull;
-import org.shaneking.roc.persistence.hello.entity.HelloUserEntity;
+import org.shaneking.roc.persistence.hello.HelloUserEntity;
 
 public class HelloUserBean extends HelloUserEntity {
   public static HelloUserBean fromEntity(HelloUserEntity entity) {

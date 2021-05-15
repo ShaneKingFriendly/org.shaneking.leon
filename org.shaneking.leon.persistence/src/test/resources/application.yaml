@@ -1,15 +1,22 @@
 ## sk
 sk:
   roc:
-    cache:
-      transactional:
-        enabled: true
+    zero:
+      cache:
+        transactional:
+          enabled: true
+      hello:
+        cache:
+          enabled: true
     persistence:
+      dao:
+        cache:
+          enabled: true
       entity:
         cache:
           enabled: true
-      dao:
-        cache:
+      hello:
+        entity:
           enabled: true
     rr:
       limiting:

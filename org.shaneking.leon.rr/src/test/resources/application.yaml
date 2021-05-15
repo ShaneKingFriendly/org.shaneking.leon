@@ -1,26 +1,22 @@
 ## sk
 sk:
-  leon:
-    rr:
-      audit:
-        enabled: true
-      geh:
-        enabled: true
-      req:
-        ips:
-          enabled: true
-        url:
-          enabled: true
   roc:
-    cache:
-      string:
-        enabled: true
+    zero:
+      cache:
+        transactional:
+          enabled: true
+      hello:
+        cache:
+          enabled: true
     persistence:
+      dao:
+        cache:
+          enabled: true
       entity:
         cache:
           enabled: true
-      dao:
-        cache:
+      hello:
+        entity:
           enabled: true
     rr:
       limiting:
@@ -33,6 +29,17 @@ sk:
         enabled: true
       crypto:
         enabled: true
+  leon:
+    rr:
+      audit:
+        enabled: true
+      geh:
+        enabled: true
+      req:
+        ips:
+          enabled: true
+        url:
+          enabled: true
 
 ## spring
 spring:

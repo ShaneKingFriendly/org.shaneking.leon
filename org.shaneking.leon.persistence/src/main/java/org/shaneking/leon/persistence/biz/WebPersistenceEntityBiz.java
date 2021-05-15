@@ -54,9 +54,9 @@ public class WebPersistenceEntityBiz {
   private int csvBuffer;
   @Autowired
   private CacheableDao cacheableDao;
-  @Autowired
+  @Autowired(required = false)
   private NumberedCacheableDao numberedCacheableDao;
-  @Autowired
+  @Autowired(required = false)
   private TenantedNumberedCacheableDao tenantedNumberedCacheableDao;
   @Autowired
   private UserEntities userEntityClass;
@@ -64,9 +64,9 @@ public class WebPersistenceEntityBiz {
   //special for common
   private <T extends CacheableEntities> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
     T rtn = null;
-    if (t instanceof TenantedNumberedEntities && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
+    if (tenantedNumberedCacheableDao != null && t instanceof TenantedNumberedEntities && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
       rtn = (T) tenantedNumberedCacheableDao.oneByNo(((TenantedNumberedEntities) t).getClass(), t.getNo(), tenantId, true);
-    } else if (t instanceof NumberedEntities && !String0.isNullOrEmpty(t.getNo())) {
+    } else if (numberedCacheableDao != null && t instanceof NumberedEntities && !String0.isNullOrEmpty(t.getNo())) {
       rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntities) t).getClass(), t.getNo(), true);
     }
     return rtn;

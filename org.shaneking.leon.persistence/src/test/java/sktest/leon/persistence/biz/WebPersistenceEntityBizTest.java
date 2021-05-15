@@ -10,7 +10,7 @@ import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.test.SKUnit;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.String0;
-import org.shaneking.roc.persistence.hello.entity.HelloUserEntity;
+import org.shaneking.roc.persistence.hello.HelloUserEntity;
 
 import java.io.IOException;
 

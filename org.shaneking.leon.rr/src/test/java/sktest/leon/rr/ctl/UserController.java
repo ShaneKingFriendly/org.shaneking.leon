@@ -3,7 +3,7 @@ package sktest.leon.rr.ctl;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.util.List0;
 import org.shaneking.roc.persistence.dao.CacheableDao;
-import org.shaneking.roc.persistence.hello.entity.HelloUserEntity;
+import org.shaneking.roc.persistence.hello.HelloUserEntity;
 import org.shaneking.roc.rr.Req;
 import org.shaneking.roc.rr.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;

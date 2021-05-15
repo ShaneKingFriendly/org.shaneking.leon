@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.shaneking.leon</groupId>
     <artifactId>org.shaneking.leon</artifactId>
-    <version>0.241.6.Friendly-SNAPSHOT</version>
+    <version>0.241.7.Friendly-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.shaneking.leon.persistence</artifactId>
-  <version>0.241.6.Friendly-SNAPSHOT</version>
+  <version>0.241.7.Friendly-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>org.shaneking.leon.persistence</name>
@@ -57,12 +57,6 @@
     <dependency>
       <groupId>org.shaneking.leon</groupId>
       <artifactId>org.shaneking.leon.test</artifactId>
-      <version>${project.parent.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.shaneking.roc</groupId>
-      <artifactId>org.shaneking.roc.persistence.hello</artifactId>
       <version>${project.parent.version}</version>
       <scope>test</scope>
     </dependency>
