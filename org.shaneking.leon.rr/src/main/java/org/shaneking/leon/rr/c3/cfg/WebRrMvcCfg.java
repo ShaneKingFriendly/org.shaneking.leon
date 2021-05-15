@@ -1,7 +1,7 @@
 package org.shaneking.leon.rr.c3.cfg;
 
-import org.shaneking.leon.rr.g5g.WebRrReqIpsInterceptor;
-import org.shaneking.leon.rr.g5g.WebRrReqUrlInterceptor;
+import org.shaneking.leon.rr.g5e5interceptor.WebRrReqIpsInterceptor;
+import org.shaneking.leon.rr.g5e5interceptor.WebRrReqUrlInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

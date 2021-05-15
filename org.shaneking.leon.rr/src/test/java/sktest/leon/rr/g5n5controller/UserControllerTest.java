@@ -1,4 +1,4 @@
-package sktest.leon.rr.g5n;
+package sktest.leon.rr.g5n5controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

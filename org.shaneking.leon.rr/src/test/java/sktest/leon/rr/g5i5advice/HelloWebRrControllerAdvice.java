@@ -1,4 +1,4 @@
-package sktest.leon.rr.g5i;
+package sktest.leon.rr.g5i5advice;
 
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.rr.RespException;

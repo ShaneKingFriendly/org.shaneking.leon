@@ -1,4 +1,4 @@
-package sktest.leon.rr.g5n;
+package sktest.leon.rr.g5n5controller;
 
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.util.List0;
@@ -58,7 +58,7 @@ public class UserController {
 
   @RequestMapping("/lst")
   @ResponseBody
-  @RrLimiting(prop = "sktest.leon.rr.g5n.UserController.lst", limit = 1)
+  @RrLimiting(prop = "sktest.leon.rr.g5n5controller.UserController.lst", limit = 1)
   @RrAudit
   @RrAccess
   @RrCache

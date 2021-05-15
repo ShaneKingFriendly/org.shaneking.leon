@@ -1,4 +1,4 @@
-package org.shaneking.leon.rr.g5g;
+package org.shaneking.leon.rr.g5e5interceptor;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;

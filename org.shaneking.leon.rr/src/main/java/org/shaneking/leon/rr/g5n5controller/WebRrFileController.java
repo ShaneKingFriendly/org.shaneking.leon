@@ -1,8 +1,8 @@
-package org.shaneking.leon.rr.g5n;
+package org.shaneking.leon.rr.g5n5controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
-import org.shaneking.leon.rr.i5n.WebRrFileRr;
+import org.shaneking.leon.rr.i5n5rr.WebRrFileRr;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.roc.rr.Req;

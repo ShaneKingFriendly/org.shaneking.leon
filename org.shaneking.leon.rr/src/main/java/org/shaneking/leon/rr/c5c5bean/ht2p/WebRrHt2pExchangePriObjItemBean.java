@@ -1,4 +1,4 @@
-package org.shaneking.leon.rr.c5c.ht2p;
+package org.shaneking.leon.rr.c5c5bean.ht2p;
 
 import lombok.Getter;
 import lombok.Setter;
