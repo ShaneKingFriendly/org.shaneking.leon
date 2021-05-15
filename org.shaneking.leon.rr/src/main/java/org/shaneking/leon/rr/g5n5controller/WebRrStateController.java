@@ -2,6 +2,7 @@ package org.shaneking.leon.rr.g5n5controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.shaneking.ling.jackson.databind.OM3;
+import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.crypto.SKC1;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.String0;
@@ -66,6 +67,6 @@ public class WebRrStateController {
 
   @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = {"/uuid0/cul33"})
   public String stateUuid0cul33() {
-    return String.join(String0.COMMA, Arrays.stream(String0.repeat(String0.COMMA, 100).split(String0.COMMA)).map(s -> UUID0.cUl33()).collect(Collectors.toList()));
+    return Arrays.stream(String0.repeat(Resp.CODE_UNKNOWN_EXCEPTION, 100).split(String0.MINUS)).map(s -> UUID0.cUl33()).collect(Collectors.joining(String0.BLANK));
   }
 }
