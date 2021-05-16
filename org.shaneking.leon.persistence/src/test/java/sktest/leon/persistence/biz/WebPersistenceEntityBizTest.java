@@ -4,12 +4,12 @@ import com.github.liaochong.myexcel.core.DefaultExcelBuilder;
 import com.github.liaochong.myexcel.core.SaxExcelReader;
 import com.github.liaochong.myexcel.utils.FileExportUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.test.SKUnit;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.String0;
+import org.shaneking.ling.zero.util.List0;
 import org.shaneking.roc.persistence.hello.HelloUserEntity;
 
 import java.io.IOException;
@@ -80,7 +80,7 @@ class WebPersistenceEntityBizTest extends SKUnit {
 
   @Test
   void template() throws IOException {
-    FileExportUtil.export(DefaultExcelBuilder.of(HelloUserEntity.class).sheetName(new HelloUserEntity().getDbTableName()).build(Lists.newArrayList(new HelloUserEntity())), tstOFiles(File0.TYPE_XLSX));
+    FileExportUtil.export(DefaultExcelBuilder.of(HelloUserEntity.class).sheetName(new HelloUserEntity().getDbTableName()).build(List0.newArrayList(new HelloUserEntity())), tstOFiles(File0.TYPE_XLSX));
     assertEquals(String0.ARY_DEC, String0.DIGITAL);
   }
 
