@@ -2,7 +2,9 @@
 
 ShaneKing Spring Web Library
 
-## yaml default values
+## @
+
+### @ConditionalOnProperty
 
 ```yaml
 sk:
@@ -10,14 +12,21 @@ sk:
     rr:
       audit:
         enabled: true
-      controller:
-        advice:
-          enabled: true
       req:
         ips:
           enabled: true
         url:
           enabled: true
+      controller:
+        advice:
+          enabled: true
+```
+
+### @ConfigurationProperties
+
+```yaml
+sk:
+  leon:
     swagger:
       ui:
         enabled: false
@@ -25,4 +34,41 @@ sk:
         path-reg: /api/\w*/open/\S*
         title: ShaneKing
         version: 1.0
+```
+
+### @Value ${
+
+```yaml
+sk:
+  leon:
+    persistence:
+      file:
+        temporary:
+          folder: /tmp
+        csv:
+          buffer: 1023
+    rr:
+      audit:
+        enabled: true
+      req:
+        ips:
+          enabled: true
+        url:
+          enabled: true
+      ctl:
+        cmd:
+          prefix: /leon/rr/cmd
+        file:
+          prefix: /leon/rr/file
+        ht2p:
+          prefix: /leon/rr/ht2p
+        state:
+          prefix: /leon/rr/state
+      file:
+        temporary:
+          folder: /tmp
+        attach:
+          folder: /tmp
+        upload:
+          folder: /tmp
 ```
