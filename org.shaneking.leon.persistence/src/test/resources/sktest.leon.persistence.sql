@@ -8,7 +8,7 @@ drop table if exists t_hello_user_entity;
 drop table if exists t_hello_user_entity_d;
 
 
--- HelloApiAccessRegexEntityTest_createTableIfNotExistSql_null_o.txt
+-- HelloApiAccessRegexEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
 create table if not exists `t_hello_api_access_regex_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
@@ -28,7 +28,7 @@ create table if not exists `t_hello_api_access_regex_entity` (
 
 create unique index if not exists u_idx_channel_id_tenant_id on t_hello_api_access_regex_entity(`channel_id`,`tenant_id`);
 
--- HelloApiAccessSignatureEntityTest_createTableIfNotExistSql_null_o.txt
+-- HelloApiAccessSignatureEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
 create table if not exists `t_hello_api_access_signature_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
@@ -46,7 +46,7 @@ create table if not exists `t_hello_api_access_signature_entity` (
 
 create unique index if not exists u_idx_channel_id_tenant_id_signature on t_hello_api_access_signature_entity(`channel_id`,`tenant_id`,`signature`);
 
--- HelloApiAccessUrlEntityTest_createTableIfNotExistSql_null_o.txt
+-- HelloApiAccessUrlEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
 create table if not exists `t_hello_api_access_url_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
@@ -64,7 +64,7 @@ create table if not exists `t_hello_api_access_url_entity` (
 
 create unique index if not exists u_idx_channel_id_tenant_id_url on t_hello_api_access_url_entity(`channel_id`,`tenant_id`,`url`);
 
--- HelloAuditLogEntityTest_createTableIfNotExistSql_null_o.txt
+-- HelloAuditLogEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
 create table if not exists `t_hello_audit_log_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
@@ -93,7 +93,7 @@ create table if not exists `t_hello_audit_log_entity` (
   primary key (`id`)
 );
 
--- HelloChannelEntityTest_createTableIfNotExistSql_null_o.txt
+-- HelloChannelEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
 create table if not exists `t_hello_channel_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
@@ -113,7 +113,7 @@ create table if not exists `t_hello_channel_entity` (
 
 create unique index if not exists u_idx_no on t_hello_channel_entity(`no`);
 
--- HelloTenantEntityTest_createTableIfNotExistSql_null_o.txt
+-- HelloTenantEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
 create table if not exists `t_hello_tenant_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
@@ -129,7 +129,7 @@ create table if not exists `t_hello_tenant_entity` (
 
 create unique index if not exists u_idx_no on t_hello_tenant_entity(`no`);
 
--- HelloUserEntityTest_createTableIfNotExistSql_null_o.txt
+-- HelloUserEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
 create table if not exists `t_hello_user_entity` (
   `version` int not null default 0,
   `id` char(40) not null,
