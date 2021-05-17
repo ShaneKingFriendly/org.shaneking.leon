@@ -9,8 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.persistence.Pagination;
 import org.shaneking.ling.persistence.entity.Identified;
+import org.shaneking.ling.persistence.entity.sql.TenantReadable;
 import org.shaneking.ling.persistence.entity.sql.Tenanted;
 import org.shaneking.ling.rr.Resp;
+import org.shaneking.ling.rr.RespException;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.Char0;
 import org.shaneking.ling.zero.lang.String0;
@@ -26,6 +28,7 @@ import org.shaneking.roc.persistence.dao.CacheableDao;
 import org.shaneking.roc.persistence.dao.NumberedCacheableDao;
 import org.shaneking.roc.persistence.dao.TenantedNumberedCacheableDao;
 import org.shaneking.roc.persistence.entity.NumberedEntities;
+import org.shaneking.roc.persistence.entity.ReadableTenantEntities;
 import org.shaneking.roc.persistence.entity.TenantedNumberedEntities;
 import org.shaneking.roc.persistence.entity.sql.UserEntities;
 import org.shaneking.roc.rr.Req;
@@ -34,6 +37,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Transient;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,10 +55,14 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class WebPersistenceEntityBiz {
+  @Transient
+  public static final String ERR_CODE__ILLEGAL_CHARACTER = "PERSISTENCE_BIZ__ILLEGAL_CHARACTER(')";
   @Value("${sk.leon.persistence.file.temporary.folder:/tmp}")
   private String temporaryFolder;
   @Value("${sk.leon.persistence.file.csv.buffer:1023}")
   private int csvBuffer;
+  @Value("${sk.leon.persistence.dbserver.backup.folder:/tmp}")
+  private String dbserverBackupFolder;
   @Autowired
   private CacheableDao cacheableDao;
   @Autowired
@@ -304,8 +312,12 @@ public class WebPersistenceEntityBiz {
       T t = req.getPri().getObj();
       t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLastModifyUserId()));
       t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
-      req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
-      t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId()))));
+      List<String> tenantIdList = List0.newArrayList(req.gnnCtx().gnaTenantId());
+      if (t instanceof TenantReadable) {
+        tenantIdList = ReadableTenantEntities.calc(req.gnnCtx().getTrtList(), entityClass.getName(), List0.newArrayList(req.gnnCtx().gnaTenantId()));
+      }
+      req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, tenantIdList)));
+      t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, tenantIdList)));
       req.getPri().gnnExt().gnnTbl().setPagination(t.getPagination());
       ///setLastModifyUser in other biz when need
     } catch (Exception e) {
@@ -323,6 +335,31 @@ public class WebPersistenceEntityBiz {
       T rst = cacheableDao.one(entityClass, CacheableDao.pts(t, List0.newArrayList(req.gnnCtx().gnaTenantId())));
       rst.setLastModifyUser((Objects.equals(rst.getLastModifyUserId(), t.getLastModifyUserId())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLastModifyUserId()));
       req.getPri().setRtn(rst);
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, String>> iof(Req<T, String> req, Class<T> entityClass) {
+    Resp<Req<T, String>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      String rtn = dbserverBackupFolder + String0.SLASH + String0.nullOrEmptyTo(req.gnnCtx().gnaAuditId(), UUID0.cUl33());
+      Tuple.Pair<List<String>, List<Object>> pair = t.selectSql(t.getSelectList(), List0.newArrayList(), true);
+      List<String> args = List0.newArrayList();
+      for (Object o : Tuple.getSecond(pair)) {
+        if (String.valueOf(o).contains(String0.SINGLE_QUOTATION)) {
+          throw new RespException(Resp.failed(ERR_CODE__ILLEGAL_CHARACTER, String.valueOf(o), req));
+        }
+        args.add(String0.wrap(String.valueOf(o), o instanceof String ? String0.SINGLE_QUOTATION : String0.EMPTY));
+      }
+      String sql = String.format(String.join(String0.BLANK, Tuple.getFirst(pair)).replace(String0.QUESTION, "%s"), args)
+        + "into outfile '" + rtn + "' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\\n'";
+      log.info(sql);
+      cacheableDao.getJdbcTemplate().execute(sql);
+      req.getPri().setRtn(rtn);
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);

@@ -47,6 +47,9 @@ sk:
           folder: /tmp
         csv:
           buffer: 1023
+      dbserver:
+        backup:
+          folder: /tmp
     rr:
       audit:
         enabled: true
