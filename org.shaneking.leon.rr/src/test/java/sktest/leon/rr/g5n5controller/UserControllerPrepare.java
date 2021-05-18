@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequestMapping("/user")
 @RestController
-public class UserController {
+public class UserControllerPrepare {
 
   @Autowired
   private CacheableDao cacheableDao;
@@ -58,7 +58,7 @@ public class UserController {
 
   @RequestMapping("/lst")
   @ResponseBody
-  @RrLimiting(prop = "sktest.leon.rr.g5n5controller.UserController.lst", limit = 1)
+  @RrLimiting(prop = "sktest.leon.rr.g5n5controller.UserControllerPrepare.lst", limit = 1)
   @RrAudit
   @RrAccess
   @RrCache

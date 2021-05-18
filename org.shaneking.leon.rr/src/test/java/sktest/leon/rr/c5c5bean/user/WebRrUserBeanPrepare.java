@@ -3,11 +3,11 @@ package sktest.leon.rr.c5c5bean.user;
 import lombok.NonNull;
 import org.shaneking.roc.persistence.hello.HelloUserEntity;
 
-public class HelloWebRrUserBean extends HelloUserEntity {
-  public static HelloWebRrUserBean fromEntity(HelloUserEntity entity) {
-    HelloWebRrUserBean rtn = null;
+public class WebRrUserBeanPrepare extends HelloUserEntity {
+  public static WebRrUserBeanPrepare fromEntity(HelloUserEntity entity) {
+    WebRrUserBeanPrepare rtn = null;
     if (entity != null) {
-      rtn = new HelloWebRrUserBean();
+      rtn = new WebRrUserBeanPrepare();
       transform(entity, rtn);
     }
     return rtn;
@@ -21,7 +21,7 @@ public class HelloWebRrUserBean extends HelloUserEntity {
     to.setEmail(from.getEmail());
   }
 
-  public static HelloUserEntity toEntity(HelloWebRrUserBean bean) {
+  public static HelloUserEntity toEntity(WebRrUserBeanPrepare bean) {
     HelloUserEntity rtn = null;
     if (bean != null) {
       rtn = new HelloUserEntity();

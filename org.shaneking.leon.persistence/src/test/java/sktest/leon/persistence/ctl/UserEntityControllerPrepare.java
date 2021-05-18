@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/user")
 @RestController
-public class HelloUserEntityController extends WebPersistenceEntityController<HelloUserEntity> {
+public class UserEntityControllerPrepare extends WebPersistenceEntityController<HelloUserEntity> {
   @Getter
   private final Class<HelloUserEntity> entityClass = HelloUserEntity.class;
 

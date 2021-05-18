@@ -5,7 +5,7 @@ import org.shaneking.leon.test.SKSpringMvcUnit;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class HelloUserEntityControllerTest extends SKSpringMvcUnit {
+class UserEntityControllerTest extends SKSpringMvcUnit {
 
   @Test
   void curd() throws Exception {

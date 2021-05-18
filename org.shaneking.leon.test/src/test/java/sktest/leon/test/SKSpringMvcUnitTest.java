@@ -8,6 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class SKSpringMvcUnitTest extends SKSpringMvcUnit {
   @Test
   void test() throws Exception {
-    assertNotNull(performJJ("/hello/world"));
+    assertNotNull(performJJ("/test/user"));
   }
 }

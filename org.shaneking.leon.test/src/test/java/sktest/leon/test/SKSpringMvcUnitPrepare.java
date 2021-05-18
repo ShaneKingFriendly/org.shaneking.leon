@@ -1,4 +1,4 @@
-package sktest.leon.test.ctl;
+package sktest.leon.test;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/hello")
+@RequestMapping("/test")
 @RestController
-public class HelloController {
+public class SKSpringMvcUnitPrepare {
 
-  @RequestMapping("/world")
+  @RequestMapping("/user")
   @ResponseBody
-  public UserBean world(@RequestBody UserBean userBean) {
+  public UserBean user(@RequestBody UserBean userBean) {
     return userBean;
   }
 
