@@ -1,5 +1,5 @@
 {
-  "code": "API_ACCESS__PERMISSION_DENIED",
+  "code": "API_ACCESS_OP__PERMISSION_DENIED",
   "data": {
     "pri": {
       "ext": {

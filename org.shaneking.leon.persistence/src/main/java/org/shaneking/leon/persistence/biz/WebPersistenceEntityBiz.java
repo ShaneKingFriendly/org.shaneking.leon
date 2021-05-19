@@ -56,7 +56,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class WebPersistenceEntityBiz {
   @Transient
-  public static final String ERR_CODE__ILLEGAL_CHARACTER = "PERSISTENCE_BIZ__ILLEGAL_CHARACTER(')";
+  public static final String ERR_CODE__ILLEGAL_CHARACTER = "WEB_PERSISTENCE_ENTITY_BIZ__ILLEGAL_CHARACTER(')";
   @Value("${sk.leon.persistence.file.temporary.folder:/tmp}")
   private String temporaryFolder;
   @Value("${sk.leon.persistence.file.csv.buffer:1023}")
