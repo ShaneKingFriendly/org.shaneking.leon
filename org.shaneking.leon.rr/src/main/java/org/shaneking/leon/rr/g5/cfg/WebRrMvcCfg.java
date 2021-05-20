@@ -1,4 +1,4 @@
-package org.shaneking.leon.rr.g5g5.cfg;
+package org.shaneking.leon.rr.g5.cfg;
 
 import org.shaneking.leon.rr.j5f5interceptor.WebRrReqIpsInterceptor;
 import org.shaneking.leon.rr.j5f5interceptor.WebRrReqUrlInterceptor;

@@ -1,4 +1,4 @@
-[//]:(https://github.com/ShaneKing/spec.sk/blob/5532d608ac34065651ac4d7eb58b366bb0a107ae/Java.md)
+[//]:(https://github.com/ShaneKing/spec.sk/blob/9301383f8226f5a5126bc0cc4927298bcb4c89f5/Java.md)
 
 # Package
 
@@ -17,8 +17,8 @@ the layers like car, A classes, B classes, C classes, A0 classes, A1 classes, A0
 ### Design
 
 - stub: open for caller
-  - q5q5bean: XxxBean
-  - u5u5entity: XxxEntity
+  - q5bean: XxxBean
+  - u5entity: XxxEntity
 - prog
   - BEGIN
     - f5j5filter

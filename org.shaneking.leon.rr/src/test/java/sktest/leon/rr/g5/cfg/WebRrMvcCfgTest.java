@@ -1,4 +1,4 @@
-package sktest.leon.rr.g5g5.cfg;
+package sktest.leon.rr.g5.cfg;
 
 import org.junit.jupiter.api.Test;
 import org.shaneking.leon.test.SKSpringMvcUnit;
