@@ -1,26 +1,34 @@
-[//]:(https://github.com/ShaneKing/spec.sk/blob/0ae1f0420ef89a04a6a65de1858a0d38b85819c6/Java.md)
+[//]:(https://github.com/ShaneKing/spec.sk/blob/5532d608ac34065651ac4d7eb58b366bb0a107ae/Java.md)
+
 # Package
+
 ## Process Flow Layer
+
 the layers like car, A classes, B classes, C classes, A0 classes, A1 classes, A00 classes(WuLingHongGuang MINI EV)
+
 ### Analysis
-- ABCDEFG HIJKLMN OPQRST UVWXYZ
-  - access layer(@Controller), process layer(@Service), storage layer(@Repository)
+
+- AbCdE`f`GhI`j`KlM`n`OpQ`r`StU`v`WxYz
+  - @Controller -> @Service -> @Repository
+  - b -> d -> f -> ... -> v -> x -> z
 - 123456789
-  - 3 Helper(@Component), 7 Utils(Statics)
+  - 2 Helper(@Component), 8 Utils(Statics)
+
 ### Design
+
 - stub: open for caller
-  - c5c5bean: XxxBean
-  - x5x5entity: XxxEntity
+  - q5q5bean: XxxBean
+  - u5u5entity: XxxEntity
 - prog
   - BEGIN
-    - e5i5filter
-  - e5n5rpc(Access Layer): XxxRpc, XxxSocket, XxxServlet
-    - g5e5interceptor
-    - g5i5advice
-  - g5n5controller(Control Layer): XxxController
-  - i5n5rr(Request And Response): XxxRr
-  - l5n5transactional(Transactional Layer): XxxTransactional
+    - f5j5filter
+  - f5n5rpc(Access Layer): XxxRpc, XxxSocket, XxxServlet
+    - j5f5interceptor
+    - j5j5advice
+  - j5n5controller(Control Layer): XxxController
+    - j5r5rr(Request And Response): XxxRr
+    - n5j5transactional(Transactional Layer): XxxTransactional
   - n5n5service(Business Layer): XxxService
-  - p5n5rc(Remote Call): XxxRc
-  - t5n5repository(Database Layer): XxxRepository
+    - n5r5rc(Remote Call): XxxRc
+  - r5n5repository(Database Layer): XxxRepository
   - END
