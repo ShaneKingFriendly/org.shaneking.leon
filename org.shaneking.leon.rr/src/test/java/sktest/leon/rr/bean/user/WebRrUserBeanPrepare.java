@@ -1,4 +1,4 @@
-package sktest.leon.rr.q5bean.user;
+package sktest.leon.rr.bean.user;
 
 import lombok.NonNull;
 import org.shaneking.roc.persistence.hello.HelloUserEntity;

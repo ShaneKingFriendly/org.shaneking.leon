@@ -1,36 +1,28 @@
 package org.shaneking.leon.swagger.cfg;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
 import org.shaneking.leon.swagger.prop.WebSwaggerProps;
 import org.shaneking.ling.zero.lang.String0;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ClassUtils;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.Optional;
+import java.util.function.Predicate;
 
 @Configuration
-@EnableSwagger2
+@EnableOpenApi
 public class WebSwaggerCfg implements WebMvcConfigurer {
   @Autowired
   private WebSwaggerProps props;
-
-  @Override
-  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    if (props.isEnabled()) {
-      registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-      registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
-  }
 
   @Bean
   public Docket docket() {
@@ -50,7 +42,7 @@ public class WebSwaggerCfg implements WebMvcConfigurer {
   }
 
   private Predicate<RequestHandler> predicate(final String pkgs) {
-    return requestHeader -> Optional.fromNullable(requestHeader.declaringClass()).transform(clazz -> {
+    return requestHeader -> Optional.ofNullable(requestHeader.declaringClass()).map(clazz -> {
       for (String pkg : pkgs.split(String0.SEMICOLON)) {
         boolean matched = ClassUtils.getPackageName(clazz).startsWith(pkg);
         if (matched) {
@@ -58,6 +50,6 @@ public class WebSwaggerCfg implements WebMvcConfigurer {
         }
       }
       return false;
-    }).or(true);
+    }).orElse(true);
   }
 }

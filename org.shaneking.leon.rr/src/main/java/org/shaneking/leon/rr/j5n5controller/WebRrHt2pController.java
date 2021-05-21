@@ -1,7 +1,7 @@
 package org.shaneking.leon.rr.j5n5controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.shaneking.leon.rr.q5bean.ht2p.WebRrHt2pExchangePriObjItemBean;
+import org.shaneking.leon.rr.bean.ht2p.WebRrHt2pExchangePriObjItemBean;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.lang.String0;
