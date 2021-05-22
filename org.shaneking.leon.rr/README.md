@@ -1,4 +1,4 @@
-[//]:(https://github.com/ShaneKing/spec.sk/blob/fd236ce8d610a92f0405ff842f8910592b050410/Java.md)
+[//]:(https://github.com/ShaneKing/spec.sk/blob/dd795a28258f9fa1532f79789e8eef7b984f8568/Java.md)
 
 # Package
 
@@ -17,18 +17,13 @@ the layers like car, A classes, B classes, C classes, A0 classes, A1 classes, A0
 
 ### Layer
 
-- bean: used for caller
-  - common: XxxBean
-  - special: XxxHt2pBean, XxxCloudBean, XxxDubboBean
-- api: call for caller
-  - ht2p
-  - cloud
-  - dubbo
-- entity: XxxEntity
+- bean: used for caller. XxxBean, XxxHt2pBean, XxxCloudBean, XxxDubboBean
+- api(ht2p/cloud/dubbo): call for caller
 - application
   - BEGIN
     - f5j5filter
   - f5n5xxx(Access Layer): XxxServlet, XxxSocket, XxxDubbo
+    - **g5**.cfg: XxxCfg
     - j5f5interceptor
     - j5j5advice
   - j5n5controller(Control Layer): XxxController
@@ -37,4 +32,5 @@ the layers like car, A classes, B classes, C classes, A0 classes, A1 classes, A0
   - n5n5service(Business Layer): XxxService(Biz)
     - n5r5rc(Remote Call): XxxRc
   - r5n5repository(Database Layer): XxxRepository(Dao)
+    - **u5**.entity: XxxEntity
   - END
