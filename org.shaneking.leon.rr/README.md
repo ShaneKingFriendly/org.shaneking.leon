@@ -1,4 +1,4 @@
-[//]:(https://github.com/ShaneKing/spec.sk/blob/dd795a28258f9fa1532f79789e8eef7b984f8568/Java.md)
+[//]:(https://github.com/ShaneKing/spec.sk/blob/381209a725bfe55785de8c42b8f054abbf991cd5/Java.md)
 
 # Package
 
@@ -17,9 +17,12 @@ the layers like car, A classes, B classes, C classes, A0 classes, A1 classes, A0
 
 ### Layer
 
-- bean: used for caller. XxxBean, XxxHt2pBean, XxxCloudBean, XxxDubboBean
-- api(ht2p/cloud/dubbo): call for caller
-- application
+- stub(no dependency): used for caller. Dicts, Constants, ErrorCodes etc.
+  - bean: XxxBean, XxxHt2pBean, XxxCloudBean, XxxDubboBean
+  - kafka: Kafka Message Body Struct
+  - dubbo: maybe if no dependency or bean dependency
+- api(by dependency): call for caller. ht2p, cloud, dubbo etc.
+- application(implements)
   - BEGIN
     - f5j5filter
   - f5n5xxx(Access Layer): XxxServlet, XxxSocket, XxxDubbo
