@@ -42,7 +42,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -208,7 +207,7 @@ public class WebPersistenceEntityBiz {
 
       //create table if not exists tableName_d (like tableName);
       //insert into tableName_d(columns) select columns from tableName where dd = ?
-      assert req.getPri().getRtn() == cacheableDao.getJdbcTemplate().update(MessageFormat.format("insert into {0}({1}) select {1} from {2} where dd = ?", t.deletedFullTableName()
+      assert req.getPri().getRtn() == cacheableDao.getJdbcTemplate().update(MF0.fmt("insert into {0}({1}) select {1} from {2} where dd = ?", t.deletedFullTableName()
         , t.getFieldNameList().stream().map(f -> t.getDbColumnMap().get(f)).collect(Collectors.joining(String0.COMMA)), t.fullTableName()), dd);
       //delete original records
       T rmvT = entityClass.newInstance();
