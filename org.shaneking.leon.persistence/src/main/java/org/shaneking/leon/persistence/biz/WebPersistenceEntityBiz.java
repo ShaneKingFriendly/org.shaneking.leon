@@ -6,6 +6,7 @@ import com.github.liaochong.myexcel.core.SaxExcelReader;
 import com.github.liaochong.myexcel.utils.FileExportUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.shaneking.leon.persistence.dao.ProtectDao;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.persistence.Pagination;
 import org.shaneking.ling.persistence.entity.Identified;
@@ -65,6 +66,8 @@ public class WebPersistenceEntityBiz {
   @Autowired
   private CacheableDao cacheableDao;
   @Autowired
+  private ProtectDao protectDao;
+  @Autowired
   private NumberedCacheableDao numberedCacheableDao;
   @Autowired
   private TenantedNumberedCacheableDao tenantedNumberedCacheableDao;
@@ -85,15 +88,15 @@ public class WebPersistenceEntityBiz {
   private <T extends CacheableEntities> List<String> soft(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
     T t = req.getPri().getObj();
 
-    long cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
+    long cnt = protectDao.cnt(entityClass, t, req.gnnCtx());
     T modT = t.filedToCondition();
     modT.setDd(dd);
     modT.setLastModifyDateTime(Date0.on().dateTime()).setLastModifyUserId(req.gnnCtx().gnaUserId());
     List<String> ids = List0.newArrayList();
     if (cnt < Pagination.MAX_SIZE) {
       Pagination definedPagination = t.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
-      ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
-      req.getPri().setRtn(cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(modT, req.gnnCtx().gnaTenantId()), ids));
+      ids = protectDao.lstIds(entityClass, t, req.gnnCtx());
+      req.getPri().setRtn(protectDao.modByIdsVer(entityClass, modT, ids, req.gnnCtx()));
       t.setPagination(definedPagination);
 
       if (ids.size() != req.getPri().getRtn()) {
@@ -101,7 +104,7 @@ public class WebPersistenceEntityBiz {
 
         T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
         idsT.setDd(dd);
-        ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(idsT, req.gnnCtx().gnaTenantId()));
+        ids = protectDao.lstIds(entityClass, idsT, req.gnnCtx());
 
         if (ids.size() != req.getPri().getRtn()) {
           log.error(OM3.lp(dd, ids.toArray()));
@@ -109,7 +112,7 @@ public class WebPersistenceEntityBiz {
         }
       }
     } else {
-      req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(modT, req.gnnCtx().gnaTenantId())));
+      req.getPri().setRtn(protectDao.mod(entityClass, modT, req.gnnCtx()));
     }
 
     return ids;
@@ -184,7 +187,7 @@ public class WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
       t.initWithUserIdAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
-      req.getPri().setRtn(cacheableDao.add(entityClass, CacheableDao.pti(t, req.gnnCtx().gnaTenantId())));
+      req.getPri().setRtn(protectDao.add(entityClass, t, req.gnnCtx()));
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
@@ -213,9 +216,9 @@ public class WebPersistenceEntityBiz {
       T rmvT = entityClass.newInstance();
       rmvT.setDd(dd);
       if (ids.size() > 0) {
-        assert req.getPri().getRtn() == cacheableDao.rmvByIds(entityClass, CacheableDao.ptu(rmvT, req.gnnCtx().gnaTenantId()), ids);
+        assert req.getPri().getRtn() == protectDao.rmvByIds(entityClass, rmvT, ids, req.gnnCtx());
       } else {
-        assert req.getPri().getRtn() == cacheableDao.rmv(entityClass, CacheableDao.ptu(rmvT, req.gnnCtx().gnaTenantId()));
+        assert req.getPri().getRtn() == protectDao.rmv(entityClass, rmvT, req.gnnCtx());
       }
 
       t.setDd(dd);
@@ -253,17 +256,17 @@ public class WebPersistenceEntityBiz {
       T t = req.getPri().getObj();
       T tmpT = t.filedToCondition();
       List<String> ids = List0.newArrayList();
-      long cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(tmpT, req.gnnCtx().gnaTenantId()));
+      long cnt = protectDao.cnt(entityClass, tmpT, req.gnnCtx());
       if (cnt < Pagination.MAX_SIZE) {
         Pagination definedPagination = tmpT.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
-        ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(tmpT, req.gnnCtx().gnaTenantId()));
+        ids = protectDao.lstIds(entityClass, tmpT, req.gnnCtx());
         tmpT.setPagination(definedPagination);
       }
       tmpT.setInvalid(String0.Y).setLastModifyDateTime(Date0.on().dateTime()).setLastModifyUserId(req.gnnCtx().gnaUserId());
       if (ids.size() > 0) {
-        req.getPri().setRtn(cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(tmpT, req.gnnCtx().gnaTenantId()), ids));
+        req.getPri().setRtn(protectDao.modByIdsVer(entityClass, tmpT, ids, req.gnnCtx()));
       } else {
-        req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(tmpT, req.gnnCtx().gnaTenantId())));
+        req.getPri().setRtn(protectDao.mod(entityClass, tmpT, req.gnnCtx()));
       }
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
@@ -277,24 +280,24 @@ public class WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
       if (!String0.isNullOrEmpty(t.getId())) {
-        req.getPri().setRtn(cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+        req.getPri().setRtn(protectDao.modByIdVer(entityClass, t, req.gnnCtx()));
       } else {
         List<String> cl = t.forceWhereCondition(Identified.FIELD__ID).getCl();
         if (cl != null && cl.size() > 0) {
-          req.getPri().setRtn(cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId()), cl));
+          req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, cl, req.gnnCtx()));
         } else {
           T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
           idsT.setVersion(t.getVersion());
           idsT.srvWhereConditions(t.getWhereConditions());
           List<String> ids = List0.newArrayList();
-          long cnt = cacheableDao.cnt(entityClass, CacheableDao.pts(idsT, req.gnnCtx().gnaTenantId()));
+          long cnt = protectDao.cnt(entityClass, idsT, req.gnnCtx());
           if (cnt < Pagination.MAX_SIZE) {
-            ids = cacheableDao.lstIds(entityClass, CacheableDao.pts(idsT, req.gnnCtx().gnaTenantId()));
+            ids = protectDao.lstIds(entityClass, idsT, req.gnnCtx());
           }
           if (ids.size() > 0) {
-            req.getPri().setRtn(cacheableDao.modByIdsVer(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId()), ids));
+            req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, ids, req.gnnCtx()));
           } else {
-            req.getPri().setRtn(cacheableDao.mod(entityClass, CacheableDao.ptu(t, req.gnnCtx().gnaTenantId())));
+            req.getPri().setRtn(protectDao.mod(entityClass, t, req.gnnCtx()));
           }
         }
       }
@@ -331,7 +334,7 @@ public class WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
       t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLastModifyUserId()));
-      T rst = cacheableDao.one(entityClass, CacheableDao.pts(t, req.gnnCtx().gnaTenantId()));
+      T rst = protectDao.one(entityClass, t, req.gnnCtx());
       rst.setLastModifyUser((Objects.equals(rst.getLastModifyUserId(), t.getLastModifyUserId())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLastModifyUserId()));
       req.getPri().setRtn(rst);
     } catch (Exception e) {
@@ -444,17 +447,17 @@ public class WebPersistenceEntityBiz {
             T existT = exists(entityClass, row, req.gnnCtx().gnaTenantId());
             if (existT == null) {
               row.sinId(UUID0.cUl33());
-              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.add(entityClass, CacheableDao.pti(row, req.gnnCtx().gnaTenantId())));
+              req.getPri().setRtn(req.getPri().getRtn() + protectDao.add(entityClass, row, req.gnnCtx()));
             } else {
               row.setVersion(existT.getVersion());
               row.setId(existT.getId());
-              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(row, req.gnnCtx().gnaTenantId())));
+              req.getPri().setRtn(req.getPri().getRtn() + protectDao.modByIdVer(entityClass, row, req.gnnCtx()));
             }
           } else {
             if (cacheableDao.oneById(entityClass, row.getId(), true) == null) {
-              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.add(entityClass, CacheableDao.pti(row, req.gnnCtx().gnaTenantId())));
+              req.getPri().setRtn(req.getPri().getRtn() + protectDao.add(entityClass, row, req.gnnCtx()));
             } else {
-              req.getPri().setRtn(req.getPri().getRtn() + cacheableDao.modByIdVer(entityClass, CacheableDao.ptu(row, req.gnnCtx().gnaTenantId())));
+              req.getPri().setRtn(req.getPri().getRtn() + protectDao.modByIdVer(entityClass, row, req.gnnCtx()));
             }
           }
         } catch (Exception e) {
