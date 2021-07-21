@@ -5,15 +5,16 @@
     },
     "obj": {
       "id": "1612353237501_DcNd45KtJXPmSpz2xRB",
+      "version": 0,
       "invalid": "N",
       "lastModifyDateTime": "2021-02-03 19:54:02",
-      "lastModifyUserId": "1612262610216_koFVLCNZrhezbgULWqW",
-      "version": 0
+      "lastModifyUserId": "1612262610216_koFVLCNZrhezbgULWqW"
     }
   },
   "pub": {
     "channelNo": "tstChannelNo",
     "tenantNo": "tstTenantNo",
-    "tracingNo": "$UUID0_cUl33_1$"
+    "tracingNo": "$UUID0_cUl33_1$",
+    "reqNo": "$UUID0_cUl33_1$"
   }
 }

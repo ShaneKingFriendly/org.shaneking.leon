@@ -4,6 +4,7 @@
     "channelNo": "tstChannelNo",
     "encoded": "Y",
     "tenantNo": "tstTenantNo",
-    "tracingNo": "$UUID0_cUl33_1$"
+    "tracingNo": "$UUID0_cUl33_1$",
+    "reqNo": "$UUID0_cUl33_1$"
   }
 }

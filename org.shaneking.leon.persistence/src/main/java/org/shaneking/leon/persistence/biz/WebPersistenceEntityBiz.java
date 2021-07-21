@@ -9,8 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.persistence.Pagination;
 import org.shaneking.ling.persistence.entity.Identified;
+import org.shaneking.ling.persistence.entity.NumberedUniIdx;
 import org.shaneking.ling.persistence.entity.sql.TenantReadable;
 import org.shaneking.ling.persistence.entity.sql.Tenanted;
+import org.shaneking.ling.persistence.entity.sql.TenantedNumberedUniIdx;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.rr.RespException;
 import org.shaneking.ling.zero.io.File0;
@@ -27,9 +29,7 @@ import org.shaneking.roc.persistence.CacheableEntities;
 import org.shaneking.roc.persistence.dao.CacheableDao;
 import org.shaneking.roc.persistence.dao.NumberedCacheableDao;
 import org.shaneking.roc.persistence.dao.TenantedNumberedCacheableDao;
-import org.shaneking.roc.persistence.entity.NumberedEntities;
 import org.shaneking.roc.persistence.entity.ReadableTenantEntities;
-import org.shaneking.roc.persistence.entity.TenantedNumberedEntities;
 import org.shaneking.roc.persistence.entity.sql.UserEntities;
 import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,10 +74,10 @@ public class WebPersistenceEntityBiz {
   //special for common
   private <T extends CacheableEntities> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
     T rtn = null;
-    if (tenantedNumberedCacheableDao != null && t instanceof TenantedNumberedEntities && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
-      rtn = (T) tenantedNumberedCacheableDao.oneByNo(((TenantedNumberedEntities) t).getClass(), t.getNo(), tenantId, true);
-    } else if (numberedCacheableDao != null && t instanceof NumberedEntities && !String0.isNullOrEmpty(t.getNo())) {
-      rtn = (T) numberedCacheableDao.oneByNo(((NumberedEntities) t).getClass(), t.getNo(), true);
+    if (tenantedNumberedCacheableDao != null && t instanceof TenantedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
+      rtn = tenantedNumberedCacheableDao.oneByNo(entityClass, t.getNo(), tenantId, true);
+    } else if (numberedCacheableDao != null && t instanceof NumberedUniIdx && !String0.isNullOrEmpty(t.getNo())) {
+      rtn = numberedCacheableDao.oneByNo(entityClass, t.getNo(), true);
     }
     return rtn;
   }
@@ -372,7 +372,7 @@ public class WebPersistenceEntityBiz {
       AtomicInteger writeTimes = new AtomicInteger(0);
       List<T> list = List0.newArrayList();
       File csvFile = new File(req.getPri().getObj());
-      Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), String0.nullOrEmptyTo(req.getPub().getTracingNo(), UUID0.cUl33()), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
+      Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), req.getPub().gnnReqNo(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
       tmpPath.toFile().getParentFile().mkdirs();
       SaxExcelReader.of(entityClass).rowFilter(row -> row.getRowNum() > 0).readThen(csvFile, (row, ctx) -> {
         try {

@@ -31,7 +31,7 @@ public class WebRrFileService {
 
   private Resp<Req<String, String>> transform(Req<String, String> req, MultipartFile multipartFile, String folder) {
     Resp<Req<String, String>> resp = Resp.success(req);
-    Path path = Paths.get(folder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), req.getPub().gnnTracingNo(), new File(String.valueOf(multipartFile.getOriginalFilename())).getName());
+    Path path = Paths.get(folder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), req.getPub().gnnReqNo(), new File(String.valueOf(multipartFile.getOriginalFilename())).getName());
     path.toFile().getParentFile().mkdirs();
     try {
       multipartFile.transferTo(path);
