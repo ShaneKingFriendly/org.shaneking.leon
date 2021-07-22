@@ -75,7 +75,6 @@ create table if not exists `t_hello_audit_log_entity` (
   `last_modify_user_id` varchar(40) default '',
   `channel_id` varchar(40) default '',
   `tenant_id` varchar(40) default '',
-  `proxy_channel_id` varchar(40) default '',
   `tracing_no` varchar(40) default '',
   `req_datetime` varchar(20) default '',
   `req_ips` varchar(255) default '',
