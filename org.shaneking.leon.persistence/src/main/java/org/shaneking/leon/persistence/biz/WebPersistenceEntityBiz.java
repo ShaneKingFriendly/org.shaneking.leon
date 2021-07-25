@@ -11,7 +11,7 @@ import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.persistence.Pagination;
 import org.shaneking.ling.persistence.entity.Identified;
 import org.shaneking.ling.persistence.entity.NumberedUniIdx;
-import org.shaneking.ling.persistence.entity.sql.TenantReadable;
+import org.shaneking.ling.persistence.entity.sql.TenantUsable;
 import org.shaneking.ling.persistence.entity.sql.Tenanted;
 import org.shaneking.ling.persistence.entity.sql.TenantedNumberedUniIdx;
 import org.shaneking.ling.rr.Resp;
@@ -30,7 +30,7 @@ import org.shaneking.roc.persistence.CacheableEntities;
 import org.shaneking.roc.persistence.dao.CacheableDao;
 import org.shaneking.roc.persistence.dao.NumberedCacheableDao;
 import org.shaneking.roc.persistence.dao.TenantedNumberedCacheableDao;
-import org.shaneking.roc.persistence.entity.ReadableTenantEntities;
+import org.shaneking.roc.persistence.entity.TenantedResourceAccessibleEntities;
 import org.shaneking.roc.persistence.entity.sql.UserEntities;
 import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -315,8 +315,8 @@ public class WebPersistenceEntityBiz {
       t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLastModifyUserId()));
       t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
       List<String> tenantIdList = List0.newArrayList(req.gnnCtx().gnaTenantId());
-      if (t instanceof TenantReadable) {
-        tenantIdList = ReadableTenantEntities.calc(req.gnnCtx().getTrtList(), entityClass.getName(), tenantIdList);
+      if (t instanceof TenantUsable) {
+        tenantIdList = TenantedResourceAccessibleEntities.calc(req.gnnCtx().getTutList(), entityClass.getName(), tenantIdList);
       }
       req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, tenantIdList)));
       t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, tenantIdList)));
