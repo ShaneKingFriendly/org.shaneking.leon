@@ -26,7 +26,7 @@ import java.util.List;
 
 @Repository
 @Slf4j
-public class ReadableDao {
+public class AccessibleDao {
   @Autowired
   @Getter
   private CacheableDao cacheableDao;

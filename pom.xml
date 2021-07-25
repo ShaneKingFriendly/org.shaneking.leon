@@ -5,13 +5,13 @@
   <parent>
     <groupId>org.shaneking</groupId>
     <artifactId>org.shaneking</artifactId>
-    <version>0.241.12.Friendly-SNAPSHOT</version>
+    <version>0.241.13.Friendly-SNAPSHOT</version>
     <relativePath>../org.shaneking</relativePath>
   </parent>
 
   <groupId>org.shaneking.leon</groupId>
   <artifactId>org.shaneking.leon</artifactId>
-  <version>0.241.12.Friendly-SNAPSHOT</version>
+  <version>0.241.13.Friendly-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>org.shaneking.leon</name>

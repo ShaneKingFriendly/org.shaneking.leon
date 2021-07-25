@@ -93,12 +93,12 @@ public abstract class WebPersistenceEntityController<T extends CacheableEntities
     return this.getEntityBiz().csv(req, this.getEntityClass());
   }
 
-  @PostMapping(path = {"/template"})
+  @PostMapping(path = {"/tpl"})
   @RrAudit
   @RrAccess
   @RrCrypto
-  public Resp<Req<String, String>> template(@RequestBody Req<String, String> req) {
-    return this.getEntityBiz().template(req, this.getEntityClass());
+  public Resp<Req<String, String>> tpl(@RequestBody Req<String, String> req) {
+    return this.getEntityBiz().tpl(req, this.getEntityClass());
   }
 
   @PostMapping(path = {"/xlsx"})

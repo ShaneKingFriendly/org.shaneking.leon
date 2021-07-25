@@ -5,11 +5,11 @@
   <parent>
     <groupId>org.shaneking.leon</groupId>
     <artifactId>org.shaneking.leon</artifactId>
-    <version>0.241.12.Friendly-SNAPSHOT</version>
+    <version>0.241.13.Friendly-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.shaneking.leon.persistence</artifactId>
-  <version>0.241.12.Friendly-SNAPSHOT</version>
+  <version>0.241.13.Friendly-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>org.shaneking.leon.persistence</name>

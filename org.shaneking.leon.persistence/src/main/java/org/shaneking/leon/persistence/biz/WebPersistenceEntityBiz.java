@@ -28,8 +28,8 @@ import org.shaneking.ling.zero.util.Map0;
 import org.shaneking.ling.zero.util.UUID0;
 import org.shaneking.roc.persistence.CacheableEntities;
 import org.shaneking.roc.persistence.dao.CacheableDao;
-import org.shaneking.roc.persistence.dao.NumberedCacheableDao;
-import org.shaneking.roc.persistence.dao.TenantedNumberedCacheableDao;
+import org.shaneking.roc.persistence.dao.NumberedDao;
+import org.shaneking.roc.persistence.dao.TenantedNumberedDao;
 import org.shaneking.roc.persistence.entity.TenantedResourceAccessibleEntities;
 import org.shaneking.roc.persistence.entity.sql.UserEntities;
 import org.shaneking.roc.rr.Req;
@@ -68,24 +68,24 @@ public class WebPersistenceEntityBiz {
   @Autowired
   private ProtectDao protectDao;
   @Autowired
-  private NumberedCacheableDao numberedCacheableDao;
+  private NumberedDao numberedDao;
   @Autowired
-  private TenantedNumberedCacheableDao tenantedNumberedCacheableDao;
+  private TenantedNumberedDao tenantedNumberedDao;
   @Autowired
   private UserEntities userEntityClass;
 
   //special for common
-  private <T extends CacheableEntities> T exists(Class<T> entityClass, T t, String tenantId) throws Exception {
+  private <T extends CacheableEntities> T oneByNo(Class<T> entityClass, T t, String tenantId) throws Exception {
     T rtn = null;
-    if (tenantedNumberedCacheableDao != null && t instanceof TenantedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
-      rtn = tenantedNumberedCacheableDao.oneByNo(entityClass, t.getNo(), tenantId, true);
-    } else if (numberedCacheableDao != null && t instanceof NumberedUniIdx && !String0.isNullOrEmpty(t.getNo())) {
-      rtn = numberedCacheableDao.oneByNo(entityClass, t.getNo(), true);
+    if (tenantedNumberedDao != null && t instanceof TenantedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
+      rtn = tenantedNumberedDao.oneByNo(entityClass, t.getNo(), tenantId, true);
+    } else if (numberedDao != null && t instanceof NumberedUniIdx && !String0.isNullOrEmpty(t.getNo())) {
+      rtn = numberedDao.oneByNo(entityClass, t.getNo(), true);
     }
     return rtn;
   }
 
-  private <T extends CacheableEntities> List<String> soft(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
+  private <T extends CacheableEntities> List<String> ddIds(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
     T t = req.getPri().getObj();
 
     long cnt = protectDao.cnt(entityClass, t, req.gnnCtx());
@@ -118,7 +118,7 @@ public class WebPersistenceEntityBiz {
     return ids;
   }
 
-  protected <T extends CacheableEntities> String softSubQuery(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
+  protected <T extends CacheableEntities> String idSubQuery(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
     T subT = entityClass.newInstance();
     subT.nullSetter();
     subT.setDd(dd);
@@ -126,7 +126,8 @@ public class WebPersistenceEntityBiz {
     return String.join(String0.BLANK, Tuple.getFirst(pair)).replace(String0.QUESTION, String0.wrap(subT.getDd(), String0.SINGLE_QUOTATION));
   }
 
-  public <T extends CacheableEntities> Resp<Req<String, String>> template(Req<String, String> req, Class<T> entityClass) {
+  ///template
+  public <T extends CacheableEntities> Resp<Req<String, String>> tpl(Req<String, String> req, Class<T> entityClass) {
     Resp<Req<String, String>> resp = Resp.success(req);
     try {
       T t = entityClass.newInstance();
@@ -161,7 +162,7 @@ public class WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
       if (String0.isNullOrEmpty(t.getId())) {
-        T existT = exists(entityClass, t, req.gnnCtx().gnaTenantId());
+        T existT = oneByNo(entityClass, t, req.gnnCtx().gnaTenantId());
         if (existT == null) {
           resp = add(req, entityClass);
         } else {
@@ -204,7 +205,7 @@ public class WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
 
-      List<String> ids = soft(req, entityClass, dd);
+      List<String> ids = ddIds(req, entityClass, dd);
 
       resp.setMesg(OM3.writeValueAsString(rmvRel(req, entityClass, dd, ids)));
 
@@ -238,7 +239,7 @@ public class WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
 
-      List<String> ids = soft(req, entityClass, dd);
+      List<String> ids = ddIds(req, entityClass, dd);
 
       resp.setMesg(OM3.writeValueAsString(delRel(req, entityClass, dd, ids)));
 
@@ -344,6 +345,7 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
+  //into out file
   public <T extends CacheableEntities> Resp<Req<T, String>> iof(Req<T, String> req, Class<T> entityClass) {
     Resp<Req<T, String>> resp = Resp.success(req);
     try {
@@ -369,6 +371,7 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
+  ///must UTF-8, \n
   public <T extends CacheableEntities> Resp<Req<String, String>> csv(Req<String, String> req, Class<T> entityClass) {
     Resp<Req<String, String>> resp = Resp.success(req);
     try {
@@ -444,7 +447,7 @@ public class WebPersistenceEntityBiz {
         try {
           row.initWithUserId(req.gnnCtx().gnaUserId());
           if (String0.isNullOrEmpty(row.getId())) {
-            T existT = exists(entityClass, row, req.gnnCtx().gnaTenantId());
+            T existT = oneByNo(entityClass, row, req.gnnCtx().gnaTenantId());
             if (existT == null) {
               row.sinId(UUID0.cUl33());
               req.getPri().setRtn(req.getPri().getRtn() + protectDao.add(entityClass, row, req.gnnCtx()));
