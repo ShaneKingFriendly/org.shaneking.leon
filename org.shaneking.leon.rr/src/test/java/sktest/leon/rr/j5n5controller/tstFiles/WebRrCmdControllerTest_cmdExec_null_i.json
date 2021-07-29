@@ -1,0 +1,16 @@
+{
+  "pri": {
+    "ext": {
+      "userNo": "tstUserNo"
+    },
+    "obj": [
+      "ls -alh /"
+    ]
+  },
+  "pub": {
+    "channelNo": "tstChannelNo",
+    "tenantNo": "tstTenantNo",
+    "tracingNo": "$UUID0_cUl33_1$",
+    "reqNo": "$UUID0_cUl33_1$"
+  }
+}
