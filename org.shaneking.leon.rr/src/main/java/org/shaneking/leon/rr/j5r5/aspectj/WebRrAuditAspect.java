@@ -10,7 +10,7 @@ import org.shaneking.leon.rr.j5f5interceptor.WebRrReqUrlInterceptor;
 import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.zero.annotation.ZeroAnnotation;
 import org.shaneking.ling.zero.text.MF0;
-import org.shaneking.roc.persistence.entity.sql.AuditLogEntities;
+import org.shaneking.roc.persistence.entity.sql.RrAuditLogEntities;
 import org.shaneking.roc.rr.Req;
 import org.shaneking.roc.rr.annotation.RrAudit;
 import org.shaneking.roc.rr.aspectj.RrAccessAspect;
@@ -44,7 +44,7 @@ public class WebRrAuditAspect {
       if (jp.getArgs().length > rrAudit.reqParamIdx() && jp.getArgs()[rrAudit.reqParamIdx()] instanceof Req) {
         Req<?, ?> req = (Req<?, ?>) jp.getArgs()[rrAudit.reqParamIdx()];
 
-        AuditLogEntities auditLogEntity = req.gnnCtx().getAuditLog();
+        RrAuditLogEntities auditLogEntity = req.gnnCtx().getAuditLog();
         if (auditLogEntity != null) {
           auditLogEntity.setReqIps(WebRrReqIpsInterceptor.REQ_IPS.get());
           auditLogEntity.setReqUrl(WebRrReqUrlInterceptor.REQ_URL.get());

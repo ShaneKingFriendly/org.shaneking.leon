@@ -11,6 +11,7 @@ import org.shaneking.ling.jackson.databind.OM3;
 import org.shaneking.ling.persistence.Pagination;
 import org.shaneking.ling.persistence.entity.Identified;
 import org.shaneking.ling.persistence.entity.NumberedUniIdx;
+import org.shaneking.ling.persistence.entity.sql.ChannelizedNumberedUniIdx;
 import org.shaneking.ling.persistence.entity.sql.TenantUsable;
 import org.shaneking.ling.persistence.entity.sql.Tenanted;
 import org.shaneking.ling.persistence.entity.sql.TenantedNumberedUniIdx;
@@ -28,6 +29,7 @@ import org.shaneking.ling.zero.util.Map0;
 import org.shaneking.ling.zero.util.UUID0;
 import org.shaneking.roc.persistence.CacheableEntities;
 import org.shaneking.roc.persistence.dao.CacheableDao;
+import org.shaneking.roc.persistence.dao.ChannelizedNumberedDao;
 import org.shaneking.roc.persistence.dao.NumberedDao;
 import org.shaneking.roc.persistence.dao.TenantedNumberedDao;
 import org.shaneking.roc.persistence.entity.TenantedResourceAccessibleEntities;
@@ -70,14 +72,18 @@ public class WebPersistenceEntityBiz {
   @Autowired
   private NumberedDao numberedDao;
   @Autowired
+  private ChannelizedNumberedDao channelizedNumberedDao;
+  @Autowired
   private TenantedNumberedDao tenantedNumberedDao;
   @Autowired
   private UserEntities userEntityClass;
 
   //special for common
-  private <T extends CacheableEntities> T oneByNo(Class<T> entityClass, T t, String tenantId) throws Exception {
+  private <T extends CacheableEntities> T oneByNo(Class<T> entityClass, T t, String tenantId, String channelId) {
     T rtn = null;
-    if (tenantedNumberedDao != null && t instanceof TenantedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
+    if (channelizedNumberedDao != null && t instanceof ChannelizedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(channelId)) {
+      rtn = channelizedNumberedDao.oneByNo(entityClass, t.getNo(), channelId, true);
+    } else if (tenantedNumberedDao != null && t instanceof TenantedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
       rtn = tenantedNumberedDao.oneByNo(entityClass, t.getNo(), tenantId, true);
     } else if (numberedDao != null && t instanceof NumberedUniIdx && !String0.isNullOrEmpty(t.getNo())) {
       rtn = numberedDao.oneByNo(entityClass, t.getNo(), true);
@@ -162,7 +168,7 @@ public class WebPersistenceEntityBiz {
     try {
       T t = req.getPri().getObj();
       if (String0.isNullOrEmpty(t.getId())) {
-        T existT = oneByNo(entityClass, t, req.gnnCtx().gnaTenantId());
+        T existT = oneByNo(entityClass, t, req.gnnCtx().gnaTenantId(), req.gnnCtx().gnaChannelId());
         if (existT == null) {
           resp = add(req, entityClass);
         } else {
@@ -447,7 +453,7 @@ public class WebPersistenceEntityBiz {
         try {
           row.initWithUserId(req.gnnCtx().gnaUserId());
           if (String0.isNullOrEmpty(row.getId())) {
-            T existT = oneByNo(entityClass, row, req.gnnCtx().gnaTenantId());
+            T existT = oneByNo(entityClass, row, req.gnnCtx().gnaTenantId(), req.gnnCtx().gnaChannelId());
             if (existT == null) {
               row.sinId(UUID0.cUl33());
               req.getPri().setRtn(req.getPri().getRtn() + protectDao.add(entityClass, row, req.gnnCtx()));
