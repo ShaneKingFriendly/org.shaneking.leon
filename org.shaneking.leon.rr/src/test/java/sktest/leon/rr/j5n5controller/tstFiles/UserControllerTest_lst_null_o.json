@@ -16,10 +16,10 @@
       "rtn": [
         {
           "id": "1612262610216_koFVLCNZrhezbgULWqW",
-          "invalid": "N",
-          "lastModifyDateTime": "",
-          "lastModifyUserId": "",
-          "version": 0,
+          "ivd": "N",
+          "lmDsz": "",
+          "lmUid": "",
+          "ver": 0,
           "tenantId": "1612262610215_LoHqeZBGrVYm3MlYmpH",
           "no": "tstUserNo",
           "name": "tstusername",

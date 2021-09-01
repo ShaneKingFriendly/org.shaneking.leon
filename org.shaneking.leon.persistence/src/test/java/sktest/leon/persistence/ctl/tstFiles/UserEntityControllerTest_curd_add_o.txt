@@ -1,8 +1,8 @@
 "code":"0"
 "rtn":1
-"invalid":"N",
-"lastModifyUserId":"1612262610216_koFVLCNZrhezbgULWqW",
-"version":0
+"ivd":"N",
+"lmUid":"1612262610216_koFVLCNZrhezbgULWqW",
+"ver":0
 "id":"1612353237501_DcNd45KtJXPmSpz2xRB",
 "no":"1614173052422_dJwxshF8cKjT8mnOAhJ"
 "userNo":"tstUserNo"

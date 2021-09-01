@@ -24,7 +24,7 @@ public class WebRrControllerAdvice {
     if (t instanceof RespException && ((RespException) t).getResp() != null) {
       Resp tmp = ((RespException) t).getResp();
       resp.setCode(String0.null2EmptyTo(tmp.getCode(), resp.getCode()));
-      resp.setMesg(String0.null2EmptyTo(tmp.getMesg(), resp.getMesg()));
+      resp.setMsg(String0.null2EmptyTo(tmp.getMsg(), resp.getMsg()));
       resp.setData(tmp.getData() == null ? resp.getData() : tmp.getData());
     }
     String rtn = OM3.writeValueAsString(resp);

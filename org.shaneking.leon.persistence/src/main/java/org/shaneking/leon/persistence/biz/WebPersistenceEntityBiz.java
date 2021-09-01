@@ -23,7 +23,8 @@ import org.shaneking.ling.zero.lang.String0;
 import org.shaneking.ling.zero.lang.ZeroException;
 import org.shaneking.ling.zero.persistence.Tuple;
 import org.shaneking.ling.zero.text.MF0;
-import org.shaneking.ling.zero.util.Date0;
+import org.shaneking.ling.zero.time.LD0;
+import org.shaneking.ling.zero.time.ZDT0;
 import org.shaneking.ling.zero.util.List0;
 import org.shaneking.ling.zero.util.Map0;
 import org.shaneking.ling.zero.util.UUID0;
@@ -97,7 +98,7 @@ public class WebPersistenceEntityBiz {
     long cnt = protectDao.cnt(entityClass, t, req.gnnCtx());
     T modT = t.filedToCondition();
     modT.setDd(dd);
-    modT.setLastModifyDateTime(Date0.on().dateTime()).setLastModifyUserId(req.gnnCtx().gnaUserId());
+    modT.setLmDsz(ZDT0.on().dTSZ()).setLmUid(req.gnnCtx().gnaUserId());
     List<String> ids = List0.newArrayList();
     if (cnt < Pagination.MAX_SIZE) {
       Pagination definedPagination = t.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
@@ -137,7 +138,7 @@ public class WebPersistenceEntityBiz {
     Resp<Req<String, String>> resp = Resp.success(req);
     try {
       T t = entityClass.newInstance();
-      Path path = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_XLSX));
+      Path path = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), LD0.on().ySmSd(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_XLSX));
       if (!path.toFile().exists()) {
         path.toFile().getParentFile().mkdirs();
         FileExportUtil.export(DefaultExcelBuilder.of(entityClass).build(List0.newArrayList(t)), path.toFile());
@@ -193,7 +194,7 @@ public class WebPersistenceEntityBiz {
     Resp<Req<T, Integer>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
-      t.initWithUserIdAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
+      t.initWithUidAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
       req.getPri().setRtn(protectDao.add(entityClass, t, req.gnnCtx()));
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
@@ -213,7 +214,7 @@ public class WebPersistenceEntityBiz {
 
       List<String> ids = ddIds(req, entityClass, dd);
 
-      resp.setMesg(OM3.writeValueAsString(rmvRel(req, entityClass, dd, ids)));
+      resp.setMsg(OM3.writeValueAsString(rmvRel(req, entityClass, dd, ids)));
 
       //create table if not exists tableName_d (like tableName);
       //insert into tableName_d(columns) select columns from tableName where dd = ?
@@ -247,7 +248,7 @@ public class WebPersistenceEntityBiz {
 
       List<String> ids = ddIds(req, entityClass, dd);
 
-      resp.setMesg(OM3.writeValueAsString(delRel(req, entityClass, dd, ids)));
+      resp.setMsg(OM3.writeValueAsString(delRel(req, entityClass, dd, ids)));
 
       t.setDd(dd);
     } catch (Exception e) {
@@ -269,7 +270,7 @@ public class WebPersistenceEntityBiz {
         ids = protectDao.lstIds(entityClass, tmpT, req.gnnCtx());
         tmpT.setPagination(definedPagination);
       }
-      tmpT.setInvalid(String0.Y).setLastModifyDateTime(Date0.on().dateTime()).setLastModifyUserId(req.gnnCtx().gnaUserId());
+      tmpT.setIvd(String0.Y).setLmDsz(ZDT0.on().dTSZ()).setLmUid(req.gnnCtx().gnaUserId());
       if (ids.size() > 0) {
         req.getPri().setRtn(protectDao.modByIdsVer(entityClass, tmpT, ids, req.gnnCtx()));
       } else {
@@ -294,7 +295,7 @@ public class WebPersistenceEntityBiz {
           req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, cl, req.gnnCtx()));
         } else {
           T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
-          idsT.setVersion(t.getVersion());
+          idsT.setVer(t.getVer());
           idsT.srvWhereConditions(t.getWhereConditions());
           List<String> ids = List0.newArrayList();
           long cnt = protectDao.cnt(entityClass, idsT, req.gnnCtx());
@@ -319,7 +320,7 @@ public class WebPersistenceEntityBiz {
     Resp<Req<T, List<T>>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
-      t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLastModifyUserId()));
+      t.setLastModifyUser(String0.isNullOrEmpty(t.getLmUid()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLmUid()));
       t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
       List<String> tenantIdList = List0.newArrayList(req.gnnCtx().gnaTenantId());
       if (t instanceof TenantUsable) {
@@ -340,9 +341,9 @@ public class WebPersistenceEntityBiz {
     Resp<Req<T, T>> resp = Resp.success(req);
     try {
       T t = req.getPri().getObj();
-      t.setLastModifyUser(String0.isNullOrEmpty(t.getLastModifyUserId()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLastModifyUserId()));
+      t.setLastModifyUser(String0.isNullOrEmpty(t.getLmUid()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLmUid()));
       T rst = protectDao.one(entityClass, t, req.gnnCtx());
-      rst.setLastModifyUser((Objects.equals(rst.getLastModifyUserId(), t.getLastModifyUserId())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLastModifyUserId()));
+      rst.setLastModifyUser((Objects.equals(rst.getLmUid(), t.getLmUid())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLmUid()));
       req.getPri().setRtn(rst);
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
@@ -384,14 +385,14 @@ public class WebPersistenceEntityBiz {
       AtomicInteger writeTimes = new AtomicInteger(0);
       List<T> list = List0.newArrayList();
       File csvFile = new File(req.getPri().getObj());
-      Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), Date0.on().ySmSd(), req.getPub().gnnReqNo(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
+      Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), LD0.on().ySmSd(), req.getPub().gnnReqNo(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
       tmpPath.toFile().getParentFile().mkdirs();
       SaxExcelReader.of(entityClass).rowFilter(row -> row.getRowNum() > 0).readThen(csvFile, (row, ctx) -> {
         try {
           if (row instanceof Tenanted) {
             ((Tenanted) row).setTenantId(req.gnnCtx().gnaTenantId());
           }
-          row.initWithUserIdAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
+          row.initWithUidAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
           list.add(row);
           if (ctx.getRowNum() % csvBuffer == 0) {
             if (writeTimes.getAndIncrement() == 0) {
@@ -451,14 +452,14 @@ public class WebPersistenceEntityBiz {
       File xlsxFile = new File(req.getPri().getObj());
       SaxExcelReader.of(entityClass).sheet(String0.maxLenStr(entity.getDbTableName(), 31)).rowFilter(row -> row.getRowNum() > 0).readThen(xlsxFile, row -> {
         try {
-          row.initWithUserId(req.gnnCtx().gnaUserId());
+          row.initWithUid(req.gnnCtx().gnaUserId());
           if (String0.isNullOrEmpty(row.getId())) {
             T existT = oneByNo(entityClass, row, req.gnnCtx().gnaTenantId(), req.gnnCtx().gnaChannelId());
             if (existT == null) {
               row.sinId(UUID0.cUl33());
               req.getPri().setRtn(req.getPri().getRtn() + protectDao.add(entityClass, row, req.gnnCtx()));
             } else {
-              row.setVersion(existT.getVersion());
+              row.setVer(existT.getVer());
               row.setId(existT.getId());
               req.getPri().setRtn(req.getPri().getRtn() + protectDao.modByIdVer(entityClass, row, req.gnnCtx()));
             }

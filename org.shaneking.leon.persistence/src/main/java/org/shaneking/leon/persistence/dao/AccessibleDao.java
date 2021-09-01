@@ -46,7 +46,7 @@ public class AccessibleDao {
     List<T> rtn = cacheableDao.lst(cacheType, pts(cacheType, t, ctx));
     if (exceptionIfInvalid) {
       for (T rt : rtn) {
-        if (String0.Y.equals(rt.getInvalid())) {
+        if (String0.Y.equals(rt.getIvd())) {
           throw new RespException(Resp.failed(Entities.ERR_CODE__INVALID, MF0.fmt("{0}({1}[{2}]) is invalid", cacheType.getSimpleName(), rt.getNo(), rt.getId())));
         }
       }
@@ -82,7 +82,7 @@ public class AccessibleDao {
   }
 
   public <T extends CacheableEntities> List<T> lstValid(@NonNull Class<T> cacheType, @NonNull T t, @NonNull Ctx ctx) {
-    t.setInvalid(String0.N);
+    t.setIvd(String0.N);
     return lst(cacheType, t, ctx, false);
   }
 
@@ -99,7 +99,7 @@ public class AccessibleDao {
 
   public <T extends CacheableEntities> T one(@NonNull Class<T> cacheType, @NonNull T t, @NonNull Ctx ctx, boolean rtnNullIfNotEqualsOne, boolean exceptionIfInvalid) {
     T rtn = cacheableDao.one(cacheType, pts(cacheType, t, ctx), rtnNullIfNotEqualsOne);
-    if (rtn != null && exceptionIfInvalid && String0.Y.equals(rtn.getInvalid())) {
+    if (rtn != null && exceptionIfInvalid && String0.Y.equals(rtn.getIvd())) {
       throw new RespException(Resp.failed(Entities.ERR_CODE__INVALID, MF0.fmt("{0}({1}[{2}]) is invalid", cacheType.getSimpleName(), rtn.getNo(), rtn.getId())));
     }
     return rtn;
@@ -144,7 +144,7 @@ public class AccessibleDao {
   }
 
   public <T extends CacheableEntities> T oneValid(@NonNull Class<T> cacheType, @NonNull T t, @NonNull Ctx ctx, boolean rtnNullIfNotEqualsOne) {
-    t.setInvalid(String0.N);
+    t.setIvd(String0.N);
     return one(cacheType, t, ctx, rtnNullIfNotEqualsOne, false);
   }
 
@@ -155,7 +155,7 @@ public class AccessibleDao {
   public <T extends CacheableEntities> T oneValidById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx, boolean rtnNullIfNotEqualsOne) {
     try {
       T t = cacheType.newInstance();
-      t.setInvalid(String0.N);
+      t.setIvd(String0.N);
       t.setId(id);
       return one(cacheType, t, ctx, rtnNullIfNotEqualsOne, false);
     } catch (InstantiationException | IllegalAccessException e) {

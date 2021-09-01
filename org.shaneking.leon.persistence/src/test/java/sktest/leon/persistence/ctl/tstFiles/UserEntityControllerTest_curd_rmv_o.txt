@@ -1,2 +1,2 @@
 {"code":"0","data":{"enc":"UpYigwpx9zJXGQraTGg7LinYngjNd4HQlutN8zK/i8ekWhVfldssP4loE+0WhISX/hCnovJeStZRr7LhJxoHu3S/wGV1z6fth3CIzqGSrd2/xjWsCG6nz7Sk5SAedf1WBCM0czD4/70a+mnmJaCrQaXIZgSz6iUYra4GPXiKtP2edDorYkREtKxr/wHe5IEdNPhD2Rb0A6tzEcYx4a1EmGQqm/L9YQNk3XwB6098qlsBtQxUfKK7FbqkIdCNHdzXvg3mgL/nYLQYbwGnJeyqvR2hiJvrvqnCRV2XJR8/H94VP/Lnh3M8ZyNTTl0hRRAG38JoHc/1fnBVfxoBcmjFJe/
-/M5Pna+0Y=","pub":{"channelNo":"tstChannelNo","encoded":"Y","tenantNo":"tstTenantNo","tracingNo":"$UUID0_cUl33_1$","reqNo":"$UUID0_cUl33_1$"}},"mesg":"{}"}
+/M5Pna+0Y=","pub":{"channelNo":"tstChannelNo","encoded":"Y","tenantNo":"tstTenantNo","tracingNo":"$UUID0_cUl33_1$","reqNo":"$UUID0_cUl33_1$"}},"msg":"{}"}
