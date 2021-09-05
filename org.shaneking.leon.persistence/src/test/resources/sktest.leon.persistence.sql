@@ -5,6 +5,7 @@ drop table if exists t_hello_channel_access_tenant_signature_api_entity;
 drop table if exists t_hello_channel_access_tenant_url_api_entity;
 drop table if exists t_hello_channel_access_url_api_entity;
 drop table if exists t_hello_channel_entity;
+drop table if exists t_hello_rr_async_log_entity;
 drop table if exists t_hello_rr_audit_log_entity;
 drop table if exists t_hello_tenant_entity;
 drop table if exists t_hello_user_entity;
@@ -155,6 +156,30 @@ create unique index if not exists u_idx_no on t_hello_channel_entity(`no`);
 create unique index if not exists u_idx_name on t_hello_channel_entity(`name`);
 
 
+-- HelloRrAsyncLogEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_hello_rr_async_log_entity` (
+  `id` char(40) not null,
+  `ver` int not null default 0,
+  `dd` varchar(40) default 'N',
+  `ivd` varchar(1) default 'N',
+  `lm_dsz` varchar(30) default '',
+  `lm_uid` varchar(40) default '',
+  `no` varchar(40) default '',
+  `tenant_id` varchar(40) default '',
+  `req_json_str_raw` text default '',
+  `ctx_json_str` text default '',
+  `start_datetime` varchar(20) default '',
+  `req_json_str` text default '',
+  `rtn_json_str` text default '',
+  `rtn_code` varchar(255) default '',
+  `rtn_msg` text default '',
+  `done_datetime` varchar(20) default '',
+  primary key (`id`)
+);
+
+create unique index if not exists u_idx_no on t_hello_rr_async_log_entity(`no`);
+
+
 -- HelloRrAuditLogEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
 create table if not exists `t_hello_rr_audit_log_entity` (
   `id` char(40) not null,
@@ -242,6 +267,7 @@ select * from t_hello_channel_access_tenant_signature_api_entity;
 select * from t_hello_channel_access_tenant_url_api_entity;
 select * from t_hello_channel_access_url_api_entity;
 select * from t_hello_channel_entity;
+select * from t_hello_rr_async_log_entity;
 select * from t_hello_rr_audit_log_entity;
 select * from t_hello_tenant_entity;
 select * from t_hello_user_entity;
