@@ -147,6 +147,7 @@ create table if not exists `t_hello_channel_entity` (
   `token_force` varchar(255) default '',
   `token_algorithm_type` varchar(255) default '',
   `token_value_type` varchar(255) default '',
+  `dsz_seconds` int default 0,
   primary key (`id`)
 );
 

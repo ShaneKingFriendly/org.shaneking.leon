@@ -1,11 +1,10 @@
 {
   "code": "0",
   "data": {
-    "enc": "UpYigwpx9zJXGQraTGg7LinYngjNd4HQlutN8zK/i8dcfoFMyiXjBil7DH5l61v0Lo/SwEEK5xTVyuMTFudTeQdUUmAVUiuVk4vrOn8NgMZKPuUFmf6zENVMCmznwiKo",
+    "enc": "E+MK32CVXixTTTOO1qj87l5vpYHfjEsIuIs8usDQV3wiHjrIB6mPFHPr+puaXS4a0ydTyJDDxTFg2x9CXbDzaj1cUts99qHO7e+dEpC3XZt3m4YTMk75u8JyQYFwGr1mvdnu0kxLYIe7nbSbsrcqyQ==",
     "pub": {
       "channelNo": "tstChannelNo",
       "encoded": "Y",
-      "tenantNo": "tstTenantNo",
       "tracingNo": "$UUID0_cUl33_1$",
       "reqNo": "$UUID0_cUl33_1$"
     }

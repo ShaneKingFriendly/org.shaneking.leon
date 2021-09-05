@@ -1,9 +1,8 @@
 {
-  "enc": "UpYigwpx9zJXGQraTGg7LinYngjNd4HQlutN8zK/i8cuDbGx3iltSrCg3pUiEt/onwQC1L9bcIgn36b6P7anotLu7HEVhz6w7ibxrGL9x678BH4Bmj76KKSYXNCogdvM",
+  "enc": "E+MK32CVXixTTTOO1qj87l5vpYHfjEsIuIs8usDQV3wiHjrIB6mPFHPr+puaXS4aHvKngJ3V2+eDw8AJ9LqXjVhe3bBWpT1wFyDvgQztlXebcNL87fKMOJ42CE9k234lEkfiETuanKawvgTwwJ1TcUo+5QWZ/rMQ1UwKbOfCIqg=",
   "pub": {
     "channelNo": "tstChannelNo",
     "encoded": "Y",
-    "tenantNo": "tstTenantNo",
     "tracingNo": "$UUID0_cUl33_1$",
     "reqNo": "$UUID0_cUl33_1$"
   }

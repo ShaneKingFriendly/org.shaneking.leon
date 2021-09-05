@@ -65,7 +65,7 @@ public class SKSpringMvcUnit extends SKSpringUnit {
 
   public ResultActions perform(String url, File reqJsonFile, File reqAttachFile, File respJsonFile, File respTxtFile, Charset charset) throws Exception {
     Map<String, String> replaceMap = Map0.newHashMap();
-    this.getTstReplaceMap().keySet().parallelStream().forEach(k -> replaceMap.put(k, this.getTstReplaceMap().get(k).get()));
+    this.getTstReplaceMap().keySet().forEach(k -> replaceMap.put(k, this.getTstReplaceMap().get(k).get()));
     String reqStr = String.join(String0.EMPTY, Files.readAllLines(reqJsonFile.toPath(), charset));
     for (String key : replaceMap.keySet()) {
       reqStr = reqStr.replace(key, replaceMap.get(key));

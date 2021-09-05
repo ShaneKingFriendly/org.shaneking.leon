@@ -1,6 +1,7 @@
 {
   "pri": {
     "ext": {
+      "tenantNo": "tstTenantNo",
       "userNo": "tstUserNo"
     },
     "obj": {
@@ -10,7 +11,6 @@
   },
   "pub": {
     "channelNo": "tstChannelNo",
-    "tenantNo": "tstTenantNo",
     "tracingNo": "$UUID0_cUl33_1$"
   }
 }
