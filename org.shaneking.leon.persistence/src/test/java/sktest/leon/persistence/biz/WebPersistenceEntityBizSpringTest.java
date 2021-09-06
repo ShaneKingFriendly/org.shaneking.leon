@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.shaneking.leon.persistence.biz.WebPersistenceEntityBiz;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.util.UUID0;
-import org.shaneking.roc.persistence.hello.HelloTenantEntity;
-import org.shaneking.roc.persistence.hello.HelloUserEntity;
+import org.shaneking.roc.persistence.simple.SimpleTenantEntity;
+import org.shaneking.roc.persistence.simple.SimpleUserEntity;
 import org.shaneking.roc.rr.Ctx;
 import org.shaneking.roc.rr.Pri;
 import org.shaneking.roc.rr.Pub;
@@ -21,12 +21,12 @@ class WebPersistenceEntityBizSpringTest extends SKSpringUnit {
   private WebPersistenceEntityBiz webPersistenceEntityBiz;
 
   void csv(String fileType) {
-    Req<String, String> req = Req.<String, String>build().setCtx(new Ctx().setTenant(new HelloTenantEntity()).setUser(new HelloUserEntity()))
+    Req<String, String> req = Req.<String, String>build().setCtx(new Ctx().setTenant(new SimpleTenantEntity()).setUser(new SimpleUserEntity()))
       .setPub(new Pub().setTracingNo(UUID0.cUl33()))
       .setPri(Pri.build("", tstIFiles(fileType).getAbsolutePath()));
     req.gnnCtx().getTenant().setId("skTestTenantId");
     req.gnnCtx().getUser().setId("skTestUserId");
-    webPersistenceEntityBiz.csv(req, HelloUserEntity.class);
+    webPersistenceEntityBiz.csv(req, SimpleUserEntity.class);
   }
 
   @Test

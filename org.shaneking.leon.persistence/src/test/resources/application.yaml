@@ -5,14 +5,14 @@ sk:
       cache:
         transactional:
           enabled: true
-      hello:
+      simple:
         cache:
           enabled: true
     persistence:
       entity:
         cache:
           enabled: true
-      hello:
+      simple:
         entity:
           enabled: true
 

@@ -1,10 +1,10 @@
 package sktest.leon.rr.bean.user;
 
 import lombok.NonNull;
-import org.shaneking.roc.persistence.hello.HelloUserEntity;
+import org.shaneking.roc.persistence.simple.SimpleUserEntity;
 
-public class WebRrUserBeanPrepare extends HelloUserEntity {
-  public static WebRrUserBeanPrepare fromEntity(HelloUserEntity entity) {
+public class WebRrUserBeanPrepare extends SimpleUserEntity {
+  public static WebRrUserBeanPrepare fromEntity(SimpleUserEntity entity) {
     WebRrUserBeanPrepare rtn = null;
     if (entity != null) {
       rtn = new WebRrUserBeanPrepare();
@@ -13,7 +13,7 @@ public class WebRrUserBeanPrepare extends HelloUserEntity {
     return rtn;
   }
 
-  public static void transform(@NonNull HelloUserEntity from, @NonNull HelloUserEntity to) {
+  public static void transform(@NonNull SimpleUserEntity from, @NonNull SimpleUserEntity to) {
     to.setId(from.getId());
     to.setNo(from.getNo());
     to.setName(from.getName());
@@ -21,19 +21,19 @@ public class WebRrUserBeanPrepare extends HelloUserEntity {
     to.setEmail(from.getEmail());
   }
 
-  public static HelloUserEntity toEntity(WebRrUserBeanPrepare bean) {
-    HelloUserEntity rtn = null;
+  public static SimpleUserEntity toEntity(WebRrUserBeanPrepare bean) {
+    SimpleUserEntity rtn = null;
     if (bean != null) {
-      rtn = new HelloUserEntity();
+      rtn = new SimpleUserEntity();
       transform(bean, rtn);
     }
     return rtn;
   }
 
-  public HelloUserEntity toEntity(HelloUserEntity to) {
-    HelloUserEntity rtn = to;
+  public SimpleUserEntity toEntity(SimpleUserEntity to) {
+    SimpleUserEntity rtn = to;
     if (rtn == null) {
-      rtn = new HelloUserEntity();
+      rtn = new SimpleUserEntity();
     }
     transform(this, rtn);
     return rtn;

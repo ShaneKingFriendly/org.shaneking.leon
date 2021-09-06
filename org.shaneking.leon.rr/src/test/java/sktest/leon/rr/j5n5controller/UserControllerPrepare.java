@@ -2,7 +2,7 @@ package sktest.leon.rr.j5n5controller;
 
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.roc.persistence.dao.CacheableDao;
-import org.shaneking.roc.persistence.hello.HelloUserEntity;
+import org.shaneking.roc.persistence.simple.SimpleUserEntity;
 import org.shaneking.roc.rr.Req;
 import org.shaneking.roc.rr.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +25,9 @@ public class UserControllerPrepare {
   @RrAudit
   @RrAccess
   @RrCrypto
-  public Resp<Req<HelloUserEntity, Integer>> add(@RequestBody Req<HelloUserEntity, Integer> req) {
-    Resp<Req<HelloUserEntity, Integer>> resp = Resp.success(req);
-    req.getPri().setRtn(cacheableDao.add(HelloUserEntity.class, CacheableDao.pti(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
+  public Resp<Req<SimpleUserEntity, Integer>> add(@RequestBody Req<SimpleUserEntity, Integer> req) {
+    Resp<Req<SimpleUserEntity, Integer>> resp = Resp.success(req);
+    req.getPri().setRtn(cacheableDao.add(SimpleUserEntity.class, CacheableDao.pti(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
     return resp;
   }
 
@@ -38,9 +38,9 @@ public class UserControllerPrepare {
   @RrCrypto
   public Resp<Req<String, Integer>> rmvById(@RequestBody Req<String, Integer> req) {
     Resp<Req<String, Integer>> resp = Resp.success(req);
-    HelloUserEntity userEntity = new HelloUserEntity();
+    SimpleUserEntity userEntity = new SimpleUserEntity();
     userEntity.setId(req.getPri().getObj());
-    req.getPri().setRtn(cacheableDao.rmvById(HelloUserEntity.class, CacheableDao.ptu(userEntity, req.gnnCtx().gnaTenantId())));
+    req.getPri().setRtn(cacheableDao.rmvById(SimpleUserEntity.class, CacheableDao.ptu(userEntity, req.gnnCtx().gnaTenantId())));
     return resp;
   }
 
@@ -49,9 +49,9 @@ public class UserControllerPrepare {
   @RrAudit
   @RrAccess
   @RrCrypto
-  public Resp<Req<HelloUserEntity, Integer>> modByIdVer(@RequestBody Req<HelloUserEntity, Integer> req) {
-    Resp<Req<HelloUserEntity, Integer>> resp = Resp.success(req);
-    req.getPri().setRtn(cacheableDao.modByIdVer(HelloUserEntity.class, CacheableDao.ptu(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
+  public Resp<Req<SimpleUserEntity, Integer>> modByIdVer(@RequestBody Req<SimpleUserEntity, Integer> req) {
+    Resp<Req<SimpleUserEntity, Integer>> resp = Resp.success(req);
+    req.getPri().setRtn(cacheableDao.modByIdVer(SimpleUserEntity.class, CacheableDao.ptu(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
     return resp;
   }
 
@@ -62,9 +62,9 @@ public class UserControllerPrepare {
   @RrAccess
   @RrCache
   @RrCrypto
-  public Resp<Req<HelloUserEntity, List<HelloUserEntity>>> lst(@RequestBody Req<HelloUserEntity, List<HelloUserEntity>> req) {
-    Resp<Req<HelloUserEntity, List<HelloUserEntity>>> resp = Resp.success(req);
-    req.getPri().setRtn(cacheableDao.lst(HelloUserEntity.class, CacheableDao.pts(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
+  public Resp<Req<SimpleUserEntity, List<SimpleUserEntity>>> lst(@RequestBody Req<SimpleUserEntity, List<SimpleUserEntity>> req) {
+    Resp<Req<SimpleUserEntity, List<SimpleUserEntity>>> resp = Resp.success(req);
+    req.getPri().setRtn(cacheableDao.lst(SimpleUserEntity.class, CacheableDao.pts(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
     return resp;
   }
 }

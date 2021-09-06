@@ -10,7 +10,7 @@ import org.shaneking.ling.test.SKUnit;
 import org.shaneking.ling.zero.io.File0;
 import org.shaneking.ling.zero.lang.String0;
 import org.shaneking.ling.zero.util.List0;
-import org.shaneking.roc.persistence.hello.HelloUserEntity;
+import org.shaneking.roc.persistence.simple.SimpleUserEntity;
 
 import java.io.IOException;
 
@@ -58,7 +58,7 @@ class WebPersistenceEntityBizTest extends SKUnit {
   }
 
   void csv(String fileType) {
-    SaxExcelReader.of(HelloUserEntity.class).rowFilter(row -> row.getRowNum() > 0).readThen(tstIFiles(fileType), (row, ctx) -> {
+    SaxExcelReader.of(SimpleUserEntity.class).rowFilter(row -> row.getRowNum() > 0).readThen(tstIFiles(fileType), (row, ctx) -> {
       log.info(OM3.p(row, ctx));
     });
   }
@@ -80,7 +80,7 @@ class WebPersistenceEntityBizTest extends SKUnit {
 
   @Test
   void template() throws IOException {
-    FileExportUtil.export(DefaultExcelBuilder.of(HelloUserEntity.class).sheetName(new HelloUserEntity().getDbTableName()).build(List0.newArrayList(new HelloUserEntity())), tstOFiles(File0.TYPE_XLSX));
+    FileExportUtil.export(DefaultExcelBuilder.of(SimpleUserEntity.class).sheetName(new SimpleUserEntity().getDbTableName()).build(List0.newArrayList(new SimpleUserEntity())), tstOFiles(File0.TYPE_XLSX));
     assertEquals(String0.ARY_DEC, String0.DIGITAL);
   }
 

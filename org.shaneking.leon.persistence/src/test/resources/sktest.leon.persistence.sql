@@ -1,18 +1,18 @@
-drop table if exists t_hello_channel_access_regex_api_entity;
-drop table if exists t_hello_channel_access_signature_api_entity;
-drop table if exists t_hello_channel_access_tenant_regex_api_entity;
-drop table if exists t_hello_channel_access_tenant_signature_api_entity;
-drop table if exists t_hello_channel_access_tenant_url_api_entity;
-drop table if exists t_hello_channel_access_url_api_entity;
-drop table if exists t_hello_channel_entity;
-drop table if exists t_hello_rr_async_log_entity;
-drop table if exists t_hello_rr_audit_log_entity;
-drop table if exists t_hello_tenant_entity;
-drop table if exists t_hello_user_entity;
+drop table if exists t_simple_channel_access_regex_api_entity;
+drop table if exists t_simple_channel_access_signature_api_entity;
+drop table if exists t_simple_channel_access_tenant_regex_api_entity;
+drop table if exists t_simple_channel_access_tenant_signature_api_entity;
+drop table if exists t_simple_channel_access_tenant_url_api_entity;
+drop table if exists t_simple_channel_access_url_api_entity;
+drop table if exists t_simple_channel_entity;
+drop table if exists t_simple_rr_async_log_entity;
+drop table if exists t_simple_rr_audit_log_entity;
+drop table if exists t_simple_tenant_entity;
+drop table if exists t_simple_user_entity;
 
 
--- HelloChannelAccessRegexApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_channel_access_regex_api_entity` (
+-- SimpleChannelAccessRegexApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_channel_access_regex_api_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -28,12 +28,12 @@ create table if not exists `t_hello_channel_access_regex_api_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_channel_id_no on t_hello_channel_access_regex_api_entity(`channel_id`,`no`);
-create unique index if not exists u_idx_channel_id on t_hello_channel_access_regex_api_entity(`channel_id`);
+create unique index if not exists u_idx_channel_id_no on t_simple_channel_access_regex_api_entity(`channel_id`,`no`);
+create unique index if not exists u_idx_channel_id on t_simple_channel_access_regex_api_entity(`channel_id`);
 
 
--- HelloChannelAccessSignatureApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_channel_access_signature_api_entity` (
+-- SimpleChannelAccessSignatureApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_channel_access_signature_api_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -47,12 +47,12 @@ create table if not exists `t_hello_channel_access_signature_api_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_channel_id_signature on t_hello_channel_access_signature_api_entity(`channel_id`,`signature`);
-create unique index if not exists u_idx_channel_id_no on t_hello_channel_access_signature_api_entity(`channel_id`,`no`);
+create unique index if not exists u_idx_channel_id_signature on t_simple_channel_access_signature_api_entity(`channel_id`,`signature`);
+create unique index if not exists u_idx_channel_id_no on t_simple_channel_access_signature_api_entity(`channel_id`,`no`);
 
 
--- HelloChannelAccessTenantRegexApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_channel_access_tenant_regex_api_entity` (
+-- SimpleChannelAccessTenantRegexApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_channel_access_tenant_regex_api_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -69,12 +69,12 @@ create table if not exists `t_hello_channel_access_tenant_regex_api_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_tenant_id_channel_id on t_hello_channel_access_tenant_regex_api_entity(`tenant_id`,`channel_id`);
-create unique index if not exists u_idx_tenant_id_no on t_hello_channel_access_tenant_regex_api_entity(`tenant_id`,`no`);
+create unique index if not exists u_idx_tenant_id_channel_id on t_simple_channel_access_tenant_regex_api_entity(`tenant_id`,`channel_id`);
+create unique index if not exists u_idx_tenant_id_no on t_simple_channel_access_tenant_regex_api_entity(`tenant_id`,`no`);
 
 
--- HelloChannelAccessTenantSignatureApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_channel_access_tenant_signature_api_entity` (
+-- SimpleChannelAccessTenantSignatureApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_channel_access_tenant_signature_api_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -89,12 +89,12 @@ create table if not exists `t_hello_channel_access_tenant_signature_api_entity` 
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_channel_id_tenant_id_signature on t_hello_channel_access_tenant_signature_api_entity(`channel_id`,`tenant_id`,`signature`);
-create unique index if not exists u_idx_tenant_id_no on t_hello_channel_access_tenant_signature_api_entity(`tenant_id`,`no`);
+create unique index if not exists u_idx_channel_id_tenant_id_signature on t_simple_channel_access_tenant_signature_api_entity(`channel_id`,`tenant_id`,`signature`);
+create unique index if not exists u_idx_tenant_id_no on t_simple_channel_access_tenant_signature_api_entity(`tenant_id`,`no`);
 
 
--- HelloChannelAccessTenantUrlApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_channel_access_tenant_url_api_entity` (
+-- SimpleChannelAccessTenantUrlApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_channel_access_tenant_url_api_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -109,12 +109,12 @@ create table if not exists `t_hello_channel_access_tenant_url_api_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_channel_id_tenant_id_url on t_hello_channel_access_tenant_url_api_entity(`channel_id`,`tenant_id`,`url`);
-create unique index if not exists u_idx_tenant_id_no on t_hello_channel_access_tenant_url_api_entity(`tenant_id`,`no`);
+create unique index if not exists u_idx_channel_id_tenant_id_url on t_simple_channel_access_tenant_url_api_entity(`channel_id`,`tenant_id`,`url`);
+create unique index if not exists u_idx_tenant_id_no on t_simple_channel_access_tenant_url_api_entity(`tenant_id`,`no`);
 
 
--- HelloChannelAccessUrlApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_channel_access_url_api_entity` (
+-- SimpleChannelAccessUrlApiEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_channel_access_url_api_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -128,13 +128,13 @@ create table if not exists `t_hello_channel_access_url_api_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_channel_id_no on t_hello_channel_access_url_api_entity(`channel_id`,`no`);
-create unique index if not exists u_idx_channel_id_url on t_hello_channel_access_url_api_entity(`channel_id`,`url`);
+create unique index if not exists u_idx_channel_id_no on t_simple_channel_access_url_api_entity(`channel_id`,`no`);
+create unique index if not exists u_idx_channel_id_url on t_simple_channel_access_url_api_entity(`channel_id`,`url`);
 
 
 
--- HelloChannelEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_channel_entity` (
+-- SimpleChannelEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_channel_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -152,12 +152,12 @@ create table if not exists `t_hello_channel_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_no on t_hello_channel_entity(`no`);
-create unique index if not exists u_idx_name on t_hello_channel_entity(`name`);
+create unique index if not exists u_idx_no on t_simple_channel_entity(`no`);
+create unique index if not exists u_idx_name on t_simple_channel_entity(`name`);
 
 
--- HelloRrAsyncLogEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_rr_async_log_entity` (
+-- SimpleRrAsyncLogEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_rr_async_log_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -177,11 +177,11 @@ create table if not exists `t_hello_rr_async_log_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_no on t_hello_rr_async_log_entity(`no`);
+create unique index if not exists u_idx_no on t_simple_rr_async_log_entity(`no`);
 
 
--- HelloRrAuditLogEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_rr_audit_log_entity` (
+-- SimpleRrAuditLogEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_rr_audit_log_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -208,11 +208,11 @@ create table if not exists `t_hello_rr_audit_log_entity` (
   primary key (`id`)
 );
 
-create index if not exists no on t_hello_rr_audit_log_entity(no);
+create index if not exists no on t_simple_rr_audit_log_entity(no);
 
 
--- HelloTenantEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_tenant_entity` (
+-- SimpleTenantEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_tenant_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -225,12 +225,12 @@ create table if not exists `t_hello_tenant_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_no on t_hello_tenant_entity(`no`);
-create unique index if not exists u_idx_name on t_hello_tenant_entity(`name`);
+create unique index if not exists u_idx_no on t_simple_tenant_entity(`no`);
+create unique index if not exists u_idx_name on t_simple_tenant_entity(`name`);
 
 
--- HelloUserEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
-create table if not exists `t_hello_user_entity` (
+-- SimpleUserEntityTest_createTableAndIndexIfNotExistSql_null_o.txt
+create table if not exists `t_simple_user_entity` (
   `id` char(40) not null,
   `ver` int not null default 0,
   `dd` varchar(40) default 'N',
@@ -246,34 +246,34 @@ create table if not exists `t_hello_user_entity` (
   primary key (`id`)
 );
 
-create unique index if not exists u_idx_tenant_id_no on t_hello_user_entity(`tenant_id`,`no`);
+create unique index if not exists u_idx_tenant_id_no on t_simple_user_entity(`tenant_id`,`no`);
 
 
 
-insert into t_hello_tenant_entity (id, no, lm_dsz, lm_uid, name, description)
+insert into t_simple_tenant_entity (id, no, lm_dsz, lm_uid, name, description)
 select '1612262610215_LoHqeZBGrVYm3MlYmpH','tstTenantNo','','1612262610216_koFVLCNZrhezbgULWqW','tstTenantName','tstTenantDesc';
-insert into t_hello_user_entity (id, no, lm_dsz, lm_uid, tenant_id, name, haha, mobile, email)
+insert into t_simple_user_entity (id, no, lm_dsz, lm_uid, tenant_id, name, haha, mobile, email)
 select '1612262610216_koFVLCNZrhezbgULWqW','tstUserNo','','1612262610216_koFVLCNZrhezbgULWqW','1612262610215_LoHqeZBGrVYm3MlYmpH','tstUserName','[SKC1]494c6f7665596f75','18888888888','email@email.com';
-insert into t_hello_channel_entity (id, no, lm_dsz, lm_uid, name, description, token_value, token_force, token_algorithm_type, token_value_type)
+insert into t_simple_channel_entity (id, no, lm_dsz, lm_uid, name, description, token_value, token_force, token_algorithm_type, token_value_type)
 select '1612263653223_oGFvE5Hyndf0njoFhyK','tstChannelNo','','1612262610216_koFVLCNZrhezbgULWqW','tstChannelName','tstChannelDesc','494c6f7665596f75','N','SKC1','SELF';
-insert into t_hello_channel_access_tenant_regex_api_entity (id, no, lm_dsz, lm_uid, channel_id, tenant_id, allow_url_regex, allow_signature_regex, deny_url_regex, deny_signature_regex)
+insert into t_simple_channel_access_tenant_regex_api_entity (id, no, lm_dsz, lm_uid, channel_id, tenant_id, allow_url_regex, allow_signature_regex, deny_url_regex, deny_signature_regex)
 select '1612263668482_jaHu6tmguyKo2xWgHPj','','','1612262610216_koFVLCNZrhezbgULWqW','1612263653223_oGFvE5Hyndf0njoFhyK','1612262610215_LoHqeZBGrVYm3MlYmpH','','^[\s\S]*(add|rmv|mod|mge|lst)\([\s\S]*$','','';
 
 
-select * from t_hello_channel_access_regex_api_entity;
-select * from t_hello_channel_access_signature_api_entity;
-select * from t_hello_channel_access_tenant_regex_api_entity;
-select * from t_hello_channel_access_tenant_signature_api_entity;
-select * from t_hello_channel_access_tenant_url_api_entity;
-select * from t_hello_channel_access_url_api_entity;
-select * from t_hello_channel_entity;
-select * from t_hello_rr_async_log_entity;
-select * from t_hello_rr_audit_log_entity;
-select * from t_hello_tenant_entity;
-select * from t_hello_user_entity;
+select * from t_simple_channel_access_regex_api_entity;
+select * from t_simple_channel_access_signature_api_entity;
+select * from t_simple_channel_access_tenant_regex_api_entity;
+select * from t_simple_channel_access_tenant_signature_api_entity;
+select * from t_simple_channel_access_tenant_url_api_entity;
+select * from t_simple_channel_access_url_api_entity;
+select * from t_simple_channel_entity;
+select * from t_simple_rr_async_log_entity;
+select * from t_simple_rr_audit_log_entity;
+select * from t_simple_tenant_entity;
+select * from t_simple_user_entity;
 
 
-drop table if exists t_hello_user_entity_d;
-create table if not exists t_hello_user_entity_d as select * from t_hello_user_entity where 1=0;
-select * from t_hello_user_entity_d;
+drop table if exists t_simple_user_entity_d;
+create table if not exists t_simple_user_entity_d as select * from t_simple_user_entity where 1=0;
+select * from t_simple_user_entity_d;
 vacuum;
