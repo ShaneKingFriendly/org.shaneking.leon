@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/exception")
 @RestController
-public class WebRrControllerAdvicePrepare {
+public class WebRrControllerAdvicePrepare1 {
 
   @RequestMapping("/zero")
   @ResponseBody

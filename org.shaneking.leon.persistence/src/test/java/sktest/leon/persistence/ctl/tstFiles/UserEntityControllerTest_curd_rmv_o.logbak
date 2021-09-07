@@ -9,8 +9,8 @@ MockHttpServletRequest:
     Session Attrs = {}
 
 Handler:
-             Type = sktest.leon.persistence.ctl.UserEntityControllerPrepare
-           Method = sktest.leon.persistence.ctl.UserEntityControllerPrepare#rmv(Req)
+             Type = sktest.leon.persistence.ctl.UserEntityControllerPrepare1
+           Method = sktest.leon.persistence.ctl.UserEntityControllerPrepare1#rmv(Req)
 
 Async:
     Async started = false

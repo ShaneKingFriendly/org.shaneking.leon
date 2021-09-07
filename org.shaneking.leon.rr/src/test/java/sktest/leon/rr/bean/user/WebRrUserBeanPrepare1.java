@@ -3,11 +3,11 @@ package sktest.leon.rr.bean.user;
 import lombok.NonNull;
 import org.shaneking.roc.persistence.simple.SimpleUserEntity;
 
-public class WebRrUserBeanPrepare extends SimpleUserEntity {
-  public static WebRrUserBeanPrepare fromEntity(SimpleUserEntity entity) {
-    WebRrUserBeanPrepare rtn = null;
+public class WebRrUserBeanPrepare1 extends SimpleUserEntity {
+  public static WebRrUserBeanPrepare1 fromEntity(SimpleUserEntity entity) {
+    WebRrUserBeanPrepare1 rtn = null;
     if (entity != null) {
-      rtn = new WebRrUserBeanPrepare();
+      rtn = new WebRrUserBeanPrepare1();
       transform(entity, rtn);
     }
     return rtn;
@@ -21,7 +21,7 @@ public class WebRrUserBeanPrepare extends SimpleUserEntity {
     to.setEmail(from.getEmail());
   }
 
-  public static SimpleUserEntity toEntity(WebRrUserBeanPrepare bean) {
+  public static SimpleUserEntity toEntity(WebRrUserBeanPrepare1 bean) {
     SimpleUserEntity rtn = null;
     if (bean != null) {
       rtn = new SimpleUserEntity();
