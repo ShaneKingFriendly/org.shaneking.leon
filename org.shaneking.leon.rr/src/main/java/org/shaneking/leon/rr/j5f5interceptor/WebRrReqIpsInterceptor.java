@@ -18,13 +18,13 @@ public class WebRrReqIpsInterceptor implements HandlerInterceptor {
   public static final ThreadLocal<String> REQ_IPS = new ThreadLocal<>();
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    REQ_IPS.set(OM3.writeValueAsString(Tuple.of(request.getHeader("X-Forwarded-For"), request.getHeader("X-Real-IP"), request.getRemoteAddr())));
-    return true;
+  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    REQ_IPS.remove();
   }
 
   @Override
-  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-    REQ_IPS.remove();
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    REQ_IPS.set(OM3.writeValueAsString(Tuple.of(request.getHeader("X-Forwarded-For"), request.getHeader("X-Real-IP"), request.getRemoteAddr())));
+    return true;
   }
 }

@@ -25,17 +25,12 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 public class WebRrStateController {
-  public static final String HEALTH_GOOD = "@I@AM@GOOD@";
   public static final String HEALTH_BAD = "@I@AM@BAD@";
+  public static final String HEALTH_GOOD = "@I@AM@GOOD@";
   @Value("${sk.leon.rr.file.temporary.folder:/tmp}")
   private String temporaryFolder;
   @Autowired
   private Environment environment;
-
-  @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = {"/crypto0/slat"})
-  public String stateCrypto0slat() {
-    return SKC1.salt();
-  }
 
   @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = {"/env/{key}"})
   public String stateEnvKey(@PathVariable String key) {
@@ -63,6 +58,11 @@ public class WebRrStateController {
   @RequestMapping(path = {"/health"})
   public String stateHealth() {
     return HEALTH_GOOD;
+  }
+
+  @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = {"/skc1/slat"})
+  public String stateSkc1slat() {
+    return SKC1.salt();
   }
 
   @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, path = {"/uuid0/cul33"})

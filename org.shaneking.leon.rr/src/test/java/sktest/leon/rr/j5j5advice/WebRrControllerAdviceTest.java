@@ -8,12 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class WebRrControllerAdviceTest extends SKSpringMvcUnit {
 
   @Test
-  void zero() throws Exception {
-    assertNotNull(performJJ("/exception/zero"));
+  void resp() throws Exception {
+    assertNotNull(performJJ("/exception/resp"));
   }
 
   @Test
-  void resp() throws Exception {
-    assertNotNull(performJJ("/exception/resp"));
+  void zero() throws Exception {
+    assertNotNull(performJJ("/exception/zero"));
   }
 }

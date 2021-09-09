@@ -34,10 +34,6 @@ public class WebRrAuditAspect {
   @Value("${sk.leon.rr.audit.enabled:true}")
   private boolean enabled;
 
-  @Pointcut("execution(@org.shaneking.roc.rr.annotation.RrAudit * *..*.*(..))")
-  private void pointcut() {
-  }
-
   @Before("pointcut() && @annotation(rrAudit)")
   public void before(JoinPoint jp, RrAudit rrAudit) throws Throwable {
     if (enabled) {
@@ -53,5 +49,9 @@ public class WebRrAuditAspect {
         log.error(MF0.fmt("{0} - {1} : {2}", ZeroAnnotation.ERR_CODE__ANNOTATION_SETTING_ERROR, jp.getSignature().toLongString(), OM3.writeValueAsString(rrAudit)));
       }
     }
+  }
+
+  @Pointcut("execution(@org.shaneking.roc.rr.annotation.RrAudit * *..*.*(..))")
+  private void pointcut() {
   }
 }

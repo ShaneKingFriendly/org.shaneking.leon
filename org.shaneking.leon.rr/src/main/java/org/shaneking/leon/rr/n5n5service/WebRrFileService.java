@@ -25,10 +25,6 @@ public class WebRrFileService {
     return transform(req, multipartFile, attachFolder);
   }
 
-  public Resp<Req<String, String>> upload(Req<String, String> req, MultipartFile multipartFile) {
-    return transform(req, multipartFile, uploadFolder);
-  }
-
   private Resp<Req<String, String>> transform(Req<String, String> req, MultipartFile multipartFile, String folder) {
     Resp<Req<String, String>> resp = Resp.success(req);
     Path path = Paths.get(folder, String.valueOf(req.gnnCtx().gnaTenantId()), LD0.on().ySmSd(), req.getPub().gnnReqNo(), new File(String.valueOf(multipartFile.getOriginalFilename())).getName());
@@ -41,5 +37,9 @@ public class WebRrFileService {
       resp.parseExp(e);
     }
     return resp;
+  }
+
+  public Resp<Req<String, String>> upload(Req<String, String> req, MultipartFile multipartFile) {
+    return transform(req, multipartFile, uploadFolder);
   }
 }

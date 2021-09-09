@@ -40,7 +40,7 @@ public class SKSpringMvcUnit extends SKSpringUnit {
   public MockMvc mockMvc;
   @Getter
   @Setter
-  private Map<String, Supplier<String>> tstReplaceMap = Map0.newHashMap(List0.newArrayList("$UUID0_cUl33_1$"), List0.newArrayList((Supplier<String>) UUID0::cUl33));
+  private String tstUploadContentType = "text/plain";
   @Getter
   @Setter
   private String tstUploadFileFieldName = "file";
@@ -49,14 +49,14 @@ public class SKSpringMvcUnit extends SKSpringUnit {
   private String tstUploadParamFieldName = "req";
   @Getter
   @Setter
-  private String tstUploadContentType = "text/plain";
-
-  public MockHttpServletRequestBuilder cookie(MockHttpServletRequestBuilder mockHttpServletRequestBuilder) {
-    return mockHttpServletRequestBuilder.cookie(new Cookie("skToken", "skTestToken"));
-  }
+  private Map<String, Supplier<String>> tstReplaceMap = Map0.newHashMap(List0.newArrayList("$UUID0_cUl33_1$"), List0.newArrayList((Supplier<String>) UUID0::cUl33));
 
   public MockHttpServletRequestBuilder appJson(MockHttpServletRequestBuilder mockHttpServletRequestBuilder) {
     return mockHttpServletRequestBuilder.contentType(MediaType.APPLICATION_JSON);
+  }
+
+  public MockHttpServletRequestBuilder cookie(MockHttpServletRequestBuilder mockHttpServletRequestBuilder) {
+    return mockHttpServletRequestBuilder.cookie(new Cookie("skToken", "skTestToken"));
   }
 
   public MockHttpServletRequestBuilder multiFormData(MockHttpServletRequestBuilder mockHttpServletRequestBuilder) {
@@ -101,16 +101,16 @@ public class SKSpringMvcUnit extends SKSpringUnit {
     return performJFJ(url, tstITxtFiles());
   }
 
-  public ResultActions performJFT(String url) throws Exception {
-    return performJFT(url, tstITxtFiles());
-  }
-
   public ResultActions performJFJ(String url, File reqAttachFile) throws Exception {
     return performJFJ(url, reqAttachFile, StandardCharsets.UTF_8);
   }
 
   public ResultActions performJFJ(String url, File reqAttachFile, Charset charset) throws Exception {
     return perform(url, tstIJsonFiles(), reqAttachFile, tstOJsonFiles(), null, charset);
+  }
+
+  public ResultActions performJFT(String url) throws Exception {
+    return performJFT(url, tstITxtFiles());
   }
 
   public ResultActions performJFT(String url, File reqAttachFile) throws Exception {

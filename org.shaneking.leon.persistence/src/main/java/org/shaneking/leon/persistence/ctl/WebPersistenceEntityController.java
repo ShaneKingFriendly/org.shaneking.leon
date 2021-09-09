@@ -19,15 +19,8 @@ public abstract class WebPersistenceEntityController<T extends CacheableEntities
   private Class<T> entityClass;
 
   @Autowired
+  @Getter
   private WebPersistenceEntityBiz entityBiz;
-
-  @PostMapping(path = {"/mge"})
-  @RrAudit
-  @RrAccess
-  @RrCrypto
-  public Resp<Req<T, Integer>> mge(@RequestBody Req<T, Integer> req) {
-    return this.getEntityBiz().mge(req, this.getEntityClass());
-  }
 
   @PostMapping(path = {"/add"})
   @RrAudit
@@ -37,12 +30,12 @@ public abstract class WebPersistenceEntityController<T extends CacheableEntities
     return this.getEntityBiz().add(req, this.getEntityClass());
   }
 
-  @PostMapping(path = {"/rmv"})
+  @PostMapping(path = {"/csv"})
   @RrAudit
   @RrAccess
   @RrCrypto
-  public Resp<Req<T, Integer>> rmv(@RequestBody Req<T, Integer> req) {
-    return this.getEntityBiz().rmv(req, this.getEntityClass());
+  public Resp<Req<String, String>> csv(@RequestBody Req<String, String> req) {
+    return this.getEntityBiz().csv(req, this.getEntityClass());
   }
 
   @PostMapping(path = {"/del"})
@@ -61,20 +54,28 @@ public abstract class WebPersistenceEntityController<T extends CacheableEntities
     return this.getEntityBiz().ivd(req, this.getEntityClass());
   }
 
-  @PostMapping(path = {"/mod"})
-  @RrAudit
-  @RrAccess
-  @RrCrypto
-  public Resp<Req<T, Integer>> mod(@RequestBody Req<T, Integer> req) {
-    return this.getEntityBiz().mod(req, this.getEntityClass());
-  }
-
   @PostMapping(path = {"/lst"})
   @RrAudit
   @RrAccess
   @RrCrypto
   public Resp<Req<T, List<T>>> lst(@RequestBody Req<T, List<T>> req) {
     return this.getEntityBiz().lst(req, this.getEntityClass());
+  }
+
+  @PostMapping(path = {"/mge"})
+  @RrAudit
+  @RrAccess
+  @RrCrypto
+  public Resp<Req<T, Integer>> mge(@RequestBody Req<T, Integer> req) {
+    return this.getEntityBiz().mge(req, this.getEntityClass());
+  }
+
+  @PostMapping(path = {"/mod"})
+  @RrAudit
+  @RrAccess
+  @RrCrypto
+  public Resp<Req<T, Integer>> mod(@RequestBody Req<T, Integer> req) {
+    return this.getEntityBiz().mod(req, this.getEntityClass());
   }
 
   @PostMapping(path = {"/one"})
@@ -85,12 +86,12 @@ public abstract class WebPersistenceEntityController<T extends CacheableEntities
     return this.getEntityBiz().one(req, this.getEntityClass());
   }
 
-  @PostMapping(path = {"/csv"})
+  @PostMapping(path = {"/rmv"})
   @RrAudit
   @RrAccess
   @RrCrypto
-  public Resp<Req<String, String>> csv(@RequestBody Req<String, String> req) {
-    return this.getEntityBiz().csv(req, this.getEntityClass());
+  public Resp<Req<T, Integer>> rmv(@RequestBody Req<T, Integer> req) {
+    return this.getEntityBiz().rmv(req, this.getEntityClass());
   }
 
   @PostMapping(path = {"/tpl"})
@@ -107,9 +108,5 @@ public abstract class WebPersistenceEntityController<T extends CacheableEntities
   @RrCrypto
   public Resp<Req<String, Integer>> xlsx(@RequestBody Req<String, Integer> req) {
     return this.getEntityBiz().xlsx(req, this.getEntityClass());
-  }
-
-  public WebPersistenceEntityBiz getEntityBiz() {
-    return entityBiz;
   }
 }

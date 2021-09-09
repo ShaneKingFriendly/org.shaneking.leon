@@ -14,13 +14,13 @@ public class WebRrReqUrlInterceptor implements HandlerInterceptor {
   public static final ThreadLocal<String> REQ_URL = new ThreadLocal<>();
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    REQ_URL.set(request.getRequestURI());
-    return true;
+  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    REQ_URL.remove();
   }
 
   @Override
-  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-    REQ_URL.remove();
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    REQ_URL.set(request.getRequestURI());
+    return true;
   }
 }

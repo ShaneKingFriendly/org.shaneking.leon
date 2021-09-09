@@ -31,16 +31,16 @@ public class UserControllerPrepare1 {
     return resp;
   }
 
-  @RequestMapping("/rmvById")
+  @RequestMapping("/lst")
   @ResponseBody
+  @RrLimiting(prop = "sktest.leon.rr.j5n5controller.UserControllerPrepare1.lst", limit = 1)
   @RrAudit
   @RrAccess
+  @RrCache
   @RrCrypto
-  public Resp<Req<String, Integer>> rmvById(@RequestBody Req<String, Integer> req) {
-    Resp<Req<String, Integer>> resp = Resp.success(req);
-    SimpleUserEntity userEntity = new SimpleUserEntity();
-    userEntity.setId(req.getPri().getObj());
-    req.getPri().setRtn(cacheableDao.rmvById(SimpleUserEntity.class, CacheableDao.ptu(userEntity, req.gnnCtx().gnaTenantId())));
+  public Resp<Req<SimpleUserEntity, List<SimpleUserEntity>>> lst(@RequestBody Req<SimpleUserEntity, List<SimpleUserEntity>> req) {
+    Resp<Req<SimpleUserEntity, List<SimpleUserEntity>>> resp = Resp.success(req);
+    req.getPri().setRtn(cacheableDao.lst(SimpleUserEntity.class, CacheableDao.pts(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
     return resp;
   }
 
@@ -55,16 +55,16 @@ public class UserControllerPrepare1 {
     return resp;
   }
 
-  @RequestMapping("/lst")
+  @RequestMapping("/rmvById")
   @ResponseBody
-  @RrLimiting(prop = "sktest.leon.rr.j5n5controller.UserControllerPrepare1.lst", limit = 1)
   @RrAudit
   @RrAccess
-  @RrCache
   @RrCrypto
-  public Resp<Req<SimpleUserEntity, List<SimpleUserEntity>>> lst(@RequestBody Req<SimpleUserEntity, List<SimpleUserEntity>> req) {
-    Resp<Req<SimpleUserEntity, List<SimpleUserEntity>>> resp = Resp.success(req);
-    req.getPri().setRtn(cacheableDao.lst(SimpleUserEntity.class, CacheableDao.pts(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
+  public Resp<Req<String, Integer>> rmvById(@RequestBody Req<String, Integer> req) {
+    Resp<Req<String, Integer>> resp = Resp.success(req);
+    SimpleUserEntity userEntity = new SimpleUserEntity();
+    userEntity.setId(req.getPri().getObj());
+    req.getPri().setRtn(cacheableDao.rmvById(SimpleUserEntity.class, CacheableDao.ptu(userEntity, req.gnnCtx().gnaTenantId())));
     return resp;
   }
 }

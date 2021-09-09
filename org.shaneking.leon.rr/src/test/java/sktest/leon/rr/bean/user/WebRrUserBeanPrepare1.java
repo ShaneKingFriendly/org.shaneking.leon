@@ -13,14 +13,6 @@ public class WebRrUserBeanPrepare1 extends SimpleUserEntity {
     return rtn;
   }
 
-  public static void transform(@NonNull SimpleUserEntity from, @NonNull SimpleUserEntity to) {
-    to.setId(from.getId());
-    to.setNo(from.getNo());
-    to.setName(from.getName());
-    to.setMobile(from.getMobile());
-    to.setEmail(from.getEmail());
-  }
-
   public static SimpleUserEntity toEntity(WebRrUserBeanPrepare1 bean) {
     SimpleUserEntity rtn = null;
     if (bean != null) {
@@ -28,6 +20,14 @@ public class WebRrUserBeanPrepare1 extends SimpleUserEntity {
       transform(bean, rtn);
     }
     return rtn;
+  }
+
+  public static void transform(@NonNull SimpleUserEntity from, @NonNull SimpleUserEntity to) {
+    to.setId(from.getId());
+    to.setNo(from.getNo());
+    to.setName(from.getName());
+    to.setMobile(from.getMobile());
+    to.setEmail(from.getEmail());
   }
 
   public SimpleUserEntity toEntity(SimpleUserEntity to) {

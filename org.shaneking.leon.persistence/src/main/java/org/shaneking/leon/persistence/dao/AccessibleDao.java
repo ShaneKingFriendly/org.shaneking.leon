@@ -105,6 +105,10 @@ public class AccessibleDao {
     return rtn;
   }
 
+  public <T extends CacheableEntities> T oneById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx) {
+    return oneById(cacheType, id, ctx, false);
+  }
+
   public <T extends CacheableEntities> T oneById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx, boolean rtnNullIfNotEqualsOne) {
     try {
       T t = cacheType.newInstance();
@@ -116,16 +120,16 @@ public class AccessibleDao {
     }
   }
 
-  public <T extends CacheableEntities> T oneById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx) {
-    return oneById(cacheType, id, ctx, false);
+  public <T extends CacheableEntities> T oneEii(@NonNull Class<T> cacheType, @NonNull T t, @NonNull Ctx ctx) {
+    return one(cacheType, t, ctx, false, true);
   }
 
   public <T extends CacheableEntities> T oneEii(@NonNull Class<T> cacheType, @NonNull T t, @NonNull Ctx ctx, boolean rtnNullIfNotEqualsOne) {
     return one(cacheType, t, ctx, rtnNullIfNotEqualsOne, true);
   }
 
-  public <T extends CacheableEntities> T oneEii(@NonNull Class<T> cacheType, @NonNull T t, @NonNull Ctx ctx) {
-    return one(cacheType, t, ctx, false, true);
+  public <T extends CacheableEntities> T oneEiiById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx) {
+    return oneEiiById(cacheType, id, ctx, false);
   }
 
   public <T extends CacheableEntities> T oneEiiById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx, boolean rtnNullIfNotEqualsOne) {
@@ -139,8 +143,8 @@ public class AccessibleDao {
     }
   }
 
-  public <T extends CacheableEntities> T oneEiiById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx) {
-    return oneEiiById(cacheType, id, ctx, false);
+  public <T extends CacheableEntities> T oneValid(@NonNull Class<T> cacheType, @NonNull T t, @NonNull Ctx ctx) {
+    return oneValid(cacheType, t, ctx, false);
   }
 
   public <T extends CacheableEntities> T oneValid(@NonNull Class<T> cacheType, @NonNull T t, @NonNull Ctx ctx, boolean rtnNullIfNotEqualsOne) {
@@ -148,8 +152,8 @@ public class AccessibleDao {
     return one(cacheType, t, ctx, rtnNullIfNotEqualsOne, false);
   }
 
-  public <T extends CacheableEntities> T oneValid(@NonNull Class<T> cacheType, @NonNull T t, @NonNull Ctx ctx) {
-    return oneValid(cacheType, t, ctx, false);
+  public <T extends CacheableEntities> T oneValidById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx) {
+    return oneValidById(cacheType, id, ctx, false);
   }
 
   public <T extends CacheableEntities> T oneValidById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx, boolean rtnNullIfNotEqualsOne) {
@@ -162,9 +166,5 @@ public class AccessibleDao {
       log.error(OM3.p(cacheType, id, ctx, rtnNullIfNotEqualsOne), e);
       throw new ZeroException(e);
     }
-  }
-
-  public <T extends CacheableEntities> T oneValidById(@NonNull Class<T> cacheType, @NonNull String id, @NonNull Ctx ctx) {
-    return oneValidById(cacheType, id, ctx, false);
   }
 }

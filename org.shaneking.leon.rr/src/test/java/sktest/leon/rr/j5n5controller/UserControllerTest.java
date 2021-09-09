@@ -15,6 +15,25 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserControllerTest extends SKSpringMvcUnit {
 
   @Test
+  void curd() throws Exception {
+    assertAll(
+      () -> assertEquals("E+MK32CVXixTTTOO1qj87l5vpYHfjEsIuIs8usDQV3wiHjrIB6mPFHPr+puaXS4a0ydTyJDDxTFg2x9CXbDzaj1cUts99qHO7e+dEpC3XZt3m4YTMk75u8JyQYFwGr1mvdnu0kxLYIe7nbSbsrcqyQ=="
+        , SKC1.encrypt("{\"ext\":{\"tenantNo\":\"tstTenantNo\",\"userNo\":\"tstUserNo\"},\"obj\":\"1612353237501_DcNd45KtJXPmSpz2xRB\",\"rtn\":1}")),
+      () -> assertEquals("E+MK32CVXixTTTOO1qj87l5vpYHfjEsIuIs8usDQV3wiHjrIB6mPFHPr+puaXS4aHvKngJ3V2+eDw8AJ9LqXjVhe3bBWpT1wFyDvgQztlXebcNL87fKMOJ42CE9k234lEkfiETuanKawvgTwwJ1TcUo+5QWZ/rMQ1UwKbOfCIqg="
+        , SKC1.encrypt("{\"ext\":{\"tenantNo\":\"tstTenantNo\",\"userNo\":\"tstUserNo\"},\"obj\":{\"id\":\"1612353237501_DcNd45KtJXPmSpz2xRB\"},\"rtn\":1}"))
+    );
+
+    for (int i = 0; i < 10; i++) {
+      setTstSeq("add");
+      assertNotNull(performJJ("/user/add"));
+      setTstSeq("modByIdVer");
+      assertNotNull(performJJ("/user/modByIdVer"));
+      setTstSeq("rmvById");
+      assertNotNull(performJJ("/user/rmvById"));
+    }
+  }
+
+  @Test
   void lst() {
     assertEquals(String0.ARY_DEC, String0.DIGITAL);
 
@@ -112,25 +131,6 @@ public class UserControllerTest extends SKSpringMvcUnit {
 
     for (int i = 0; i < Integer.MAX_VALUE; i++) {
       //
-    }
-  }
-
-  @Test
-  void curd() throws Exception {
-    assertAll(
-      () -> assertEquals("E+MK32CVXixTTTOO1qj87l5vpYHfjEsIuIs8usDQV3wiHjrIB6mPFHPr+puaXS4a0ydTyJDDxTFg2x9CXbDzaj1cUts99qHO7e+dEpC3XZt3m4YTMk75u8JyQYFwGr1mvdnu0kxLYIe7nbSbsrcqyQ=="
-        , SKC1.encrypt("{\"ext\":{\"tenantNo\":\"tstTenantNo\",\"userNo\":\"tstUserNo\"},\"obj\":\"1612353237501_DcNd45KtJXPmSpz2xRB\",\"rtn\":1}")),
-      () -> assertEquals("E+MK32CVXixTTTOO1qj87l5vpYHfjEsIuIs8usDQV3wiHjrIB6mPFHPr+puaXS4aHvKngJ3V2+eDw8AJ9LqXjVhe3bBWpT1wFyDvgQztlXebcNL87fKMOJ42CE9k234lEkfiETuanKawvgTwwJ1TcUo+5QWZ/rMQ1UwKbOfCIqg="
-        , SKC1.encrypt("{\"ext\":{\"tenantNo\":\"tstTenantNo\",\"userNo\":\"tstUserNo\"},\"obj\":{\"id\":\"1612353237501_DcNd45KtJXPmSpz2xRB\"},\"rtn\":1}"))
-    );
-
-    for (int i = 0; i < 10; i++) {
-      setTstSeq("add");
-      assertNotNull(performJJ("/user/add"));
-      setTstSeq("modByIdVer");
-      assertNotNull(performJJ("/user/modByIdVer"));
-      setTstSeq("rmvById");
-      assertNotNull(performJJ("/user/rmvById"));
     }
   }
 }

@@ -60,135 +60,24 @@ import java.util.stream.Stream;
 public class WebPersistenceEntityBiz {
   @Transient
   public static final String ERR_CODE__ILLEGAL_CHARACTER = "WEB_PERSISTENCE_ENTITY_BIZ__ILLEGAL_CHARACTER(')";
-  @Value("${sk.leon.persistence.file.temporary.folder:/tmp}")
-  private String temporaryFolder;
   @Value("${sk.leon.persistence.file.csv.buffer:1023}")
   private int csvBuffer;
   @Value("${sk.leon.persistence.dbserver.backup.folder:/tmp}")
   private String dbserverBackupFolder;
+  @Value("${sk.leon.persistence.file.temporary.folder:/tmp}")
+  private String temporaryFolder;
   @Autowired
   private CacheableDao cacheableDao;
   @Autowired
-  private ProtectDao protectDao;
+  private ChannelizedNumberedDao channelizedNumberedDao;
   @Autowired
   private NumberedDao numberedDao;
   @Autowired
-  private ChannelizedNumberedDao channelizedNumberedDao;
+  private ProtectDao protectDao;
   @Autowired
   private TenantedNumberedDao tenantedNumberedDao;
   @Autowired
   private UserEntities userEntityClass;
-
-  //special for common
-  private <T extends CacheableEntities> T oneByNo(Class<T> entityClass, T t, String tenantId, String channelId) {
-    T rtn = null;
-    if (channelizedNumberedDao != null && t instanceof ChannelizedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(channelId)) {
-      rtn = channelizedNumberedDao.oneByNo(entityClass, t.getNo(), channelId, true);
-    } else if (tenantedNumberedDao != null && t instanceof TenantedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
-      rtn = tenantedNumberedDao.oneByNo(entityClass, t.getNo(), tenantId, true);
-    } else if (numberedDao != null && t instanceof NumberedUniIdx && !String0.isNullOrEmpty(t.getNo())) {
-      rtn = numberedDao.oneByNo(entityClass, t.getNo(), true);
-    }
-    return rtn;
-  }
-
-  private <T extends CacheableEntities> List<String> ddIds(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
-    T t = req.getPri().getObj();
-
-    long cnt = protectDao.cnt(entityClass, t, req.gnnCtx());
-    T modT = t.filedToCondition();
-    modT.setDd(dd);
-    modT.setLmDsz(ZDT0.on().dTSZ()).setLmUid(req.gnnCtx().gnaUserId());
-    List<String> ids = List0.newArrayList();
-    if (cnt < Pagination.MAX_SIZE) {
-      Pagination definedPagination = t.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
-      ids = protectDao.lstIds(entityClass, t, req.gnnCtx());
-      req.getPri().setRtn(protectDao.modByIdsVer(entityClass, modT, ids, req.gnnCtx()));
-      t.setPagination(definedPagination);
-
-      if (ids.size() != req.getPri().getRtn()) {
-        log.warn(OM3.lp(dd, ids.toArray()));
-
-        T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
-        idsT.setDd(dd);
-        ids = protectDao.lstIds(entityClass, idsT, req.gnnCtx());
-
-        if (ids.size() != req.getPri().getRtn()) {
-          log.error(OM3.lp(dd, ids.toArray()));
-          ids = List0.newArrayList();
-        }
-      }
-    } else {
-      req.getPri().setRtn(protectDao.mod(entityClass, modT, req.gnnCtx()));
-    }
-
-    return ids;
-  }
-
-  protected <T extends CacheableEntities> String idSubQuery(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
-    T subT = entityClass.newInstance();
-    subT.nullSetter();
-    subT.setDd(dd);
-    Tuple.Pair<List<String>, List<Object>> pair = subT.selectSql(List0.newArrayList(Identified.COLUMN__ID), List0.newArrayList(), true);
-    return String.join(String0.BLANK, Tuple.getFirst(pair)).replace(String0.QUESTION, String0.wrap(subT.getDd(), String0.SINGLE_QUOTATION));
-  }
-
-  ///template
-  public <T extends CacheableEntities> Resp<Req<String, String>> tpl(Req<String, String> req, Class<T> entityClass) {
-    Resp<Req<String, String>> resp = Resp.success(req);
-    try {
-      T t = entityClass.newInstance();
-      Path path = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), LD0.on().ySmSd(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_XLSX));
-      if (!path.toFile().exists()) {
-        path.toFile().getParentFile().mkdirs();
-        FileExportUtil.export(DefaultExcelBuilder.of(entityClass).build(List0.newArrayList(t)), path.toFile());
-      }
-      req.getPri().setRtn(path.toFile().getAbsolutePath());
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  //special for rmv
-  protected <T extends CacheableEntities> Map<String, Map<String, Integer>> rmvRel(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd, @NonNull List<String> ids) throws Exception {
-    ///abstract
-    return Map0.newHashMap();
-  }
-
-  //special for del
-  protected <T extends CacheableEntities> Map<String, Map<String, Integer>> delRel(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd, @NonNull List<String> ids) throws Exception {
-    ///abstract
-    return Map0.newHashMap();
-  }
-
-  //common
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> mge(Req<T, Integer> req, Class<T> entityClass) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
-    try {
-      T t = req.getPri().getObj();
-      if (String0.isNullOrEmpty(t.getId())) {
-        T existT = oneByNo(entityClass, t, req.gnnCtx().gnaTenantId(), req.gnnCtx().gnaChannelId());
-        if (existT == null) {
-          resp = add(req, entityClass);
-        } else {
-          t.setId(existT.getId());
-          resp = mod(req, entityClass);
-        }
-      } else {
-        if (cacheableDao.oneById(entityClass, t.getId(), true) == null) {
-          resp = add(req, entityClass);
-        } else {
-          resp = mod(req, entityClass);
-        }
-      }
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
 
   public <T extends CacheableEntities> Resp<Req<T, Integer>> add(Req<T, Integer> req, Class<T> entityClass) {
     Resp<Req<T, Integer>> resp = Resp.success(req);
@@ -196,181 +85,6 @@ public class WebPersistenceEntityBiz {
       T t = req.getPri().getObj();
       t.initWithUidAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
       req.getPri().setRtn(protectDao.add(entityClass, t, req.gnnCtx()));
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> rmv(Req<T, Integer> req, Class<T> entityClass) {
-    return rmv(req, entityClass, UUID0.cUl33());
-  }
-
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> rmv(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
-    try {
-      T t = req.getPri().getObj();
-
-      List<String> ids = ddIds(req, entityClass, dd);
-
-      resp.setMsg(OM3.writeValueAsString(rmvRel(req, entityClass, dd, ids)));
-
-      //create table if not exists tableName_d (like tableName);
-      //insert into tableName_d(columns) select columns from tableName where dd = ?
-      assert req.getPri().getRtn() == cacheableDao.getJdbcTemplate().update(MF0.fmt("insert into {0}({1}) select {1} from {2} where dd = ?", t.deletedFullTableName()
-        , t.getFieldNameList().stream().map(f -> t.getDbColumnMap().get(f)).collect(Collectors.joining(String0.COMMA)), t.fullTableName()), dd);
-      //delete original records
-      T rmvT = entityClass.newInstance();
-      rmvT.setDd(dd);
-      if (ids.size() > 0) {
-        assert req.getPri().getRtn() == protectDao.rmvByIds(entityClass, rmvT, ids, req.gnnCtx());
-      } else {
-        assert req.getPri().getRtn() == protectDao.rmv(entityClass, rmvT, req.gnnCtx());
-      }
-
-      t.setDd(dd);
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass) {
-    return del(req, entityClass, UUID0.cUl33());
-  }
-
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
-    try {
-      T t = req.getPri().getObj();
-
-      List<String> ids = ddIds(req, entityClass, dd);
-
-      resp.setMsg(OM3.writeValueAsString(delRel(req, entityClass, dd, ids)));
-
-      t.setDd(dd);
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> ivd(Req<T, Integer> req, Class<T> entityClass) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
-    try {
-      T t = req.getPri().getObj();
-      T tmpT = t.filedToCondition();
-      List<String> ids = List0.newArrayList();
-      long cnt = protectDao.cnt(entityClass, tmpT, req.gnnCtx());
-      if (cnt < Pagination.MAX_SIZE) {
-        Pagination definedPagination = tmpT.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
-        ids = protectDao.lstIds(entityClass, tmpT, req.gnnCtx());
-        tmpT.setPagination(definedPagination);
-      }
-      tmpT.setIvd(String0.Y).setLmDsz(ZDT0.on().dTSZ()).setLmUid(req.gnnCtx().gnaUserId());
-      if (ids.size() > 0) {
-        req.getPri().setRtn(protectDao.modByIdsVer(entityClass, tmpT, ids, req.gnnCtx()));
-      } else {
-        req.getPri().setRtn(protectDao.mod(entityClass, tmpT, req.gnnCtx()));
-      }
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> mod(Req<T, Integer> req, Class<T> entityClass) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
-    try {
-      T t = req.getPri().getObj();
-      if (!String0.isNullOrEmpty(t.getId())) {
-        req.getPri().setRtn(protectDao.modByIdVer(entityClass, t, req.gnnCtx()));
-      } else {
-        List<String> cl = t.forceWhereCondition(Identified.FIELD__ID).getCl();
-        if (cl != null && cl.size() > 0) {
-          req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, cl, req.gnnCtx()));
-        } else {
-          T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
-          idsT.setVer(t.getVer());
-          idsT.srvWhereConditions(t.getWhereConditions());
-          List<String> ids = List0.newArrayList();
-          long cnt = protectDao.cnt(entityClass, idsT, req.gnnCtx());
-          if (cnt < Pagination.MAX_SIZE) {
-            ids = protectDao.lstIds(entityClass, idsT, req.gnnCtx());
-          }
-          if (ids.size() > 0) {
-            req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, ids, req.gnnCtx()));
-          } else {
-            req.getPri().setRtn(protectDao.mod(entityClass, t, req.gnnCtx()));
-          }
-        }
-      }
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  public <T extends CacheableEntities> Resp<Req<T, List<T>>> lst(Req<T, List<T>> req, Class<T> entityClass) {
-    Resp<Req<T, List<T>>> resp = Resp.success(req);
-    try {
-      T t = req.getPri().getObj();
-      t.setLastModifyUser(String0.isNullOrEmpty(t.getLmUid()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLmUid()));
-      t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
-      List<String> tenantIdList = List0.newArrayList(req.gnnCtx().gnaTenantId());
-      if (t instanceof TenantUsable) {
-        tenantIdList = TenantedResourceAccessibleEntities.calc(req.gnnCtx().getTutList(), entityClass.getName(), tenantIdList);
-      }
-      req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, tenantIdList)));
-      t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, tenantIdList)));
-      req.getPri().gnnExt().gnnTbl().setPagination(t.getPagination());
-      ///setLastModifyUser in other biz when need
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  public <T extends CacheableEntities> Resp<Req<T, T>> one(Req<T, T> req, Class<T> entityClass) {
-    Resp<Req<T, T>> resp = Resp.success(req);
-    try {
-      T t = req.getPri().getObj();
-      t.setLastModifyUser(String0.isNullOrEmpty(t.getLmUid()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLmUid()));
-      T rst = protectDao.one(entityClass, t, req.gnnCtx());
-      rst.setLastModifyUser((Objects.equals(rst.getLmUid(), t.getLmUid())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLmUid()));
-      req.getPri().setRtn(rst);
-    } catch (Exception e) {
-      log.error(OM3.lp(resp, req, entityClass), e);
-      resp.parseExp(e);
-    }
-    return resp;
-  }
-
-  //into out file
-  public <T extends CacheableEntities> Resp<Req<T, String>> iof(Req<T, String> req, Class<T> entityClass) {
-    Resp<Req<T, String>> resp = Resp.success(req);
-    try {
-      T t = req.getPri().getObj();
-      String rtn = dbserverBackupFolder + String0.SLASH + String0.nullOrEmptyTo(req.gnnCtx().gnaAuditId(), UUID0.cUl33());
-      Tuple.Pair<List<String>, List<Object>> pair = t.selectSql(t.getSelectList(), List0.newArrayList(), true);
-      List<String> args = List0.newArrayList();
-      for (Object o : Tuple.getSecond(pair)) {
-        if (String.valueOf(o).contains(String0.SINGLE_QUOTATION)) {
-          throw new RespException(Resp.failed(ERR_CODE__ILLEGAL_CHARACTER, String.valueOf(o), req));
-        }
-        args.add(String0.wrap(String.valueOf(o), o instanceof String ? String0.SINGLE_QUOTATION : String0.EMPTY));
-      }
-      String sql = String.format(String.join(String0.BLANK, Tuple.getFirst(pair)).replace(String0.QUESTION, "%s"), args)
-        + "into outfile '" + rtn + "' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\\n'";
-      log.info(sql);
-      cacheableDao.getJdbcTemplate().execute(sql);
-      req.getPri().setRtn(rtn);
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
@@ -444,6 +158,224 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass) {
+    return del(req, entityClass, UUID0.cUl33());
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) {
+    Resp<Req<T, Integer>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+
+      List<String> ids = ddIds(req, entityClass, dd);
+
+      resp.setMsg(OM3.writeValueAsString(delRel(req, entityClass, dd, ids)));
+
+      t.setDd(dd);
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  //into out file
+  public <T extends CacheableEntities> Resp<Req<T, String>> iof(Req<T, String> req, Class<T> entityClass) {
+    Resp<Req<T, String>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      String rtn = dbserverBackupFolder + String0.SLASH + String0.nullOrEmptyTo(req.gnnCtx().gnaAuditId(), UUID0.cUl33());
+      Tuple.Pair<List<String>, List<Object>> pair = t.selectSql(t.getSelectList(), List0.newArrayList(), true);
+      List<String> args = List0.newArrayList();
+      for (Object o : Tuple.getSecond(pair)) {
+        if (String.valueOf(o).contains(String0.SINGLE_QUOTATION)) {
+          throw new RespException(Resp.failed(ERR_CODE__ILLEGAL_CHARACTER, String.valueOf(o), req));
+        }
+        args.add(String0.wrap(String.valueOf(o), o instanceof String ? String0.SINGLE_QUOTATION : String0.EMPTY));
+      }
+      String sql = String.format(String.join(String0.BLANK, Tuple.getFirst(pair)).replace(String0.QUESTION, "%s"), args)
+        + "into outfile '" + rtn + "' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\\n'";
+      log.info(sql);
+      cacheableDao.getJdbcTemplate().execute(sql);
+      req.getPri().setRtn(rtn);
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> ivd(Req<T, Integer> req, Class<T> entityClass) {
+    Resp<Req<T, Integer>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      T tmpT = t.filedToCondition();
+      List<String> ids = List0.newArrayList();
+      long cnt = protectDao.cnt(entityClass, tmpT, req.gnnCtx());
+      if (cnt < Pagination.MAX_SIZE) {
+        Pagination definedPagination = tmpT.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+        ids = protectDao.lstIds(entityClass, tmpT, req.gnnCtx());
+        tmpT.setPagination(definedPagination);
+      }
+      tmpT.setIvd(String0.Y).setLmDsz(ZDT0.on().dTSZ()).setLmUid(req.gnnCtx().gnaUserId());
+      if (ids.size() > 0) {
+        req.getPri().setRtn(protectDao.modByIdsVer(entityClass, tmpT, ids, req.gnnCtx()));
+      } else {
+        req.getPri().setRtn(protectDao.mod(entityClass, tmpT, req.gnnCtx()));
+      }
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, List<T>>> lst(Req<T, List<T>> req, Class<T> entityClass) {
+    Resp<Req<T, List<T>>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      t.setLastModifyUser(String0.isNullOrEmpty(t.getLmUid()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLmUid()));
+      t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
+      List<String> tenantIdList = List0.newArrayList(req.gnnCtx().gnaTenantId());
+      if (t instanceof TenantUsable) {
+        tenantIdList = TenantedResourceAccessibleEntities.calc(req.gnnCtx().getTutList(), entityClass.getName(), tenantIdList);
+      }
+      req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, tenantIdList)));
+      t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, tenantIdList)));
+      req.getPri().gnnExt().gnnTbl().setPagination(t.getPagination());
+      ///setLastModifyUser in other biz when need
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> mge(Req<T, Integer> req, Class<T> entityClass) {
+    Resp<Req<T, Integer>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      if (String0.isNullOrEmpty(t.getId())) {
+        T existT = oneByNo(entityClass, t, req.gnnCtx().gnaTenantId(), req.gnnCtx().gnaChannelId());
+        if (existT == null) {
+          resp = add(req, entityClass);
+        } else {
+          t.setId(existT.getId());
+          resp = mod(req, entityClass);
+        }
+      } else {
+        if (cacheableDao.oneById(entityClass, t.getId(), true) == null) {
+          resp = add(req, entityClass);
+        } else {
+          resp = mod(req, entityClass);
+        }
+      }
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> mod(Req<T, Integer> req, Class<T> entityClass) {
+    Resp<Req<T, Integer>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      if (!String0.isNullOrEmpty(t.getId())) {
+        req.getPri().setRtn(protectDao.modByIdVer(entityClass, t, req.gnnCtx()));
+      } else {
+        List<String> cl = t.forceWhereCondition(Identified.FIELD__ID).getCl();
+        if (cl != null && cl.size() > 0) {
+          req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, cl, req.gnnCtx()));
+        } else {
+          T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+          idsT.setVer(t.getVer());
+          idsT.srvWhereConditions(t.getWhereConditions());
+          List<String> ids = List0.newArrayList();
+          long cnt = protectDao.cnt(entityClass, idsT, req.gnnCtx());
+          if (cnt < Pagination.MAX_SIZE) {
+            ids = protectDao.lstIds(entityClass, idsT, req.gnnCtx());
+          }
+          if (ids.size() > 0) {
+            req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, ids, req.gnnCtx()));
+          } else {
+            req.getPri().setRtn(protectDao.mod(entityClass, t, req.gnnCtx()));
+          }
+        }
+      }
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, T>> one(Req<T, T> req, Class<T> entityClass) {
+    Resp<Req<T, T>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+      t.setLastModifyUser(String0.isNullOrEmpty(t.getLmUid()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLmUid()));
+      T rst = protectDao.one(entityClass, t, req.gnnCtx());
+      rst.setLastModifyUser((Objects.equals(rst.getLmUid(), t.getLmUid())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLmUid()));
+      req.getPri().setRtn(rst);
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> rmv(Req<T, Integer> req, Class<T> entityClass) {
+    return rmv(req, entityClass, UUID0.cUl33());
+  }
+
+  public <T extends CacheableEntities> Resp<Req<T, Integer>> rmv(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) {
+    Resp<Req<T, Integer>> resp = Resp.success(req);
+    try {
+      T t = req.getPri().getObj();
+
+      List<String> ids = ddIds(req, entityClass, dd);
+
+      resp.setMsg(OM3.writeValueAsString(rmvRel(req, entityClass, dd, ids)));
+
+      //create table if not exists tableName_d (like tableName);
+      //insert into tableName_d(columns) select columns from tableName where dd = ?
+      assert req.getPri().getRtn() == cacheableDao.getJdbcTemplate().update(MF0.fmt("insert into {0}({1}) select {1} from {2} where dd = ?", t.deletedFullTableName()
+        , t.getFieldNameList().stream().map(f -> t.getDbColumnMap().get(f)).collect(Collectors.joining(String0.COMMA)), t.fullTableName()), dd);
+      //delete original records
+      T rmvT = entityClass.newInstance();
+      rmvT.setDd(dd);
+      if (ids.size() > 0) {
+        assert req.getPri().getRtn() == protectDao.rmvByIds(entityClass, rmvT, ids, req.gnnCtx());
+      } else {
+        assert req.getPri().getRtn() == protectDao.rmv(entityClass, rmvT, req.gnnCtx());
+      }
+
+      t.setDd(dd);
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
+  public <T extends CacheableEntities> Resp<Req<String, String>> tpl(Req<String, String> req, Class<T> entityClass) {
+    Resp<Req<String, String>> resp = Resp.success(req);
+    try {
+      T t = entityClass.newInstance();
+      Path path = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), LD0.on().ySmSd(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_XLSX));
+      if (!path.toFile().exists()) {
+        path.toFile().getParentFile().mkdirs();
+        FileExportUtil.export(DefaultExcelBuilder.of(entityClass).build(List0.newArrayList(t)), path.toFile());
+      }
+      req.getPri().setRtn(path.toFile().getAbsolutePath());
+    } catch (Exception e) {
+      log.error(OM3.lp(resp, req, entityClass), e);
+      resp.parseExp(e);
+    }
+    return resp;
+  }
+
   public <T extends CacheableEntities> Resp<Req<String, Integer>> xlsx(Req<String, Integer> req, Class<T> entityClass) {
     Resp<Req<String, Integer>> resp = Resp.success(req);
     try {
@@ -480,5 +412,68 @@ public class WebPersistenceEntityBiz {
       resp.parseExp(e);
     }
     return resp;
+  }
+
+  protected <T extends CacheableEntities> Map<String, Map<String, Integer>> delRel(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd, @NonNull List<String> ids) throws Exception {
+    ///abstract
+    return Map0.newHashMap();
+  }
+
+  protected <T extends CacheableEntities> String idSubQuery(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
+    T subT = entityClass.newInstance();
+    subT.nullSetter();
+    subT.setDd(dd);
+    Tuple.Pair<List<String>, List<Object>> pair = subT.selectSql(List0.newArrayList(Identified.COLUMN__ID), List0.newArrayList(), true);
+    return String.join(String0.BLANK, Tuple.getFirst(pair)).replace(String0.QUESTION, String0.wrap(subT.getDd(), String0.SINGLE_QUOTATION));
+  }
+
+  protected <T extends CacheableEntities> Map<String, Map<String, Integer>> rmvRel(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd, @NonNull List<String> ids) throws Exception {
+    ///abstract
+    return Map0.newHashMap();
+  }
+
+  private <T extends CacheableEntities> List<String> ddIds(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
+    T t = req.getPri().getObj();
+
+    long cnt = protectDao.cnt(entityClass, t, req.gnnCtx());
+    T modT = t.filedToCondition();
+    modT.setDd(dd);
+    modT.setLmDsz(ZDT0.on().dTSZ()).setLmUid(req.gnnCtx().gnaUserId());
+    List<String> ids = List0.newArrayList();
+    if (cnt < Pagination.MAX_SIZE) {
+      Pagination definedPagination = t.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+      ids = protectDao.lstIds(entityClass, t, req.gnnCtx());
+      req.getPri().setRtn(protectDao.modByIdsVer(entityClass, modT, ids, req.gnnCtx()));
+      t.setPagination(definedPagination);
+
+      if (ids.size() != req.getPri().getRtn()) {
+        log.warn(OM3.lp(dd, ids.toArray()));
+
+        T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+        idsT.setDd(dd);
+        ids = protectDao.lstIds(entityClass, idsT, req.gnnCtx());
+
+        if (ids.size() != req.getPri().getRtn()) {
+          log.error(OM3.lp(dd, ids.toArray()));
+          ids = List0.newArrayList();
+        }
+      }
+    } else {
+      req.getPri().setRtn(protectDao.mod(entityClass, modT, req.gnnCtx()));
+    }
+
+    return ids;
+  }
+
+  private <T extends CacheableEntities> T oneByNo(Class<T> entityClass, T t, String tenantId, String channelId) {
+    T rtn = null;
+    if (channelizedNumberedDao != null && t instanceof ChannelizedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(channelId)) {
+      rtn = channelizedNumberedDao.oneByNo(entityClass, t.getNo(), channelId, true);
+    } else if (tenantedNumberedDao != null && t instanceof TenantedNumberedUniIdx && !String0.isNullOrEmpty(t.getNo()) && !String0.isNullOrEmpty(tenantId)) {
+      rtn = tenantedNumberedDao.oneByNo(entityClass, t.getNo(), tenantId, true);
+    } else if (numberedDao != null && t instanceof NumberedUniIdx && !String0.isNullOrEmpty(t.getNo())) {
+      rtn = numberedDao.oneByNo(entityClass, t.getNo(), true);
+    }
+    return rtn;
   }
 }

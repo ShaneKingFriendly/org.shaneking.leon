@@ -19,44 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 class WebPersistenceEntityBizTest extends SKUnit {
 
-  @Test
-  void mge() {
-  }
-
-  @Test
-  void add() {
-  }
-
-  @Test
-  void del() {
-  }
-
-  @Test
-  void rmv() {
-    assert 1 == new Integer(1);
-
-    boolean exception = false;
-    try {
-      assert 1 == new Integer(2);
-    } catch (Error e) {
-      log.error(e.getMessage(), e);
-      exception = true;
-    }
-    assert exception;
-  }
-
-  @Test
-  void mod() {
-  }
-
-  @Test
-  void lst() {
-  }
-
-  @Test
-  void one() {
-  }
-
   void csv(String fileType) {
     SaxExcelReader.of(SimpleUserEntity.class).rowFilter(row -> row.getRowNum() > 0).readThen(tstIFiles(fileType), (row, ctx) -> {
       log.info(OM3.p(row, ctx));
@@ -79,12 +41,22 @@ class WebPersistenceEntityBizTest extends SKUnit {
   }
 
   @Test
-  void template() throws IOException {
-    FileExportUtil.export(DefaultExcelBuilder.of(SimpleUserEntity.class).sheetName(new SimpleUserEntity().getDbTableName()).build(List0.newArrayList(new SimpleUserEntity())), tstOFiles(File0.TYPE_XLSX));
-    assertEquals(String0.ARY_DEC, String0.DIGITAL);
+  void rmv() {
+    assert 1 == new Integer(1);
+
+    boolean exception = false;
+    try {
+      assert 1 == new Integer(2);
+    } catch (Error e) {
+      log.error(e.getMessage(), e);
+      exception = true;
+    }
+    assert exception;
   }
 
   @Test
-  void xlsx() {
+  void template() throws IOException {
+    FileExportUtil.export(DefaultExcelBuilder.of(SimpleUserEntity.class).sheetName(new SimpleUserEntity().getDbTableName()).build(List0.newArrayList(new SimpleUserEntity())), tstOFiles(File0.TYPE_XLSX));
+    assertEquals(String0.ARY_DEC, String0.DIGITAL);
   }
 }

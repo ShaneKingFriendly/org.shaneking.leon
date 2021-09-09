@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WebRrControllerAdvicePrepare1 {
 
-  @RequestMapping("/zero")
-  @ResponseBody
-  public Resp<Req<String, String>> zero(@RequestBody Req<String, String> req) {
-    throw new ZeroException();
-  }
-
   @RequestMapping("/resp")
   @ResponseBody
   public Resp<Req<String, String>> resp(@RequestBody Req<String, String> req) {
     throw new RespException(Resp.failed("", "", req));
+  }
+
+  @RequestMapping("/zero")
+  @ResponseBody
+  public Resp<Req<String, String>> zero(@RequestBody Req<String, String> req) {
+    throw new ZeroException();
   }
 }
