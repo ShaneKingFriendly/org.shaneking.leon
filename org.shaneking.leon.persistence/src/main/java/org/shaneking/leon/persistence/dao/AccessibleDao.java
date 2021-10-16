@@ -73,7 +73,7 @@ public class AccessibleDao {
     try {
       T t = cacheType.newInstance();
       t.forceWhereCondition(Identified.FIELD__ID).resetVal(ids);
-      t.setPagination(new Pagination().setSize(ids.size()));
+      t.setPagination(new Pagination().setRows(ids.size()));
       return lstEii(cacheType, t, ctx);
     } catch (InstantiationException | IllegalAccessException e) {
       log.error(OM3.p(cacheType, ids, ctx), e);

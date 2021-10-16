@@ -213,7 +213,7 @@ public class WebPersistenceEntityBiz {
       List<String> ids = List0.newArrayList();
       long cnt = protectDao.cnt(entityClass, tmpT, req.gnnCtx());
       if (cnt < Pagination.MAX_SIZE) {
-        Pagination definedPagination = tmpT.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+        Pagination definedPagination = tmpT.sroPagination(new Pagination().setRows(Pagination.MAX_SIZE));
         ids = protectDao.lstIds(entityClass, tmpT, req.gnnCtx());
         tmpT.setPagination(definedPagination);
       }
@@ -288,7 +288,7 @@ public class WebPersistenceEntityBiz {
         if (cl != null && cl.size() > 0) {
           req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, cl, req.gnnCtx()));
         } else {
-          T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+          T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setRows(Pagination.MAX_SIZE));
           idsT.setVer(t.getVer());
           idsT.srvWhereConditions(t.getWhereConditions());
           List<String> ids = List0.newArrayList();
@@ -441,7 +441,7 @@ public class WebPersistenceEntityBiz {
     modT.setLmDsz(ZDT0.on().dTSZ()).setLmUid(req.gnnCtx().gnaUserId());
     List<String> ids = List0.newArrayList();
     if (cnt < Pagination.MAX_SIZE) {
-      Pagination definedPagination = t.sroPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+      Pagination definedPagination = t.sroPagination(new Pagination().setRows(Pagination.MAX_SIZE));
       ids = protectDao.lstIds(entityClass, t, req.gnnCtx());
       req.getPri().setRtn(protectDao.modByIdsVer(entityClass, modT, ids, req.gnnCtx()));
       t.setPagination(definedPagination);
@@ -449,7 +449,7 @@ public class WebPersistenceEntityBiz {
       if (ids.size() != req.getPri().getRtn()) {
         log.warn(OM3.lp(dd, ids.toArray()));
 
-        T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setSize(Pagination.MAX_SIZE));
+        T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setRows(Pagination.MAX_SIZE));
         idsT.setDd(dd);
         ids = protectDao.lstIds(entityClass, idsT, req.gnnCtx());
 
