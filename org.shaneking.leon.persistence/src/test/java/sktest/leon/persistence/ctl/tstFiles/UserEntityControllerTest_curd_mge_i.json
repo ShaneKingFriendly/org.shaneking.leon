@@ -1,16 +1,15 @@
 {
-  "pri": {
-    "ext": {
-      "tenantNo": "tstTenantNo",
-      "userNo": "tstUserNo"
-    },
-    "obj": {
-      "ivd": "N",
-      "no": "1614173052422_dJwxshF8cKjT8mnOAhJ"
+  "cno": "tstChannelNo",
+  "msg": {
+    "rno": "$UUID0_cUl33_1$",
+    "uno": "tstUserNo",
+    "bdy": {
+      "tno": "tstTenantNo",
+      "obj": {
+        "ivd": "N",
+        "no": "1614173052422_dJwxshF8cKjT8mnOAhJ"
+      }
     }
-  },
-  "pub": {
-    "channelNo": "tstChannelNo",
-    "tracingNo": "$UUID0_cUl33_1$"
   }
 }
+

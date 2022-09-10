@@ -8,12 +8,13 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.shaneking.leon.rr.j5f5interceptor.WebRrReqIpsInterceptor;
 import org.shaneking.leon.rr.j5f5interceptor.WebRrReqUrlInterceptor;
 import org.shaneking.ling.jackson.databind.OM3;
+import org.shaneking.ling.persistence.entity.sql.RrAuditLogEntities;
+import org.shaneking.ling.rr.Req;
 import org.shaneking.ling.zero.annotation.ZeroAnnotation;
 import org.shaneking.ling.zero.text.MF0;
-import org.shaneking.roc.persistence.entity.sql.RrAuditLogEntities;
-import org.shaneking.roc.rr.Req;
 import org.shaneking.roc.rr.annotation.RrAudit;
-import org.shaneking.roc.rr.aspectj.RrAccessAspect;
+import org.shaneking.roc.rr.aspectj.RrAuditAspect;
+import org.shaneking.roc.rr.aspectj.RrTenantAspect;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @see org.shaneking.roc.rr.aspectj.RrAuditAspect#ORDER
- * @see org.shaneking.roc.rr.aspectj.RrAccessAspect#ORDER
+ * @see RrTenantAspect#ORDER
  */
 @Aspect
 @Component
@@ -29,7 +30,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Order(WebRrAuditAspect.ORDER)
 public class WebRrAuditAspect {
-  public static final int ORDER = RrAccessAspect.ORDER - RrAccessAspect.ORDER / 10;
+  public static final int ORDER = RrAuditAspect.ORDER + RrAuditAspect.ORDER / 1000;
 
   @Value("${sk.leon.rr.audit.enabled:true}")
   private boolean enabled;
@@ -38,7 +39,7 @@ public class WebRrAuditAspect {
   public void before(JoinPoint jp, RrAudit rrAudit) throws Throwable {
     if (enabled) {
       if (jp.getArgs().length > rrAudit.reqParamIdx() && jp.getArgs()[rrAudit.reqParamIdx()] instanceof Req) {
-        Req<?, ?> req = (Req<?, ?>) jp.getArgs()[rrAudit.reqParamIdx()];
+        Req<?> req = (Req<?>) jp.getArgs()[rrAudit.reqParamIdx()];
 
         RrAuditLogEntities auditLogEntity = req.gnnCtx().getAuditLog();
         if (auditLogEntity != null) {

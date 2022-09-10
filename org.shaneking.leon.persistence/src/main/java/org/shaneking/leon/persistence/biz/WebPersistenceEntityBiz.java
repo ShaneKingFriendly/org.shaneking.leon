@@ -8,12 +8,12 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.shaneking.leon.persistence.dao.ProtectDao;
 import org.shaneking.ling.jackson.databind.OM3;
+import org.shaneking.ling.persistence.CacheableEntities;
 import org.shaneking.ling.persistence.entity.Identified;
 import org.shaneking.ling.persistence.entity.NumberedUniIdx;
-import org.shaneking.ling.persistence.entity.sql.ChannelizedNumberedUniIdx;
-import org.shaneking.ling.persistence.entity.sql.TenantUsable;
-import org.shaneking.ling.persistence.entity.sql.Tenanted;
-import org.shaneking.ling.persistence.entity.sql.TenantedNumberedUniIdx;
+import org.shaneking.ling.persistence.entity.TenantedResourceAccessibleEntities;
+import org.shaneking.ling.persistence.entity.sql.*;
+import org.shaneking.ling.rr.Req;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.rr.RespException;
 import org.shaneking.ling.zero.io.File0;
@@ -28,14 +28,10 @@ import org.shaneking.ling.zero.time.ZDT0;
 import org.shaneking.ling.zero.util.List0;
 import org.shaneking.ling.zero.util.Map0;
 import org.shaneking.ling.zero.util.UUID0;
-import org.shaneking.roc.persistence.CacheableEntities;
 import org.shaneking.roc.persistence.dao.CacheableDao;
 import org.shaneking.roc.persistence.dao.ChannelizedNumberedDao;
 import org.shaneking.roc.persistence.dao.NumberedDao;
 import org.shaneking.roc.persistence.dao.TenantedNumberedDao;
-import org.shaneking.roc.persistence.entity.TenantedResourceAccessibleEntities;
-import org.shaneking.roc.persistence.entity.sql.UserEntities;
-import org.shaneking.roc.rr.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -79,12 +75,12 @@ public class WebPersistenceEntityBiz {
   @Autowired
   private UserEntities userEntityClass;
 
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> add(Req<T, Integer> req, Class<T> entityClass) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<Integer, Req<T>> add(Req<T> req, Class<T> entityClass) {
+    Resp<Integer, Req<T>> resp = Resp.success(req, null);
     try {
-      T t = req.getPri().getObj();
+      T t = req.gnaMsgBdyObj();
       t.initWithUidAndId(req.gnnCtx().gnaUserId(), UUID0.cUl33());
-      req.getPri().setRtn(protectDao.add(entityClass, t, req.gnnCtx()));
+      resp.srtMsgBodyData(protectDao.add(entityClass, t, req.gnnCtx()));
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
@@ -93,13 +89,13 @@ public class WebPersistenceEntityBiz {
   }
 
   ///must UTF-8, \n
-  public <T extends CacheableEntities> Resp<Req<String, String>> csv(Req<String, String> req, Class<T> entityClass) {
-    Resp<Req<String, String>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<String, Req<String>> csv(Req<String> req, Class<T> entityClass) {
+    Resp<String, Req<String>> resp = Resp.success(req, null);
     try {
       AtomicInteger writeTimes = new AtomicInteger(0);
       List<T> list = List0.newArrayList();
-      File csvFile = new File(req.getPri().getObj());
-      Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), LD0.on().ySmSd(), req.getPub().gnnReqNo(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
+      File csvFile = new File(req.gnaMsgBdyObj());
+      Path tmpPath = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), LD0.on().ySmSd(), req.gnnMsg().gnnRno(), req.gnnCtx().gnaAuditId(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_CSV));
       tmpPath.toFile().getParentFile().mkdirs();
       SaxExcelReader.of(entityClass).rowFilter(row -> row.getRowNum() > 0).readThen(csvFile, (row, ctx) -> {
         try {
@@ -136,7 +132,7 @@ public class WebPersistenceEntityBiz {
           throw e;
         }
         if (String0.isNullOrEmpty(titles)) {
-          resp.setCode(Resp.CODE_UNKNOWN_EXCEPTION);
+          resp.srtMsgBodyCode(Resp.CODE_UNKNOWN_EXCEPTION);
         } else {
           //\ufeff
           while (titles.length() > 0 && !Char0.isAlphabetOrDigital(titles.charAt(0))) {
@@ -148,7 +144,7 @@ public class WebPersistenceEntityBiz {
             , List0.newArrayList(titles.split(String0.COMMA)).stream().map(s -> String0.wrap(String0.field2DbColumn(s.trim()), "`")).collect(Collectors.joining(String0.COMMA)));
           log.info(sql);
           cacheableDao.getJdbcTemplate().execute(sql);
-          req.getPri().setRtn(String0.Y);
+          resp.srtMsgBodyData(String0.Y);
         }
       }
     } catch (Exception e) {
@@ -158,18 +154,18 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Integer, Req<T>> del(Req<T> req, Class<T> entityClass) {
     return del(req, entityClass, UUID0.cUl33());
   }
 
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> del(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<Integer, Req<T>> del(Req<T> req, Class<T> entityClass, @NonNull String dd) {
+    Resp<Integer, Req<T>> resp = Resp.success(req, null);
     try {
-      T t = req.getPri().getObj();
+      T t = req.gnaMsgBdyObj();
 
-      List<String> ids = ddIds(req, entityClass, dd);
+      List<String> ids = ddIds(resp, entityClass, dd);
 
-      resp.setMsg(OM3.writeValueAsString(delRel(req, entityClass, dd, ids)));
+      resp.srtMsgBodyInfo(OM3.writeValueAsString(delRel(req, entityClass, dd, ids)));
 
       t.setDd(dd);
     } catch (Exception e) {
@@ -180,16 +176,16 @@ public class WebPersistenceEntityBiz {
   }
 
   //into out file
-  public <T extends CacheableEntities> Resp<Req<T, String>> iof(Req<T, String> req, Class<T> entityClass) {
-    Resp<Req<T, String>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<String, Req<T>> iof(Req<T> req, Class<T> entityClass) {
+    Resp<String, Req<T>> resp = Resp.success(req, null);
     try {
-      T t = req.getPri().getObj();
+      T t = req.gnaMsgBdyObj();
       String rtn = dbserverBackupFolder + String0.SLASH + String0.nullOrEmptyTo(req.gnnCtx().gnaAuditId(), UUID0.cUl33());
       Tuple.Pair<List<String>, List<Object>> pair = t.selectSql(t.getSelectList(), List0.newArrayList(), true);
       List<String> args = List0.newArrayList();
       for (Object o : Tuple.getSecond(pair)) {
         if (String.valueOf(o).contains(String0.SINGLE_QUOTATION)) {
-          throw new RespException(Resp.failed(ERR_CODE__ILLEGAL_CHARACTER, String.valueOf(o), req));
+          throw new RespException(Resp.failed(req, ERR_CODE__ILLEGAL_CHARACTER, String.valueOf(o), req));
         }
         args.add(String0.wrap(String.valueOf(o), o instanceof String ? String0.SINGLE_QUOTATION : String0.EMPTY));
       }
@@ -197,7 +193,7 @@ public class WebPersistenceEntityBiz {
         + "into outfile '" + rtn + "' fields terminated by ',' optionally enclosed by '\"' lines terminated by '\\n'";
       log.info(sql);
       cacheableDao.getJdbcTemplate().execute(sql);
-      req.getPri().setRtn(rtn);
+      resp.srtMsgBodyData(rtn);
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
@@ -205,10 +201,10 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> ivd(Req<T, Integer> req, Class<T> entityClass) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<Integer, Req<T>> ivd(Req<T> req, Class<T> entityClass) {
+    Resp<Integer, Req<T>> resp = Resp.success(req, null);
     try {
-      T t = req.getPri().getObj();
+      T t = req.gnaMsgBdyObj();
       T tmpT = t.filedToCondition();
       List<String> ids = List0.newArrayList();
       long cnt = protectDao.cnt(entityClass, tmpT, req.gnnCtx());
@@ -219,9 +215,9 @@ public class WebPersistenceEntityBiz {
       }
       tmpT.setIvd(String0.Y).setLmDsz(ZDT0.on().dTSZ()).setLmUid(req.gnnCtx().gnaUserId());
       if (ids.size() > 0) {
-        req.getPri().setRtn(protectDao.modByIdsVer(entityClass, tmpT, ids, req.gnnCtx()));
+        resp.srtMsgBodyData(protectDao.modByIdsVer(entityClass, tmpT, ids, req.gnnCtx()));
       } else {
-        req.getPri().setRtn(protectDao.mod(entityClass, tmpT, req.gnnCtx()));
+        resp.srtMsgBodyData(protectDao.mod(entityClass, tmpT, req.gnnCtx()));
       }
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
@@ -230,19 +226,19 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  public <T extends CacheableEntities> Resp<Req<T, List<T>>> lst(Req<T, List<T>> req, Class<T> entityClass) {
-    Resp<Req<T, List<T>>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<List<T>, Req<T>> lst(Req<T> req, Class<T> entityClass) {
+    Resp<List<T>, Req<T>> resp = Resp.success(req, null);
     try {
-      T t = req.getPri().getObj();
+      T t = req.gnaMsgBdyObj();
       t.setLastModifyUser(String0.isNullOrEmpty(t.getLmUid()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLmUid()));
-      t.setPagination(t.getPagination() == null ? req.getPri().gnnExt().gnnTbl().gnnPagination() : t.getPagination());
+      t.setPagination(t.getPagination() == null ? req.gnnMsg().gnnBdy().gnnTbl().gnnPage() : t.getPagination());
       List<String> tenantIdList = List0.newArrayList(req.gnnCtx().gnaTenantId());
       if (t instanceof TenantUsable) {
         tenantIdList = TenantedResourceAccessibleEntities.calc(req.gnnCtx().getTutList(), entityClass.getName(), tenantIdList);
       }
-      req.getPri().setRtn(cacheableDao.lst(entityClass, CacheableDao.pts(t, tenantIdList)));
+      resp.srtMsgBodyData(cacheableDao.lst(entityClass, CacheableDao.pts(t, tenantIdList)));
       t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, tenantIdList)));
-      req.getPri().gnnExt().gnnTbl().setPagination(t.getPagination());
+      req.gnnMsg().gnnBdy().gnnTbl().setPage(t.getPagination());
       ///setLastModifyUser in other biz when need
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
@@ -251,10 +247,10 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> mge(Req<T, Integer> req, Class<T> entityClass) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<Integer, Req<T>> mge(Req<T> req, Class<T> entityClass) {
+    Resp<Integer, Req<T>> resp = Resp.success(req, null);
     try {
-      T t = req.getPri().getObj();
+      T t = req.gnaMsgBdyObj();
       if (String0.isNullOrEmpty(t.getId())) {
         T existT = oneByNo(entityClass, t, req.gnnCtx().gnaTenantId(), req.gnnCtx().gnaChannelId());
         if (existT == null) {
@@ -277,16 +273,16 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> mod(Req<T, Integer> req, Class<T> entityClass) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<Integer, Req<T>> mod(Req<T> req, Class<T> entityClass) {
+    Resp<Integer, Req<T>> resp = Resp.success(req, null);
     try {
-      T t = req.getPri().getObj();
+      T t = req.gnaMsgBdyObj();
       if (!String0.isNullOrEmpty(t.getId())) {
-        req.getPri().setRtn(protectDao.modByIdVer(entityClass, t, req.gnnCtx()));
+        resp.srtMsgBodyData(protectDao.modByIdVer(entityClass, t, req.gnnCtx()));
       } else {
         List<String> cl = t.forceWhereCondition(Identified.FIELD__ID).getCl();
         if (cl != null && cl.size() > 0) {
-          req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, cl, req.gnnCtx()));
+          resp.srtMsgBodyData(protectDao.modByIdsVer(entityClass, t, cl, req.gnnCtx()));
         } else {
           T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setRows(Pagination.MAX_SIZE));
           idsT.setVer(t.getVer());
@@ -297,9 +293,9 @@ public class WebPersistenceEntityBiz {
             ids = protectDao.lstIds(entityClass, idsT, req.gnnCtx());
           }
           if (ids.size() > 0) {
-            req.getPri().setRtn(protectDao.modByIdsVer(entityClass, t, ids, req.gnnCtx()));
+            resp.srtMsgBodyData(protectDao.modByIdsVer(entityClass, t, ids, req.gnnCtx()));
           } else {
-            req.getPri().setRtn(protectDao.mod(entityClass, t, req.gnnCtx()));
+            resp.srtMsgBodyData(protectDao.mod(entityClass, t, req.gnnCtx()));
           }
         }
       }
@@ -310,14 +306,14 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  public <T extends CacheableEntities> Resp<Req<T, T>> one(Req<T, T> req, Class<T> entityClass) {
-    Resp<Req<T, T>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<T, Req<T>> one(Req<T> req, Class<T> entityClass) {
+    Resp<T, Req<T>> resp = Resp.success(req, null);
     try {
-      T t = req.getPri().getObj();
+      T t = req.gnaMsgBdyObj();
       t.setLastModifyUser(String0.isNullOrEmpty(t.getLmUid()) ? null : cacheableDao.oneById(userEntityClass.entityClass(), t.getLmUid()));
       T rst = protectDao.one(entityClass, t, req.gnnCtx());
       rst.setLastModifyUser((Objects.equals(rst.getLmUid(), t.getLmUid())) ? t.getLastModifyUser() : cacheableDao.oneById(userEntityClass.entityClass(), rst.getLmUid()));
-      req.getPri().setRtn(rst);
+      resp.srtMsgBodyData(rst);
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
@@ -325,30 +321,30 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> rmv(Req<T, Integer> req, Class<T> entityClass) {
+  public <T extends CacheableEntities> Resp<Integer, Req<T>> rmv(Req<T> req, Class<T> entityClass) {
     return rmv(req, entityClass, UUID0.cUl33());
   }
 
-  public <T extends CacheableEntities> Resp<Req<T, Integer>> rmv(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) {
-    Resp<Req<T, Integer>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<Integer, Req<T>> rmv(Req<T> req, Class<T> entityClass, @NonNull String dd) {
+    Resp<Integer, Req<T>> resp = Resp.success(req, null);
     try {
-      T t = req.getPri().getObj();
+      T t = req.gnaMsgBdyObj();
 
-      List<String> ids = ddIds(req, entityClass, dd);
+      List<String> ids = ddIds(resp, entityClass, dd);
 
-      resp.setMsg(OM3.writeValueAsString(rmvRel(req, entityClass, dd, ids)));
+      resp.srtMsgBodyInfo(OM3.writeValueAsString(rmvRel(resp, entityClass, dd, ids)));
 
       //create table if not exists tableName_d (like tableName);
       //insert into tableName_d(columns) select columns from tableName where dd = ?
-      assert req.getPri().getRtn() == cacheableDao.getJdbcTemplate().update(MF0.fmt("insert into {0}({1}) select {1} from {2} where dd = ?", t.deletedFullTableName()
+      assert resp.gnaMsgBodyData() == cacheableDao.getJdbcTemplate().update(MF0.fmt("insert into {0}({1}) select {1} from {2} where dd = ?", t.deletedFullTableName()
         , t.getFieldNameList().stream().map(f -> t.getDbColumnMap().get(f)).collect(Collectors.joining(String0.COMMA)), t.fullTableName()), dd);
       //delete original records
       T rmvT = entityClass.newInstance();
       rmvT.setDd(dd);
       if (ids.size() > 0) {
-        assert req.getPri().getRtn() == protectDao.rmvByIds(entityClass, rmvT, ids, req.gnnCtx());
+        assert resp.gnaMsgBodyData() == protectDao.rmvByIds(entityClass, rmvT, ids, req.gnnCtx());
       } else {
-        assert req.getPri().getRtn() == protectDao.rmv(entityClass, rmvT, req.gnnCtx());
+        assert resp.gnaMsgBodyData() == protectDao.rmv(entityClass, rmvT, req.gnnCtx());
       }
 
       t.setDd(dd);
@@ -359,8 +355,8 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  public <T extends CacheableEntities> Resp<Req<String, String>> tpl(Req<String, String> req, Class<T> entityClass) {
-    Resp<Req<String, String>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<String, Req<String>> tpl(Req<String> req, Class<T> entityClass) {
+    Resp<String, Req<String>> resp = Resp.success(req, null);
     try {
       T t = entityClass.newInstance();
       Path path = Paths.get(temporaryFolder, String.valueOf(req.gnnCtx().gnaTenantId()), LD0.on().ySmSd(), entityClass.getSimpleName() + File0.suffix(File0.TYPE_XLSX));
@@ -368,7 +364,7 @@ public class WebPersistenceEntityBiz {
         path.toFile().getParentFile().mkdirs();
         FileExportUtil.export(DefaultExcelBuilder.of(entityClass).build(List0.newArrayList(t)), path.toFile());
       }
-      req.getPri().setRtn(path.toFile().getAbsolutePath());
+      resp.srtMsgBodyData(path.toFile().getAbsolutePath());
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
       resp.parseExp(e);
@@ -376,12 +372,12 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  public <T extends CacheableEntities> Resp<Req<String, Integer>> xlsx(Req<String, Integer> req, Class<T> entityClass) {
-    Resp<Req<String, Integer>> resp = Resp.success(req);
+  public <T extends CacheableEntities> Resp<Integer, Req<String>> xlsx(Req<String> req, Class<T> entityClass) {
+    Resp<Integer, Req<String>> resp = Resp.success(req, null);
     try {
-      req.getPri().setRtn(0);
+      resp.srtMsgBodyData(0);
       T entity = entityClass.newInstance();
-      File xlsxFile = new File(req.getPri().getObj());
+      File xlsxFile = new File(req.gnaMsgBdyObj());
       SaxExcelReader.of(entityClass).sheet(String0.maxLenStr(entity.getDbTableName(), 31)).rowFilter(row -> row.getRowNum() > 0).readThen(xlsxFile, row -> {
         try {
           row.initWithUid(req.gnnCtx().gnaUserId());
@@ -389,17 +385,17 @@ public class WebPersistenceEntityBiz {
             T existT = oneByNo(entityClass, row, req.gnnCtx().gnaTenantId(), req.gnnCtx().gnaChannelId());
             if (existT == null) {
               row.sinId(UUID0.cUl33());
-              req.getPri().setRtn(req.getPri().getRtn() + protectDao.add(entityClass, row, req.gnnCtx()));
+              resp.srtMsgBodyData(resp.gnaMsgBodyData() + protectDao.add(entityClass, row, req.gnnCtx()));
             } else {
               row.setVer(existT.getVer());
               row.setId(existT.getId());
-              req.getPri().setRtn(req.getPri().getRtn() + protectDao.modByIdVer(entityClass, row, req.gnnCtx()));
+              resp.srtMsgBodyData(resp.gnaMsgBodyData() + protectDao.modByIdVer(entityClass, row, req.gnnCtx()));
             }
           } else {
             if (cacheableDao.oneById(entityClass, row.getId(), true) == null) {
-              req.getPri().setRtn(req.getPri().getRtn() + protectDao.add(entityClass, row, req.gnnCtx()));
+              resp.srtMsgBodyData(resp.gnaMsgBodyData() + protectDao.add(entityClass, row, req.gnnCtx()));
             } else {
-              req.getPri().setRtn(req.getPri().getRtn() + protectDao.modByIdVer(entityClass, row, req.gnnCtx()));
+              resp.srtMsgBodyData(resp.gnaMsgBodyData() + protectDao.modByIdVer(entityClass, row, req.gnnCtx()));
             }
           }
         } catch (Exception e) {
@@ -414,12 +410,12 @@ public class WebPersistenceEntityBiz {
     return resp;
   }
 
-  protected <T extends CacheableEntities> Map<String, Map<String, Integer>> delRel(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd, @NonNull List<String> ids) throws Exception {
+  protected <T extends CacheableEntities> Map<String, Map<String, Integer>> delRel(Req<T> req, Class<T> entityClass, @NonNull String dd, @NonNull List<String> ids) throws Exception {
     ///abstract
     return Map0.newHashMap();
   }
 
-  protected <T extends CacheableEntities> String idSubQuery(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
+  protected <T extends CacheableEntities> String idSubQuery(Req<T> req, Class<T> entityClass, @NonNull String dd) throws Exception {
     T subT = entityClass.newInstance();
     subT.nullSetter();
     subT.setDd(dd);
@@ -427,13 +423,14 @@ public class WebPersistenceEntityBiz {
     return String.join(String0.BLANK, Tuple.getFirst(pair)).replace(String0.QUESTION, String0.wrap(subT.getDd(), String0.SINGLE_QUOTATION));
   }
 
-  protected <T extends CacheableEntities> Map<String, Map<String, Integer>> rmvRel(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd, @NonNull List<String> ids) throws Exception {
+  protected <T extends CacheableEntities> Map<String, Map<String, Integer>> rmvRel(Resp<Integer, Req<T>> resp, Class<T> entityClass, @NonNull String dd, @NonNull List<String> ids) throws Exception {
     ///abstract
     return Map0.newHashMap();
   }
 
-  private <T extends CacheableEntities> List<String> ddIds(Req<T, Integer> req, Class<T> entityClass, @NonNull String dd) throws Exception {
-    T t = req.getPri().getObj();
+  private <T extends CacheableEntities> List<String> ddIds(Resp<Integer, Req<T>> resp, Class<T> entityClass, @NonNull String dd) throws Exception {
+    Req<T> req = resp.getReq();
+    T t = req.gnaMsgBdyObj();
 
     long cnt = protectDao.cnt(entityClass, t, req.gnnCtx());
     T modT = t.filedToCondition();
@@ -443,23 +440,23 @@ public class WebPersistenceEntityBiz {
     if (cnt < Pagination.MAX_SIZE) {
       Pagination definedPagination = t.sroPagination(new Pagination().setRows(Pagination.MAX_SIZE));
       ids = protectDao.lstIds(entityClass, t, req.gnnCtx());
-      req.getPri().setRtn(protectDao.modByIdsVer(entityClass, modT, ids, req.gnnCtx()));
+      resp.srtMsgBodyData(protectDao.modByIdsVer(entityClass, modT, ids, req.gnnCtx()));
       t.setPagination(definedPagination);
 
-      if (ids.size() != req.getPri().getRtn()) {
+      if (ids.size() != resp.gnaMsgBodyData()) {
         log.warn(OM3.lp(dd, ids.toArray()));
 
         T idsT = entityClass.newInstance().nullSetter().setPagination(new Pagination().setRows(Pagination.MAX_SIZE));
         idsT.setDd(dd);
         ids = protectDao.lstIds(entityClass, idsT, req.gnnCtx());
 
-        if (ids.size() != req.getPri().getRtn()) {
+        if (ids.size() != resp.gnaMsgBodyData()) {
           log.error(OM3.lp(dd, ids.toArray()));
           ids = List0.newArrayList();
         }
       }
     } else {
-      req.getPri().setRtn(protectDao.mod(entityClass, modT, req.gnnCtx()));
+      resp.srtMsgBodyData(protectDao.mod(entityClass, modT, req.gnnCtx()));
     }
 
     return ids;

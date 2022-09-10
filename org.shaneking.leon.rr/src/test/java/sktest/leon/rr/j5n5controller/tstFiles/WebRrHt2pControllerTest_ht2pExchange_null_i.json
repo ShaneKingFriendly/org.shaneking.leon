@@ -1,35 +1,34 @@
 {
-  "pri": {
-    "ext": {
-      "tenantNo": "tstTenantNo",
-      "userNo": "tstUserNo"
-    },
-    "obj": [
-      {
-        "url": "https://camo.githubusercontent.com/819cacbb9c6650fc1456aabc6aeaacf30a696d248c08d97ac03274f2ae2fbd11/68747470733a2f2f6b6f6d617265762e636f6d2f67687076632f3f757365726e616d653d5368616e654b696e6726636f6c6f723d626c756576696f6c6574267374796c653d666c61742d737175617265",
-        "requestType": "GET",
-        "headers": {
-          "Content-Type": [
-            "application/json; charset=utf-8"
-          ]
-        },
-        "mapBody": {
-          "this is multipart/form-data demo1 of Content-Type": [
-            "value1",
-            "value2"
-          ],
-          "this is multipart/form-data demo2 of Content-Type": [
-            "value1",
-            "value2"
-          ]
-        },
-        "strBody": "this is application/json demo of Content-Type, need json format string here"
-      }
-    ]
-  },
-  "pub": {
-    "channelNo": "tstChannelNo",
-    "tracingNo": "$UUID0_cUl33_1$",
-    "reqNo": "$UUID0_cUl33_1$"
+  "cno": "tstChannelNo",
+  "msg": {
+    "rno": "$UUID0_cUl33_1$",
+    "tno": "$UUID0_cUl33_1$",
+    "uno": "tstUserNo",
+    "bdy": {
+      "tno": "tstTenantNo",
+      "uno": "tstUserNo",
+      "obj": [
+        {
+          "url": "https://shaneking.org/assets/images/WechatIMG14S258.jpeg",
+          "requestType": "GET",
+          "headers": {
+            "Content-Type": [
+              "application/json; charset=utf-8"
+            ]
+          },
+          "mapBody": {
+            "this is multipart/form-data demo1 of Content-Type": [
+              "value1",
+              "value2"
+            ],
+            "this is multipart/form-data demo2 of Content-Type": [
+              "value1",
+              "value2"
+            ]
+          },
+          "strBody": "this is application/json demo of Content-Type, need json format string here"
+        }
+      ]
+    }
   }
 }

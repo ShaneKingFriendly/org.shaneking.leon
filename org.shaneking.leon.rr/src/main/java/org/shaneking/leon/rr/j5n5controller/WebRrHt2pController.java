@@ -3,12 +3,11 @@ package org.shaneking.leon.rr.j5n5controller;
 import lombok.extern.slf4j.Slf4j;
 import org.shaneking.leon.rr.bean.ht2p.WebRrHt2pExchangePriObjItemBean;
 import org.shaneking.ling.jackson.databind.OM3;
+import org.shaneking.ling.rr.Req;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.ling.zero.lang.String0;
 import org.shaneking.ling.zero.util.List0;
-import org.shaneking.roc.rr.Req;
-import org.shaneking.roc.rr.annotation.RrAudit;
-import org.shaneking.roc.rr.annotation.RrCrypto;
+import org.shaneking.roc.rr.annotation.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,16 +27,19 @@ public class WebRrHt2pController {
 
   @PostMapping(path = {"/exchange"})
   @RrAudit
+  @RrChannel
   @RrCrypto
-  public Resp<Req<List<WebRrHt2pExchangePriObjItemBean>, List<String>>> ht2pExchange(@RequestBody Req<List<WebRrHt2pExchangePriObjItemBean>, List<String>> req) {
-    Resp<Req<List<WebRrHt2pExchangePriObjItemBean>, List<String>>> resp = Resp.success(req);
+  @RrTenant
+  @RrUser
+  public Resp<List<String>, Req<List<WebRrHt2pExchangePriObjItemBean>>> ht2pExchange(@RequestBody Req<List<WebRrHt2pExchangePriObjItemBean>> req) {
+    Resp<List<String>, Req<List<WebRrHt2pExchangePriObjItemBean>>> resp = Resp.success(req, null);
     try {
-      req.getPri().setRtn(List0.newArrayList());
+      resp.srtMsgBodyData(List0.newArrayList());
 
       RestTemplate restTemplate = null;
       HttpHeaders httpHeaders = null;
       HttpEntity httpEntity = null;
-      for (WebRrHt2pExchangePriObjItemBean ht2pBean : req.getPri().getObj()) {
+      for (WebRrHt2pExchangePriObjItemBean ht2pBean : req.gnaMsgBdyObj()) {
         restTemplate = new RestTemplate();
         httpHeaders = new HttpHeaders();
         httpHeaders.putAll(ht2pBean.getHeaders());
@@ -45,7 +47,7 @@ public class WebRrHt2pController {
         log.info(OM3.writeValueAsString(httpEntity));
         ResponseEntity<String> responseEntity = restTemplate.exchange(ht2pBean.getUrl(), HttpMethod.resolve(ht2pBean.getRequestType()), httpEntity, String.class);
         log.info(OM3.writeValueAsString(responseEntity));
-        req.getPri().getRtn().add(responseEntity.hasBody() ? responseEntity.getBody() : String0.EMPTY);
+        resp.gnaMsgBodyData().add(responseEntity.hasBody() ? responseEntity.getBody() : String0.EMPTY);
       }
     } catch (Exception e) {
       log.error(OM3.lp(resp, req), e);

@@ -20,12 +20,12 @@ public class WebRrControllerAdvice {
   @ResponseBody
   public String error(Throwable t) {
     log.error(t.toString(), t);
-    Resp resp = Resp.failed(Resp.CODE_UNKNOWN_EXCEPTION, String0.null2EmptyTo(t.getMessage(), t.toString()));
+    Resp resp = Resp.failed(null, Resp.CODE_UNKNOWN_EXCEPTION, String0.null2EmptyTo(t.getMessage(), t.toString()));
     if (t instanceof RespException && ((RespException) t).getResp() != null) {
       Resp tmp = ((RespException) t).getResp();
-      resp.setCode(String0.null2EmptyTo(tmp.getCode(), resp.getCode()));
-      resp.setMsg(String0.null2EmptyTo(tmp.getMsg(), resp.getMsg()));
-      resp.setData(tmp.getData() == null ? resp.getData() : tmp.getData());
+      resp.srtMsgBodyCode(String0.null2EmptyTo(tmp.gnaMsgBodyCode(), resp.gnaMsgBodyCode()));
+      resp.srtMsgBodyInfo(String0.null2EmptyTo(tmp.gnaMsgBodyInfo(), resp.gnaMsgBodyInfo()));
+      resp.srtMsgBodyData(tmp.gnaMsgBodyData() == null ? resp.gnaMsgBodyData() : tmp.gnaMsgBodyData());
     }
     String rtn = OM3.writeValueAsString(resp);
     log.warn(rtn);

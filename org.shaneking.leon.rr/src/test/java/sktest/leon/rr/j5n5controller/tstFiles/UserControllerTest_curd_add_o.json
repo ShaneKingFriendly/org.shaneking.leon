@@ -1,26 +1,9 @@
 {
-  "code": "0",
-  "data": {
-    "pri": {
-      "ext": {
-        "tenantNo": "tstTenantNo",
-        "userNo": "tstUserNo"
-      },
-      "obj": {
-        "id": "1612353237501_DcNd45KtJXPmSpz2xRB",
-        "ver": 0,
-        "dd": "N",
-        "ivd": "N",
-        "lmDsz": "2021-02-03 19:54:02",
-        "lmUid": "1612262610216_koFVLCNZrhezbgULWqW",
-        "tenantId": "1612262610215_LoHqeZBGrVYm3MlYmpH"
-      },
-      "rtn": 1
-    },
-    "pub": {
-      "channelNo": "tstChannelNo",
-      "tracingNo": "$UUID0_cUl33_1$",
-      "reqNo": "$UUID0_cUl33_1$"
+  "msg": {
+    "rno": "$UUID0_cUl33_1$",
+    "body": {
+      "code": "0",
+      "data": 1
     }
   }
 }

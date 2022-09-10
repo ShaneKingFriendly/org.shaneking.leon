@@ -1,14 +1,13 @@
 {
-  "pri": {
-    "ext": {
-      "tenantNo": "tstTenantNo",
-      "userNo": "tstUserNo"
-    },
-    "obj": ""
-  },
-  "pub": {
-    "channelNo": "tstChannelNo",
-    "tracingNo": "$UUID0_cUl33_1$",
-    "reqNo": "$UUID0_cUl33_1$"
+  "cno": "tstChannelNo",
+  "msg": {
+    "rno": "$UUID0_cUl33_1$",
+    "tno": "$UUID0_cUl33_1$",
+    "uno": "tstUserNo",
+    "bdy": {
+      "tno": "tstTenantNo",
+      "uno": "tstUserNo",
+      "obj": ""
+    }
   }
 }

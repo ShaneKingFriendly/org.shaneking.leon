@@ -1,11 +1,3 @@
 "code":"0"
-"rtn":1
-"ivd":"N",
-"lmUid":"1612262610216_koFVLCNZrhezbgULWqW",
-"ver":0
-"id":"1612353237501_DcNd45KtJXPmSpz2xRB",
-"no":"1614173052422_dJwxshF8cKjT8mnOAhJ"
-"userNo":"tstUserNo"
-"channelNo":"tstChannelNo",
-"tenantNo":"tstTenantNo",
-"tracingNo":"$UUID0_cUl33_1$"
+"data":1
+"rno":"$UUID0_cUl33_1$"

@@ -1,20 +1,10 @@
 {
-  "code": "0",
-  "data": {
-    "pri": {
-      "ext": {
-        "tenantNo": "tstTenantNo",
-        "userNo": "tstUserNo"
-      },
-      "obj": {
-        "whereConditions": {
-          "tenantId": {
-            "op": "=",
-            "cs": "1612262610215_LoHqeZBGrVYm3MlYmpH"
-          }
-        }
-      },
-      "rtn": [
+  "msg": {
+    "rno": "$UUID0_cUl33_1$",
+    "body": {
+      "code": "0",
+      "info": "{}",
+      "data": [
         {
           "id": "1612262610216_koFVLCNZrhezbgULWqW",
           "ivd": "N",
@@ -29,11 +19,6 @@
           "email": "email@email.com"
         }
       ]
-    },
-    "pub": {
-      "channelNo": "tstChannelNo",
-      "tracingNo": "$UUID0_cUl33_1$",
-      "reqNo": "$UUID0_cUl33_1$"
     }
   }
 }

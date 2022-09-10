@@ -1,9 +1,9 @@
 package sktest.leon.rr.j5n5controller;
 
+import org.shaneking.ling.rr.Req;
 import org.shaneking.ling.rr.Resp;
 import org.shaneking.roc.persistence.dao.CacheableDao;
 import org.shaneking.roc.persistence.simple.SimpleUserEntity;
-import org.shaneking.roc.rr.Req;
 import org.shaneking.roc.rr.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +23,13 @@ public class UserControllerPrepare1 {
   @RequestMapping("/add")
   @ResponseBody
   @RrAudit
-  @RrAccess
+  @RrChannel
   @RrCrypto
-  public Resp<Req<SimpleUserEntity, Integer>> add(@RequestBody Req<SimpleUserEntity, Integer> req) {
-    Resp<Req<SimpleUserEntity, Integer>> resp = Resp.success(req);
-    req.getPri().setRtn(cacheableDao.add(SimpleUserEntity.class, CacheableDao.pti(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
+  @RrTenant
+  @RrUser
+  public Resp<Integer, Req<SimpleUserEntity>> add(@RequestBody Req<SimpleUserEntity> req) {
+    Resp<Integer, Req<SimpleUserEntity>> resp = Resp.success(req, null);
+    resp.srtMsgBodyData(cacheableDao.add(SimpleUserEntity.class, CacheableDao.pti(req.gnaMsgBdyObj(), req.gnnCtx().gnaTenantId())));
     return resp;
   }
 
@@ -35,36 +37,42 @@ public class UserControllerPrepare1 {
   @ResponseBody
   @RrLimiting(prop = "sktest.leon.rr.j5n5controller.UserControllerPrepare1.lst", limit = 1)
   @RrAudit
-  @RrAccess
-  @RrCache
+  @RrChannel
   @RrCrypto
-  public Resp<Req<SimpleUserEntity, List<SimpleUserEntity>>> lst(@RequestBody Req<SimpleUserEntity, List<SimpleUserEntity>> req) {
-    Resp<Req<SimpleUserEntity, List<SimpleUserEntity>>> resp = Resp.success(req);
-    req.getPri().setRtn(cacheableDao.lst(SimpleUserEntity.class, CacheableDao.pts(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
+  @RrTenant
+  @RrUser
+  @RrCache
+  public Resp<List<SimpleUserEntity>, Req<SimpleUserEntity>> lst(@RequestBody Req<SimpleUserEntity> req) {
+    Resp<List<SimpleUserEntity>, Req<SimpleUserEntity>> resp = Resp.success(req, null);
+    resp.srtMsgBodyData(cacheableDao.lst(SimpleUserEntity.class, CacheableDao.pts(req.gnaMsgBdyObj(), req.gnnCtx().gnaTenantId())));
     return resp;
   }
 
   @RequestMapping("/modByIdVer")
   @ResponseBody
   @RrAudit
-  @RrAccess
+  @RrChannel
   @RrCrypto
-  public Resp<Req<SimpleUserEntity, Integer>> modByIdVer(@RequestBody Req<SimpleUserEntity, Integer> req) {
-    Resp<Req<SimpleUserEntity, Integer>> resp = Resp.success(req);
-    req.getPri().setRtn(cacheableDao.modByIdVer(SimpleUserEntity.class, CacheableDao.ptu(req.getPri().getObj(), req.gnnCtx().gnaTenantId())));
+  @RrTenant
+  @RrUser
+  public Resp<Integer, Req<SimpleUserEntity>> modByIdVer(@RequestBody Req<SimpleUserEntity> req) {
+    Resp<Integer, Req<SimpleUserEntity>> resp = Resp.success(req, null);
+    resp.srtMsgBodyData(cacheableDao.modByIdVer(SimpleUserEntity.class, CacheableDao.ptu(req.gnaMsgBdyObj(), req.gnnCtx().gnaTenantId())));
     return resp;
   }
 
   @RequestMapping("/rmvById")
   @ResponseBody
   @RrAudit
-  @RrAccess
+  @RrChannel
   @RrCrypto
-  public Resp<Req<String, Integer>> rmvById(@RequestBody Req<String, Integer> req) {
-    Resp<Req<String, Integer>> resp = Resp.success(req);
+  @RrTenant
+  @RrUser
+  public Resp<Integer, Req<String>> rmvById(@RequestBody Req<String> req) {
+    Resp<Integer, Req<String>> resp = Resp.success(req, null);
     SimpleUserEntity userEntity = new SimpleUserEntity();
-    userEntity.setId(req.getPri().getObj());
-    req.getPri().setRtn(cacheableDao.rmvById(SimpleUserEntity.class, CacheableDao.ptu(userEntity, req.gnnCtx().gnaTenantId())));
+    userEntity.setId(req.gnaMsgBdyObj());
+    resp.srtMsgBodyData(cacheableDao.rmvById(SimpleUserEntity.class, CacheableDao.ptu(userEntity, req.gnnCtx().gnaTenantId())));
     return resp;
   }
 }
