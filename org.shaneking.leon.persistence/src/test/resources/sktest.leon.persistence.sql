@@ -260,8 +260,8 @@ insert into t_simple_user_entity (id, no, lm_dsz, lm_uid, tenant_id, name, haha,
 select '1612262610216_koFVLCNZrhezbgULWqW','tstUserNo','','1612262610216_koFVLCNZrhezbgULWqW','1612262610215_LoHqeZBGrVYm3MlYmpH','tstUserName','[SKC1]494c6f7665596f75','18888888888','email@email.com';
 insert into t_simple_channel_entity (id, no, lm_dsz, lm_uid, name, description, enc_tv, enc_tf, enc_tat, enc_tvt)
 select '1612263653223_oGFvE5Hyndf0njoFhyK','tstChannelNo','','1612262610216_koFVLCNZrhezbgULWqW','tstChannelName','tstChannelDesc','494c6f7665596f75','N','SKC1','SELF';
-insert into t_simple_channel_access_tenant_regex_api_entity (id, no, lm_dsz, lm_uid, channel_id, tenant_id, allow_url_regex, allow_signature_regex, deny_url_regex, deny_signature_regex)
-select '1612263668482_jaHu6tmguyKo2xWgHPj','','','1612262610216_koFVLCNZrhezbgULWqW','1612263653223_oGFvE5Hyndf0njoFhyK','1612262610215_LoHqeZBGrVYm3MlYmpH','','^[\s\S]*(add|rmv|mod|mge|lst)\([\s\S]*$','','';
+insert into t_simple_channel_access_regex_api_entity (id, no, lm_dsz, lm_uid, channel_id, allow_url_regex, allow_signature_regex, deny_url_regex, deny_signature_regex)
+select '1612263668482_jaHu6tmguyKo2xWgHPj','','','1612262610216_koFVLCNZrhezbgULWqW','1612263653223_oGFvE5Hyndf0njoFhyK','','^[\s\S]*(add|rmv|mod|mge|lst)\([\s\S]*$','','';
 
 
 select * from t_simple_channel_access_regex_api_entity;
