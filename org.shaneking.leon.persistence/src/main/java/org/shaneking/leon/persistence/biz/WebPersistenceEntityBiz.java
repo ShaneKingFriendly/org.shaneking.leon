@@ -238,7 +238,7 @@ public class WebPersistenceEntityBiz {
       }
       resp.srtMsgBodyData(cacheableDao.lst(entityClass, CacheableDao.pts(t, tenantIdList)));
       t.getPagination().setCount(cacheableDao.cnt(entityClass, CacheableDao.pts(t, tenantIdList)));
-      req.gnnMsg().gnnBdy().gnnTbl().setPage(t.getPagination());
+      resp.gnnMsg().gnnBody().setPage(t.getPagination());
       ///setLastModifyUser in other biz when need
     } catch (Exception e) {
       log.error(OM3.lp(resp, req, entityClass), e);
