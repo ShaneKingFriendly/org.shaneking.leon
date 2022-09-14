@@ -2,7 +2,7 @@
   "msg": {
     "body": {
       "code": "-1",
-      "info": "RespException(super=org.shaneking.ling.rr.RespException: , resp=Resp(mvc=null, enc=null, msg=RespMsg(rno=$UUID0_cUl33_1$, ano=null, dsz=null, jsn=null, body=RespMsgBody(code=, info=, page=null, data=null, json=null)), rbk=null, req=Req(cno=tstChannelNo, tkn=null, mvc=null, enc=null, msg=ReqMsg(rno=$UUID0_cUl33_1$, tno=$UUID0_cUl33_1$, asy=null, ano=null, dsz=null, uno=tstUserNo, jsn=null, bdy=ReqMsgBdy(tno=tstTenantNo, uno=tstUserNo, tbl=null, obj={}, jsn=null)), ctx=null)))"
+      "info": "RespException(super=org.shaneking.ling.rr.RespException: , resp=Resp(super=OpenResp(mvc=null, enc=null, msg=RespMsg(rno=$UUID0_cUl33_1$, ano=null, dsz=null, jsn=null, body=RespMsgBody(code=, info=, page=null, data=null, json=null))), rbk=null, req=Req(super=OpenReq(cno=tstChannelNo, tkn=null, mvc=null, enc=null, msg=ReqMsg(rno=$UUID0_cUl33_1$, tno=$UUID0_cUl33_1$, asy=null, ano=null, dsz=null, uno=tstUserNo, jsn=null, bdy=ReqMsgBdy(tno=tstTenantNo, uno=tstUserNo, tbl=null, obj={}, jsn=null))), ctx=null)))"
     }
   }
 }

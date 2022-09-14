@@ -21,8 +21,8 @@ class WebPersistenceEntityBizSpringTest extends SKSpringUnit {
 
   void csv(String fileType) {
     Req<String> req = Req.<String>build().setCtx(new Ctx().setTenant(new SimpleTenantEntity()).setUser(new SimpleUserEntity()))
-      .setMsg(ReqMsg.<String>build().setTno(UUID0.cUl33()))
       .srtObj(tstIFiles(fileType).getAbsolutePath());
+    req.setMsg(ReqMsg.<String>build().setTno(UUID0.cUl33()));
     req.gnnCtx().getTenant().setId("skTestTenantId");
     req.gnnCtx().getUser().setId("skTestUserId");
     webPersistenceEntityBiz.csv(req, SimpleUserEntity.class);

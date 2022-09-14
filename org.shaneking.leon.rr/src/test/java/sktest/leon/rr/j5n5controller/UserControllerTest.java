@@ -39,7 +39,8 @@ public class UserControllerTest extends SKSpringMvcUnit {
       assertNotNull(performJJ("/user/modByIdVer"));
 
       setTstSeq("rmvById");
-      Req req = Req.build().setCno("tstChannelNo").setMsg(ReqMsg.build().setRno(UUID0.cUl33()).setUno("tstUserNo").setBdy(ReqMsgBdy.build().setTno("tstTenantNo").setObj("1612353237501_DcNd45KtJXPmSpz2xRB")));
+      Req req = Req.build();
+      req.setCno("tstChannelNo").setMsg(ReqMsg.build().setRno(UUID0.cUl33()).setUno("tstUserNo").setBdy(ReqMsgBdy.build().setTno("tstTenantNo").setObj("1612353237501_DcNd45KtJXPmSpz2xRB")));
       req.setEnc(SKC1.encrypt(OM3.writeValueAsString(req.getMsg()))).setMsg(null);
       ResultActions resultActions = mockMvc.perform(appJson(cookie(post("/user/rmvById").content(OM3.writeValueAsString(req)))));
       resultActions.andExpect(status().isOk()).andDo(print());
