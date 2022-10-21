@@ -10,8 +10,6 @@ ShaneKing Spring Web Library
 sk:
   leon:
     rr:
-      audit:
-        enabled: true
       req:
         ips:
           enabled: true
@@ -20,6 +18,8 @@ sk:
       controller:
         advice:
           enabled: true
+      audit:
+        enabled: true
 ```
 
 ### @ConfigurationProperties
@@ -43,16 +43,14 @@ sk:
   leon:
     persistence:
       file:
-        temporary:
-          folder: /tmp
         csv:
           buffer: 1023
+        temporary:
+          folder: /tmp
       dbserver:
         backup:
           folder: /tmp
     rr:
-      audit:
-        enabled: true
       req:
         ips:
           enabled: true
@@ -74,4 +72,6 @@ sk:
           folder: /tmp
         upload:
           folder: /tmp
+      audit:
+        enabled: true
 ```

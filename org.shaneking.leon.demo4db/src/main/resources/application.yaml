@@ -1,0 +1,17 @@
+## spring
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    password:
+    ## absolute
+    #url: jdbc:sqlite:D:/test/sktest.leon.rr.sqllite
+    ## compiled for test(../org.shaneking.roc.persistence/target/test-classes/sktest.leon.rr.sqllite)
+    #url: jdbc:sqlite::resource:sktest.leon.rr.sqllite
+    ## relative
+    url: jdbc:sqlite:src/main/resources/sktest.leon.demo4db.sqllite
+    username:
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      fail_on_unknown_properties: false
+

@@ -92,6 +92,8 @@
   </ciManagement>
 
   <modules>
+    <module>org.shaneking.leon.demo4db</module>
+    <module>org.shaneking.leon.demo4web</module>
     <module>org.shaneking.leon.persistence</module>
     <module>org.shaneking.leon.rr</module>
     <module>org.shaneking.leon.swagger</module>

@@ -1,0 +1,7 @@
+## spring
+spring:
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      fail_on_unknown_properties: false
+
